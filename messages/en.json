@@ -1,0 +1,143 @@
+{
+  "Common": {
+    "universityName": "Sulaiman Al-Rajhi University",
+    "portalName": "Sulaiman Al-Rajhi University Portal",
+    "signIn": "Sign In",
+    "signOut": "Sign Out",
+    "backToHome": "Back to Home",
+    "langSwitch": "عربي",
+    "copyright": "© {year} Sulaiman Al-Rajhi University. All rights reserved."
+  },
+  "Landing": {
+    "heroTitle": "Sulaiman Al-Rajhi University Portal",
+    "heroSubtitle": "Your unified gateway to all university services for faculty, students, and graduates",
+    "getStarted": "Get Started",
+    "servicesTitle": "Available Services",
+    "servicesSubtitle": "Select the service you need",
+    "enterService": "Access Service",
+    "rateService": "Rate Service",
+    "responsibleParty": "Responsible Department",
+    "footerLinks": "Quick Links",
+    "footerHome": "Home",
+    "footerLogin": "Sign In",
+    "footerAbout": "About the University"
+  },
+  "Modules": {
+    "hala": {
+      "name": "Hala",
+      "description": "Communication, complaints and inquiries",
+      "party": "Deanship of Student Affairs"
+    },
+    "sanad": {
+      "name": "Sanad – Student Services",
+      "description": "All student services in one place",
+      "party": "Deanship of Student Affairs"
+    },
+    "facultyServices": {
+      "name": "Faculty Services",
+      "description": "Academic services for faculty members",
+      "party": "Deanship of Faculty and Staff Affairs"
+    },
+    "clubs": {
+      "name": "Student Clubs",
+      "description": "Activities, clubs and student events",
+      "party": "Deanship of Student Affairs"
+    },
+    "financial": {
+      "name": "Financial Services",
+      "description": "Tuition fees, payments and financial statements",
+      "party": "Financial Administration"
+    },
+    "scholarships": {
+      "name": "Grants & Financial Solutions",
+      "description": "Scholarships and financial support for students",
+      "party": "Deanship of Student Affairs"
+    },
+    "training": {
+      "name": "Cooperative Training",
+      "description": "Training opportunities and employment services",
+      "party": "Deanship of Career Development"
+    },
+    "graduates": {
+      "name": "Graduates",
+      "description": "Post-graduation services and alumni network",
+      "party": "Deanship of Community Service"
+    },
+    "admin": {
+      "name": "Control Panel",
+      "description": "System administration and permissions",
+      "party": "System Administration"
+    }
+  },
+  "Login": {
+    "title": "Sign in to the Portal",
+    "subtitle": "Sulaiman Al-Rajhi University",
+    "email": "Email address",
+    "emailPlaceholder": "you@sru.edu.sa",
+    "password": "Password",
+    "passwordPlaceholder": "••••••••",
+    "submit": "Sign In",
+    "submitting": "Signing in…",
+    "backToHome": "Back to Home"
+  },
+  "Dashboard": {
+    "portalName": "Sulaiman Al-Rajhi University Portal",
+    "roles": {
+      "STUDENT": "Student",
+      "FACULTY": "Faculty Member",
+      "ADMIN": "Administrator",
+      "ORGANIZER": "Event Organizer",
+      "SUBADMIN": "System Supervisor"
+    }
+  },
+  "Student": {
+    "welcome": "Welcome, {name}",
+    "subtitle": "Student Dashboard",
+    "myCourses": "My Courses",
+    "coursesEnrolled": "Enrolled this semester",
+    "gpa": "GPA",
+    "currentSemester": "Current semester",
+    "attendance": "Attendance",
+    "overallAttendance": "Overall attendance",
+    "quickLinks": "Quick Links",
+    "grades": "View Grades",
+    "schedule": "Course Schedule",
+    "exams": "Exam Timetable",
+    "library": "Library Resources",
+    "financial": "Financial Summary"
+  },
+  "Faculty": {
+    "welcome": "Welcome, {name}",
+    "subtitle": "Faculty Dashboard",
+    "activeCourses": "Active Courses",
+    "thisSemester": "This semester",
+    "totalStudents": "Total Students",
+    "acrossAllCourses": "Across all courses",
+    "pendingGrades": "Pending Grades",
+    "needSubmission": "Need submission",
+    "quickLinks": "Quick Links",
+    "manage": "Manage Courses",
+    "grades": "Submit Grades",
+    "attendance": "Attendance Records",
+    "students": "Student List",
+    "office": "Office Hours"
+  },
+  "Admin": {
+    "title": "Admin Dashboard",
+    "subtitle": "System overview",
+    "totalUsers": "Total Users",
+    "students": "Students",
+    "faculty": "Faculty",
+    "recentUsers": "Recent Users",
+    "name": "Name",
+    "email": "Email",
+    "role": "Role",
+    "joined": "Joined",
+    "noUsers": "No users yet"
+  },
+  "ModulePage": {
+    "underDevTitle": "This service is under development",
+    "underDevDesc": "We are working on developing this service to provide the best possible experience. Please check back later.",
+    "backBtn": "Back to Home"
+  }
+}
