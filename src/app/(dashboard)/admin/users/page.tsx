@@ -20,30 +20,31 @@ interface Pagination {
 }
 
 const roleLabel: Record<string, string> = {
-  STUDENT:  "طالب",
-  FACULTY:  "هيئة التدريس",
-  ADMIN:    "مدير",
-  ORGANIZER:"منظم",
-  SUBADMIN: "مشرف",
+  STUDENT:   "طالب",
+  FACULTY:   "هيئة التدريس",
+  ADMIN:     "مدير",
+  ORGANIZER: "منظم",
+  SUBADMIN:  "مشرف",
 };
 
-const roleStyle: Record<string, string> = {
-  STUDENT:  "bg-blue-100 text-blue-700",
-  FACULTY:  "bg-green-100 text-green-700",
-  ADMIN:    "bg-purple-100 text-purple-700",
-  ORGANIZER:"bg-orange-100 text-orange-700",
-  SUBADMIN: "bg-gray-100 text-gray-700",
+const roleBadge: Record<string, string> = {
+  STUDENT:   "bg-blue-100 text-blue-700",
+  FACULTY:   "bg-green-100 text-green-700",
+  ADMIN:     "bg-purple-100 text-purple-700",
+  ORGANIZER: "bg-orange-100 text-orange-700",
+  SUBADMIN:  "bg-gray-100 text-gray-700",
 };
 
-const ROLES = ["", "STUDENT", "FACULTY", "ADMIN", "ORGANIZER", "SUBADMIN"];
+const ROLES = ["STUDENT", "FACULTY", "ADMIN", "ORGANIZER", "SUBADMIN"];
 
 export default function UsersPage() {
   const [users, setUsers] = useState<User[]>([]);
   const [pagination, setPagination] = useState<Pagination | null>(null);
   const [search, setSearch] = useState("");
-  const [role, setRole] = useState("");
+  const [roleFilter, setRoleFilter] = useState("");
   const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(true);
+  const [changingRole, setChangingRole] = useState<Record<string, boolean>>({});
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const fetchUsers = useCallback(async (q: string, r: string, p: number) => {
@@ -51,7 +52,6 @@ export default function UsersPage() {
     const params = new URLSearchParams({ page: String(p), limit: "15" });
     if (q) params.set("search", q);
     if (r) params.set("role", r);
-
     const token = getClientToken();
     const res = await fetch(`/api/admin/users?${params}`, {
       headers: { Authorization: `Bearer ${token}` },
@@ -64,23 +64,29 @@ export default function UsersPage() {
     setLoading(false);
   }, []);
 
-  // Debounce search; immediately apply role/page changes
   useEffect(() => {
     if (debounceRef.current) clearTimeout(debounceRef.current);
-    debounceRef.current = setTimeout(() => {
-      fetchUsers(search, role, page);
-    }, 300);
+    debounceRef.current = setTimeout(() => fetchUsers(search, roleFilter, page), 300);
     return () => { if (debounceRef.current) clearTimeout(debounceRef.current); };
-  }, [search, role, page, fetchUsers]);
+  }, [search, roleFilter, page, fetchUsers]);
 
-  function handleSearch(v: string) {
-    setSearch(v);
-    setPage(1);
-  }
-
-  function handleRole(v: string) {
-    setRole(v);
-    setPage(1);
+  async function changeRole(userId: string, newRole: string) {
+    setChangingRole((prev) => ({ ...prev, [userId]: true }));
+    const token = getClientToken();
+    const res = await fetch(`/api/admin/users/${userId}/role`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({ role: newRole }),
+    });
+    if (res.ok) {
+      setUsers((prev) =>
+        prev.map((u) => (u.id === userId ? { ...u, role: newRole } : u))
+      );
+    }
+    setChangingRole((prev) => ({ ...prev, [userId]: false }));
   }
 
   return (
@@ -99,20 +105,20 @@ export default function UsersPage() {
             type="text"
             placeholder="بحث بالاسم أو البريد الإلكتروني…"
             value={search}
-            onChange={(e) => handleSearch(e.target.value)}
-            className="w-full pl-4 pr-10 py-2.5 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
+            onChange={(e) => { setSearch(e.target.value); setPage(1); }}
+            className="w-full px-4 py-2.5 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
           />
           {loading && (
-            <span className="absolute end-3 top-1/2 -translate-y-1/2 text-gray-400 text-xs">⏳</span>
+            <span className="absolute end-3 top-1/2 -translate-y-1/2 text-gray-300 text-xs animate-pulse">●●●</span>
           )}
         </div>
         <select
-          value={role}
-          onChange={(e) => handleRole(e.target.value)}
-          className="px-4 py-2.5 border border-gray-300 rounded-lg text-sm bg-white focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
+          value={roleFilter}
+          onChange={(e) => { setRoleFilter(e.target.value); setPage(1); }}
+          className="px-4 py-2.5 border border-gray-300 rounded-lg text-sm bg-white focus:outline-none focus:ring-2 focus:ring-green-500"
         >
           <option value="">كل الأدوار</option>
-          {ROLES.filter(Boolean).map((r) => (
+          {ROLES.map((r) => (
             <option key={r} value={r}>{roleLabel[r] ?? r}</option>
           ))}
         </select>
@@ -129,21 +135,18 @@ export default function UsersPage() {
                 <th className="px-5 py-3 text-start">الدور</th>
                 <th className="px-5 py-3 text-start">النقاط</th>
                 <th className="px-5 py-3 text-start">تاريخ التسجيل</th>
+                <th className="px-5 py-3 text-start">تغيير الدور</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-100">
               {loading && users.length === 0 && (
                 <tr>
-                  <td colSpan={5} className="px-5 py-8 text-center text-gray-400">
-                    جارٍ التحميل…
-                  </td>
+                  <td colSpan={6} className="px-5 py-8 text-center text-gray-400">جارٍ التحميل…</td>
                 </tr>
               )}
               {!loading && users.length === 0 && (
                 <tr>
-                  <td colSpan={5} className="px-5 py-8 text-center text-gray-400">
-                    لا يوجد مستخدمون مطابقون
-                  </td>
+                  <td colSpan={6} className="px-5 py-8 text-center text-gray-400">لا يوجد مستخدمون مطابقون</td>
                 </tr>
               )}
               {users.map((user) => (
@@ -151,7 +154,7 @@ export default function UsersPage() {
                   <td className="px-5 py-3 font-medium text-gray-900">{user.name}</td>
                   <td className="px-5 py-3 text-gray-500 text-xs">{user.email}</td>
                   <td className="px-5 py-3">
-                    <span className={`px-2.5 py-0.5 rounded-full text-xs font-medium ${roleStyle[user.role] ?? "bg-gray-100 text-gray-600"}`}>
+                    <span className={`px-2.5 py-0.5 rounded-full text-xs font-medium ${roleBadge[user.role] ?? "bg-gray-100 text-gray-600"}`}>
                       {roleLabel[user.role] ?? user.role}
                     </span>
                   </td>
@@ -159,13 +162,24 @@ export default function UsersPage() {
                   <td className="px-5 py-3 text-gray-400 text-xs">
                     {new Date(user.createdAt).toLocaleDateString("ar-SA")}
                   </td>
+                  <td className="px-5 py-3">
+                    <select
+                      value={user.role}
+                      disabled={changingRole[user.id]}
+                      onChange={(e) => changeRole(user.id, e.target.value)}
+                      className="text-xs px-2 py-1.5 border border-gray-200 rounded-lg bg-white focus:outline-none focus:ring-1 focus:ring-green-500 disabled:opacity-50 cursor-pointer"
+                    >
+                      {ROLES.map((r) => (
+                        <option key={r} value={r}>{roleLabel[r] ?? r}</option>
+                      ))}
+                    </select>
+                  </td>
                 </tr>
               ))}
             </tbody>
           </table>
         </div>
 
-        {/* Pagination */}
         {pagination && pagination.pages > 1 && (
           <div className="px-5 py-3 border-t border-gray-100 flex items-center justify-between">
             <p className="text-xs text-gray-500">
