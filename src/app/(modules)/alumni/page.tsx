@@ -1,4 +1,6 @@
 import Link from "next/link";
+import { redirect } from "next/navigation";
+import { getCurrentUser } from "@/lib/dal";
 import {
   alumniProfile,
   alumniPersonalStats,
@@ -37,16 +39,18 @@ function fmt(date: string) {
   });
 }
 
-export default function AlumniDashboardPage() {
-  const { name, major, graduationYear, honor, profileCompletion, currentJob, college } = alumniProfile;
+export default async function AlumniDashboardPage() {
+  const user = await getCurrentUser();
+  if (!user) redirect("/login");
 
-  // أقرب فعاليتين قادمتين
+  const firstName = user.name.split(" ")[0];
+  const { major, graduationYear, honor, profileCompletion, currentJob, college } = alumniProfile;
+
   const upcomingEvents = alumniEvents
     .filter((e) => new Date(e.date) >= new Date())
     .sort((a, b) => a.date.localeCompare(b.date))
     .slice(0, 2);
 
-  // وظائف موصى بها لتخصص الخريج
   const recommendedJobs = jobOpportunities
     .filter((j) => j.majors.includes(major))
     .slice(0, 3);
@@ -62,18 +66,22 @@ export default function AlumniDashboardPage() {
         <div className="flex items-start justify-between gap-4 flex-wrap">
           <div>
             <p className="text-white/70 text-xs mb-1">{college}</p>
-            <h1 className="text-xl font-bold">مرحباً، {name.split(" ")[0]} 👋</h1>
+            <h1 className="text-xl font-bold">مرحباً، {firstName} 👋</h1>
             <p className="text-white/80 text-sm mt-0.5">{major} — دفعة {graduationYear}</p>
             {currentJob && (
               <p className="text-white/70 text-xs mt-1">💼 {currentJob}</p>
             )}
           </div>
-          {/* Honor badge */}
-          <div
-            className="shrink-0 flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold"
-            style={{ background: "rgba(255,215,0,0.25)", color: "#FFD700", border: "1px solid rgba(255,215,0,0.4)" }}
-          >
-            🏅 {honor}
+          <div className="flex flex-col items-end gap-2">
+            <div
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold"
+              style={{ background: "rgba(255,215,0,0.25)", color: "#FFD700", border: "1px solid rgba(255,215,0,0.4)" }}
+            >
+              🏅 {honor}
+            </div>
+            <div className="w-12 h-12 rounded-full bg-white/20 flex items-center justify-center text-xl font-bold">
+              {user.name.charAt(0)}
+            </div>
           </div>
         </div>
 
@@ -130,15 +138,9 @@ export default function AlumniDashboardPage() {
         </div>
         <div className="divide-y divide-[#F4F7F8]">
           {recommendedJobs.map((job) => (
-            <div
-              key={job.id}
-              className="px-5 py-4 hover:bg-[#F9FAFB] transition-colors"
-            >
+            <div key={job.id} className="px-5 py-4 hover:bg-[#F9FAFB] transition-colors">
               <div className="flex items-start gap-3">
-                <div
-                  className="w-10 h-10 rounded-xl flex items-center justify-center text-xl shrink-0"
-                  style={{ background: "#F3EEF7" }}
-                >
+                <div className="w-10 h-10 rounded-xl flex items-center justify-center text-xl shrink-0" style={{ background: "#F3EEF7" }}>
                   {job.logo}
                 </div>
                 <div className="flex-1 min-w-0">
@@ -148,19 +150,13 @@ export default function AlumniDashboardPage() {
                       <p className="text-xs text-[#6B7280] mt-0.5">{job.company} · {job.location}</p>
                     </div>
                     {job.featured && (
-                      <span
-                        className="shrink-0 text-xs font-bold px-2 py-0.5 rounded-full"
-                        style={{ background: "#FEF3C7", color: "#D97706" }}
-                      >
+                      <span className="shrink-0 text-xs font-bold px-2 py-0.5 rounded-full" style={{ background: "#FEF3C7", color: "#D97706" }}>
                         ⭐ مميزة
                       </span>
                     )}
                   </div>
                   <div className="flex items-center gap-3 mt-2 flex-wrap">
-                    <span
-                      className="text-xs font-medium px-2 py-0.5 rounded-full"
-                      style={{ background: "#F3EEF7", color: "#875E9E" }}
-                    >
+                    <span className="text-xs font-medium px-2 py-0.5 rounded-full" style={{ background: "#F3EEF7", color: "#875E9E" }}>
                       {jobTypeLabel[job.type]}
                     </span>
                     <span className="text-xs text-[#6B7280]">💰 {job.salary}</span>
@@ -210,25 +206,17 @@ export default function AlumniDashboardPage() {
                   </div>
                   <div className="flex-1 min-w-0">
                     <p className="font-semibold text-sm text-[#1F2937] leading-snug">{ev.title}</p>
-                    <p className="text-xs text-[#9CA3AF] mt-1">
-                      {fmt(ev.date)} · {ev.time}
-                    </p>
+                    <p className="text-xs text-[#9CA3AF] mt-1">{fmt(ev.date)} · {ev.time}</p>
                     <p className="text-xs text-[#6B7280] mt-0.5 truncate">
                       {ev.online ? "🌐" : "📍"} {ev.location}
                     </p>
                     <div className="flex items-center gap-2 mt-2">
                       {ev.registered ? (
-                        <span
-                          className="text-xs font-semibold px-2 py-0.5 rounded-full"
-                          style={{ background: "#DCFCE7", color: "#16A34A" }}
-                        >
+                        <span className="text-xs font-semibold px-2 py-0.5 rounded-full" style={{ background: "#DCFCE7", color: "#16A34A" }}>
                           ✅ مسجّل
                         </span>
                       ) : (
-                        <span
-                          className="text-xs font-semibold px-2 py-0.5 rounded-full"
-                          style={{ background: ev.color + "18", color: ev.color }}
-                        >
+                        <span className="text-xs font-semibold px-2 py-0.5 rounded-full" style={{ background: ev.color + "18", color: ev.color }}>
                           {ev.seatsLeft} مقعد متبقٍ
                         </span>
                       )}
@@ -252,18 +240,12 @@ export default function AlumniDashboardPage() {
               return (
                 <div key={news.id} className="px-5 py-4 hover:bg-[#F9FAFB] transition-colors cursor-pointer">
                   <div className="flex items-start gap-3">
-                    <div
-                      className="w-9 h-9 rounded-xl flex items-center justify-center text-lg shrink-0"
-                      style={{ background: cat.bg }}
-                    >
+                    <div className="w-9 h-9 rounded-xl flex items-center justify-center text-lg shrink-0" style={{ background: cat.bg }}>
                       {news.image}
                     </div>
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2 mb-1">
-                        <span
-                          className="text-xs font-semibold px-2 py-0.5 rounded-full"
-                          style={{ background: cat.bg, color: cat.color }}
-                        >
+                        <span className="text-xs font-semibold px-2 py-0.5 rounded-full" style={{ background: cat.bg, color: cat.color }}>
                           {cat.label}
                         </span>
                         <span className="text-xs text-[#9CA3AF]">{news.readTime} د قراءة</span>
@@ -286,20 +268,17 @@ export default function AlumniDashboardPage() {
       {/* ── روابط سريعة ── */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
         {[
-          { href: "/alumni/profile",     label: "أكمل ملفك",       icon: "👤", color: "#875E9E" },
-          { href: "/alumni/documents",   label: "وثائقي",          icon: "📄", color: "#6CAEBD" },
-          { href: "/alumni/network",     label: "الشبكة المهنية",  icon: "🤝", color: "#4A8FA0" },
-          { href: "/alumni/contribute",  label: "ساهم وأعطِ",      icon: "❤️", color: "#875E9E" },
+          { href: "/alumni/profile",    label: "أكمل ملفك",       icon: "👤", color: "#875E9E" },
+          { href: "/alumni/documents",  label: "وثائقي",          icon: "📄", color: "#6CAEBD" },
+          { href: "/alumni/network",    label: "الشبكة المهنية",  icon: "🤝", color: "#4A8FA0" },
+          { href: "/alumni/contribute", label: "ساهم وأعطِ",      icon: "❤️", color: "#875E9E" },
         ].map((link) => (
           <Link
             key={link.href}
             href={link.href}
             className="bg-white flex flex-col items-center gap-2 p-4 rounded-xl border border-[#E8EDEF] hover:shadow-sm transition-all group text-center"
           >
-            <div
-              className="w-10 h-10 rounded-xl flex items-center justify-center text-xl"
-              style={{ background: link.color + "18" }}
-            >
+            <div className="w-10 h-10 rounded-xl flex items-center justify-center text-xl" style={{ background: link.color + "18" }}>
               {link.icon}
             </div>
             <span className="text-xs font-medium text-[#506570] group-hover:text-[#875E9E] transition-colors">

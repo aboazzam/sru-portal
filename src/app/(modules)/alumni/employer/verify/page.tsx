@@ -1,14 +1,14 @@
 "use client";
 import Link from "next/link";
 import { useState } from "react";
-import { alumniDocuments } from "@/lib/mock/alumni";
+import { officialDocuments } from "@/lib/mock/alumni";
 
 type VerifyResult =
   | { found: true;  name: string; major: string; college: string; graduationYear: number; honor: string; gpa: number; id: string; verifiedAt: string }
   | { found: false; code: string };
 
 function findByCode(code: string): VerifyResult {
-  const doc = alumniDocuments.find(
+  const doc = officialDocuments.find(
     (d) => d.verificationCode?.toLowerCase() === code.trim().toLowerCase()
   );
   if (doc) {
@@ -27,7 +27,7 @@ function findByCode(code: string): VerifyResult {
   return { found: false, code };
 }
 
-const SAMPLE_CODES = alumniDocuments
+const SAMPLE_CODES = officialDocuments
   .filter((d) => d.verificationCode)
   .slice(0, 3)
   .map((d) => d.verificationCode as string);
