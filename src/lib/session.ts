@@ -43,6 +43,31 @@ export async function deleteSession() {
 
 export async function getSession() {
   const cookieStore = await cookies()
-  const token = cookieStore.get('session')?.value
-  return decrypt(token)
+
+  // 1. Try existing jose session cookie (server-action login)
+  const sessionToken = cookieStore.get('session')?.value
+  if (sessionToken) {
+    const session = await decrypt(sessionToken)
+    if (session) return session
+  }
+
+  // 2. Fall back to JWT auth-token cookie (REST API login)
+  const authToken = cookieStore.get('auth-token')?.value
+  if (authToken) {
+    try {
+      const key = new TextEncoder().encode(process.env.JWT_SECRET!)
+      const { payload } = await jwtVerify(authToken, key, { algorithms: ['HS256'] })
+      if (payload.sub && typeof payload.role === 'string') {
+        return {
+          userId: payload.sub,
+          role: payload.role as SessionPayload['role'],
+          expiresAt: new Date((payload.exp ?? 0) * 1000),
+        }
+      }
+    } catch {
+      // expired or tampered
+    }
+  }
+
+  return null
 }
