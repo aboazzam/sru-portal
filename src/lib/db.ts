@@ -1,6 +1,6 @@
 import 'server-only'
 import path from 'path'
-import { PrismaClient } from '@/generated/prisma/client'
+import { PrismaClient } from '@/generated/prisma'
 import { PrismaLibSql } from '@prisma/adapter-libsql'
 
 const dbPath = path.resolve(process.cwd(), 'dev.db')
