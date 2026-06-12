@@ -3,133 +3,175 @@ import Image from "next/image";
 import { getTranslations } from "next-intl/server";
 import LanguageToggle from "@/components/LanguageToggle";
 
+// ── All built modules ─────────────────────────────────────────
 const modules = [
   {
-    key: "hala",
-    href: "/sanad",
-    icon: "◉",
-    accent: "#0D9488",
-    bg: "bg-teal-50",
-    border: "border-teal-200",
-    iconBg: "bg-teal-100 text-teal-700",
-    btn: "bg-teal-600 hover:bg-teal-700",
+    href:        "/hala",
+    icon:        "👋",
+    name:        "هلا بك",
+    description: "الدليل الجامعي والإعلانات والاستفسارات — نقطة البداية لكل طالب جديد",
+    party:       "عمادة شؤون الطلاب",
+    primary:     "#0D9488",
+    bg:          "#F0FDFA",
+    border:      "#99F6E4",
+    badge:       "#CCFBF1",
+    badgeText:   "#0F766E",
   },
   {
-    key: "sanad",
-    href: "/sanad",
-    icon: "◎",
-    accent: "#7C3AED",
-    bg: "bg-purple-50",
-    border: "border-purple-200",
-    iconBg: "bg-purple-100 text-purple-700",
-    btn: "bg-purple-600 hover:bg-purple-700",
+    href:        "/financial",
+    icon:        "💳",
+    name:        "الخدمات المالية",
+    description: "الرسوم الدراسية والمدفوعات والفواتير والكشوف المالية",
+    party:       "الإدارة المالية",
+    primary:     "#6CAEBD",
+    bg:          "#E8F6F8",
+    border:      "#C8E6EC",
+    badge:       "#C8E6EC",
+    badgeText:   "#4A8FA0",
   },
   {
-    key: "facultyServices",
-    href: "/faculty-services",
-    icon: "◈",
-    accent: "#2563EB",
-    bg: "bg-blue-50",
-    border: "border-blue-200",
-    iconBg: "bg-blue-100 text-blue-700",
-    btn: "bg-blue-600 hover:bg-blue-700",
+    href:        "/scholarships",
+    icon:        "🎓",
+    name:        "المنح الدراسية",
+    description: "المنح الدراسية والدعم المالي والتقديم على برامج التمويل",
+    party:       "عمادة شؤون الطلاب",
+    primary:     "#875E9E",
+    bg:          "#F3EEF7",
+    border:      "#D8C8E8",
+    badge:       "#D8C8E8",
+    badgeText:   "#6A4A7E",
   },
   {
-    key: "clubs",
-    href: "/sanad",
-    icon: "◆",
-    accent: "#D97706",
-    bg: "bg-amber-50",
-    border: "border-amber-200",
-    iconBg: "bg-amber-100 text-amber-700",
-    btn: "bg-amber-600 hover:bg-amber-700",
+    href:        "/training",
+    icon:        "🏢",
+    name:        "التدريب التعاوني",
+    description: "فرص التدريب وخدمات التوظيف والتسجيل في البرامج التدريبية",
+    party:       "عمادة التطوير الوظيفي",
+    primary:     "#4A8FA0",
+    bg:          "#EFF8FA",
+    border:      "#A8D8E2",
+    badge:       "#A8D8E2",
+    badgeText:   "#2E6878",
   },
   {
-    key: "financial",
-    href: "/sanad",
-    icon: "◐",
-    accent: "#0891B2",
-    bg: "bg-cyan-50",
-    border: "border-cyan-200",
-    iconBg: "bg-cyan-100 text-cyan-700",
-    btn: "bg-cyan-600 hover:bg-cyan-700",
+    href:        "/alumni",
+    icon:        "🤝",
+    name:        "الخريجون",
+    description: "شبكة الخريجين وفرص العمل والتواصل المهني وخدمات ما بعد التخرج",
+    party:       "عمادة خدمة المجتمع",
+    primary:     "#6A4A7E",
+    bg:          "#F5F0F9",
+    border:      "#D8C8E8",
+    badge:       "#E8D8F0",
+    badgeText:   "#6A4A7E",
   },
   {
-    key: "scholarships",
-    href: "/student/scholarships",
-    icon: "◑",
-    accent: "#6CAEBD",
-    bg: "bg-primary-light",
-    border: "border-primary-subtle",
-    iconBg: "bg-primary-subtle text-primary-dark",
-    btn: "bg-primary hover:bg-primary-dark",
+    href:        "/services",
+    icon:        "🛎️",
+    name:        "الخدمات الطلابية",
+    description: "طلب الوثائق والشهادات والخدمات الإدارية الجامعية",
+    party:       "عمادة شؤون الطلاب",
+    primary:     "#059669",
+    bg:          "#ECFDF5",
+    border:      "#A7F3D0",
+    badge:       "#A7F3D0",
+    badgeText:   "#065F46",
   },
   {
-    key: "training",
-    href: "/student/trainings",
-    icon: "◒",
-    accent: "#EA580C",
-    bg: "bg-orange-50",
-    border: "border-orange-200",
-    iconBg: "bg-orange-100 text-orange-700",
-    btn: "bg-orange-600 hover:bg-orange-700",
+    href:        "/volunteers",
+    icon:        "🌱",
+    name:        "التطوع",
+    description: "فرص التطوع المجتمعي والمشاركة في المبادرات والحصول على شهادات",
+    party:       "عمادة شؤون الطلاب",
+    primary:     "#EA580C",
+    bg:          "#FFF7ED",
+    border:      "#FED7AA",
+    badge:       "#FED7AA",
+    badgeText:   "#9A3412",
   },
   {
-    key: "graduates",
-    href: "/sanad",
-    icon: "◓",
-    accent: "#BE185D",
-    bg: "bg-rose-50",
-    border: "border-rose-200",
-    iconBg: "bg-rose-100 text-rose-700",
-    btn: "bg-rose-600 hover:bg-rose-700",
+    href:        "/activities",
+    icon:        "🎯",
+    name:        "الأنشطة الطلابية",
+    description: "الأنشطة الثقافية والاجتماعية والتسجيل في الفعاليات الجامعية",
+    party:       "عمادة شؤون الطلاب",
+    primary:     "#2563EB",
+    bg:          "#EFF6FF",
+    border:      "#BFDBFE",
+    badge:       "#BFDBFE",
+    badgeText:   "#1E40AF",
+  },
+  {
+    href:        "/clubs",
+    icon:        "⚽",
+    name:        "الأندية الرياضية",
+    description: "الانضمام للأندية الرياضية والمشاركة في البطولات والفعاليات",
+    party:       "عمادة شؤون الطلاب",
+    primary:     "#DC2626",
+    bg:          "#FEF2F2",
+    border:      "#FECACA",
+    badge:       "#FECACA",
+    badgeText:   "#991B1B",
+  },
+  {
+    href:        "/news",
+    icon:        "📰",
+    name:        "الأخبار الجامعية",
+    description: "آخر أخبار الجامعة والفعاليات والإعلانات الأكاديمية والإبداعية",
+    party:       "إدارة الاتصال المؤسسي",
+    primary:     "#7C3AED",
+    bg:          "#F5F3FF",
+    border:      "#DDD6FE",
+    badge:       "#DDD6FE",
+    badgeText:   "#5B21B6",
   },
 ];
 
 const stats = [
   { value: "+٥٠٠٠", label: "طالب وطالبة" },
   { value: "+٤٠٠",  label: "عضو هيئة تدريس" },
-  { value: "٨",     label: "خدمات رقمية" },
+  { value: "١٠",    label: "خدمات رقمية" },
   { value: "+١٥",   label: "عاماً من التميز" },
 ];
 
 const features = [
   {
-    icon: "◈",
-    title: "وصول موحّد",
-    desc: "جميع الخدمات الجامعية من منصة واحدة — من التسجيل الأكاديمي إلى الأنشطة الطلابية.",
-    color: "text-primary",
-    bg: "bg-primary-light",
-  },
-  {
-    icon: "◉",
+    icon: "🔐",
     title: "أمان وخصوصية",
-    desc: "بياناتك محمية بأحدث معايير التشفير وضوابط الوصول المبنية على الأدوار.",
-    color: "text-green-700",
-    bg: "bg-green-50",
+    desc:  "بياناتك محمية بأحدث معايير التشفير وضوابط الوصول المبنية على الأدوار.",
+    bg:    "#F0FDFA",
+    color: "#0F766E",
   },
   {
-    icon: "◆",
-    title: "دعم متكامل",
-    desc: "إدارة المنح والتدريب التعاوني والأنشطة والمزيد — كل ما تحتاجه في مكان واحد.",
-    color: "text-secondary",
-    bg: "bg-secondary-light",
+    icon: "📱",
+    title: "وصول موحّد",
+    desc:  "جميع الخدمات الجامعية من منصة واحدة — في أي وقت ومن أي مكان.",
+    bg:    "#EFF6FF",
+    color: "#1D4ED8",
+  },
+  {
+    icon: "⚡",
+    title: "سرعة وكفاءة",
+    desc:  "أنجز معاملاتك في دقائق بدلاً من ساعات دون الحاجة للحضور الشخصي.",
+    bg:    "#F5F3FF",
+    color: "#6D28D9",
   },
 ];
 
 export default async function LandingPage() {
-  const t = await getTranslations();
+  const t  = await getTranslations("Common");
+  const tl = await getTranslations("Landing");
   const year = new Date().getFullYear();
 
   return (
-    <main className="min-h-screen bg-white flex flex-col font-sans">
+    <main className="min-h-screen bg-white flex flex-col font-sans" dir="rtl">
 
-      {/* ── Sticky Header ─────────────────────────────── */}
+      {/* ── Sticky Header ──────────────────────────────── */}
       <header className="sticky top-0 z-50 bg-[#1B5E20]/95 backdrop-blur-sm shadow-lg">
         <div className="max-w-7xl mx-auto px-6 py-3.5 flex items-center justify-between">
           <Image
             src="/assets/logos/logo-white.svg"
-            alt={t("Common.universityName")}
+            alt={t("universityName")}
             width={180}
             height={40}
             style={{ height: "38px", width: "auto" }}
@@ -139,34 +181,33 @@ export default async function LandingPage() {
             <LanguageToggle className="text-white" />
             <Link
               href="/login"
-              className="px-5 py-2 bg-white text-green-800 rounded-lg font-semibold hover:bg-green-50 transition-colors text-sm shadow"
+              className="px-5 py-2 bg-white text-[#1B5E20] rounded-lg font-semibold hover:bg-green-50 transition-colors text-sm shadow"
             >
-              {t("Common.signIn")}
+              {t("signIn")}
             </Link>
           </div>
         </div>
       </header>
 
-      {/* ── Hero ──────────────────────────────────────── */}
-      <section className="relative overflow-hidden bg-gradient-to-br from-[#1B5E20] via-green-800 to-[#1B5E20] text-white">
-        {/* Decorative circles */}
+      {/* ── Hero ───────────────────────────────────────── */}
+      <section className="relative overflow-hidden bg-gradient-to-br from-[#1B5E20] via-[#155724] to-[#0d3d17] text-white">
         <div className="absolute -top-32 -start-32 w-96 h-96 rounded-full bg-white/5 pointer-events-none" />
         <div className="absolute top-20 -end-20 w-72 h-72 rounded-full bg-white/5 pointer-events-none" />
-        <div className="absolute bottom-0 start-1/2 -translate-x-1/2 w-[120%] h-16 bg-white rounded-t-[50%] pointer-events-none" />
+        <div className="absolute -bottom-1 start-0 end-0 h-16 bg-white"
+          style={{ borderRadius: "50% 50% 0 0 / 100% 100% 0 0" }}
+        />
 
         <div className="relative max-w-4xl mx-auto px-6 pt-24 pb-32 text-center">
-          <div
-            className="inline-block mb-5 px-4 py-1.5 rounded-full border border-green-400/40 bg-green-700/40 text-green-200 text-xs font-medium tracking-wide animate-fade-in"
-          >
+          <div className="inline-block mb-5 px-4 py-1.5 rounded-full border border-green-400/40 bg-green-700/40 text-green-200 text-xs font-medium tracking-wide animate-fade-in">
             البوابة الجامعية الرسمية
           </div>
 
-          <h1 className="text-4xl md:text-6xl font-extrabold mb-6 leading-tight animate-fade-in-up">
-            {t("Landing.heroTitle")}
+          <h1 className="text-4xl md:text-5xl font-extrabold mb-5 leading-tight animate-fade-in-up">
+            {tl("heroTitle")}
           </h1>
 
           <p className="text-green-200 text-lg md:text-xl max-w-2xl mx-auto mb-10 leading-relaxed animate-fade-in-up" style={{ animationDelay: "80ms" }}>
-            {t("Landing.heroSubtitle")}
+            {tl("heroSubtitle")}
           </p>
 
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4 animate-fade-in-up" style={{ animationDelay: "160ms" }}>
@@ -174,7 +215,7 @@ export default async function LandingPage() {
               href="/login"
               className="px-10 py-4 bg-white text-[#1B5E20] rounded-xl font-bold text-base shadow-2xl hover:bg-green-50 hover:scale-105 transition-all duration-200"
             >
-              {t("Landing.getStarted")} ←
+              {tl("getStarted")} ←
             </Link>
             <a
               href="#services"
@@ -186,7 +227,7 @@ export default async function LandingPage() {
         </div>
       </section>
 
-      {/* ── Stats Strip ───────────────────────────────── */}
+      {/* ── Stats Strip ────────────────────────────────── */}
       <section className="bg-white border-b border-gray-100">
         <div className="max-w-4xl mx-auto px-6 py-12 grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
           {stats.map((s, i) => (
@@ -202,51 +243,57 @@ export default async function LandingPage() {
         </div>
       </section>
 
-      {/* ── Services Grid ─────────────────────────────── */}
+      {/* ── Services Grid ──────────────────────────────── */}
       <section id="services" className="py-20 px-6 bg-gray-50">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-14">
-            <p className="text-xs font-semibold uppercase tracking-widest text-primary mb-2">الخدمات</p>
+            <p className="text-xs font-semibold uppercase tracking-widest text-[#4A8FA0] mb-2">الخدمات</p>
             <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-3">
-              {t("Landing.servicesTitle")}
+              {tl("servicesTitle")}
             </h2>
-            <p className="text-gray-500 text-lg max-w-xl mx-auto">{t("Landing.servicesSubtitle")}</p>
+            <p className="text-gray-500 text-lg max-w-xl mx-auto">{tl("servicesSubtitle")}</p>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
             {modules.map((mod, i) => (
               <div
-                key={mod.key}
-                className={`group flex flex-col rounded-2xl border ${mod.border} ${mod.bg} p-6 gap-4 hover:shadow-lg transition-all duration-300 hover:-translate-y-1 animate-fade-in-up`}
-                style={{ animationDelay: `${i * 50}ms` }}
+                key={mod.href}
+                className="group flex flex-col rounded-2xl border p-6 gap-4 hover:shadow-xl transition-all duration-300 hover:-translate-y-1 animate-fade-in-up"
+                style={{
+                  background:    mod.bg,
+                  borderColor:   mod.border,
+                  animationDelay: `${i * 50}ms`,
+                }}
               >
-                {/* Icon + title */}
+                {/* Icon + name */}
                 <div className="flex items-center gap-3">
-                  <div className={`w-11 h-11 rounded-xl flex items-center justify-center text-xl font-bold shrink-0 ${mod.iconBg}`}>
+                  <div
+                    className="w-12 h-12 rounded-2xl flex items-center justify-center text-2xl shrink-0 shadow-sm"
+                    style={{ background: "white" }}
+                  >
                     {mod.icon}
                   </div>
-                  <h3 className="font-bold text-gray-900 text-sm leading-snug">
-                    {t(`Modules.${mod.key}.name`)}
-                  </h3>
+                  <h3 className="font-bold text-gray-900 text-sm leading-snug">{mod.name}</h3>
                 </div>
 
                 {/* Description */}
-                <p className="text-gray-600 text-xs leading-relaxed flex-1">
-                  {t(`Modules.${mod.key}.description`)}
-                </p>
+                <p className="text-gray-600 text-xs leading-relaxed flex-1">{mod.description}</p>
 
-                {/* Responsible party */}
-                <p className="text-[10px] text-gray-400">
-                  <span className="font-semibold text-gray-500">{t("Landing.responsibleParty")}: </span>
-                  {t(`Modules.${mod.key}.party`)}
+                {/* Party badge */}
+                <p
+                  className="text-[10px] font-semibold px-2 py-1 rounded-lg w-fit"
+                  style={{ background: mod.badge, color: mod.badgeText }}
+                >
+                  {mod.party}
                 </p>
 
                 {/* CTA */}
                 <Link
                   href={mod.href}
-                  className={`w-full text-center py-2 px-4 rounded-lg text-white text-xs font-semibold transition-colors ${mod.btn}`}
+                  className="w-full text-center py-2.5 px-4 rounded-xl text-white text-xs font-bold transition-all duration-200 hover:opacity-90 hover:shadow-md"
+                  style={{ background: `linear-gradient(to left, ${mod.primary}, ${mod.primary}CC)` }}
                 >
-                  {t("Landing.enterService")}
+                  {tl("enterService")} ←
                 </Link>
               </div>
             ))}
@@ -254,25 +301,23 @@ export default async function LandingPage() {
         </div>
       </section>
 
-      {/* ── Features ──────────────────────────────────── */}
+      {/* ── Why the Portal ─────────────────────────────── */}
       <section className="py-20 px-6 bg-white">
         <div className="max-w-5xl mx-auto">
           <div className="text-center mb-14">
-            <p className="text-xs font-semibold uppercase tracking-widest text-primary mb-2">لماذا بوابتنا؟</p>
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900">
-              منصة واحدة لكل احتياجاتك الجامعية
-            </h2>
+            <p className="text-xs font-semibold uppercase tracking-widest text-[#4A8FA0] mb-2">لماذا بوابتنا؟</p>
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-900">منصة واحدة لكل احتياجاتك الجامعية</h2>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {features.map((f, i) => (
               <div
                 key={f.title}
-                className="flex flex-col items-center text-center gap-4 p-8 rounded-2xl bg-gray-50 border border-gray-100 hover:shadow-md transition-shadow animate-fade-in-up"
-                style={{ animationDelay: `${i * 100}ms` }}
+                className="flex flex-col items-center text-center gap-4 p-8 rounded-2xl border border-gray-100 hover:shadow-md transition-shadow animate-fade-in-up"
+                style={{ background: f.bg, animationDelay: `${i * 100}ms` }}
               >
-                <div className={`w-14 h-14 rounded-2xl flex items-center justify-center text-2xl font-bold ${f.bg}`}>
-                  <span className={f.color}>{f.icon}</span>
+                <div className="w-16 h-16 rounded-2xl bg-white flex items-center justify-center text-3xl shadow-sm">
+                  {f.icon}
                 </div>
                 <h3 className="text-lg font-bold text-gray-900">{f.title}</h3>
                 <p className="text-gray-500 text-sm leading-relaxed">{f.desc}</p>
@@ -282,12 +327,56 @@ export default async function LandingPage() {
         </div>
       </section>
 
-      {/* ── CTA Banner ────────────────────────────────── */}
-      <section className="py-16 px-6 bg-gradient-to-l from-[#1B5E20] to-green-700 text-white">
+      {/* ── Portal Access by Role ──────────────────────── */}
+      <section className="py-16 px-6 bg-gray-50 border-y border-gray-100">
+        <div className="max-w-4xl mx-auto">
+          <div className="text-center mb-10">
+            <h2 className="text-2xl md:text-3xl font-bold text-gray-900">بوابة مخصّصة لكل مستخدم</h2>
+            <p className="text-gray-500 text-sm mt-2 max-w-md mx-auto">سجّل دخولك وستُوجَّه تلقائياً إلى لوحة التحكم المناسبة لدورك</p>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
+            {[
+              {
+                icon:  "🎓",
+                title: "الطلاب",
+                desc:  "وصول كامل لجميع الخدمات الطلابية والأنشطة والأندية والمنح",
+                bg:    "#EFF6FF",
+                color: "#2563EB",
+              },
+              {
+                icon:  "👨‍🏫",
+                title: "هيئة التدريس",
+                desc:  "إدارة المقررات وتسجيل الدرجات ومتابعة الطلاب",
+                bg:    "#ECFDF5",
+                color: "#059669",
+              },
+              {
+                icon:  "⚙️",
+                title: "الإدارة",
+                desc:  "لوحة تحكم كاملة لإدارة المنصة والمستخدمين والصلاحيات",
+                bg:    "#FEF3C7",
+                color: "#D97706",
+              },
+            ].map((role, i) => (
+              <div
+                key={role.title}
+                className="rounded-2xl p-6 text-center flex flex-col items-center gap-3 animate-fade-in-up border border-gray-100"
+                style={{ background: role.bg, animationDelay: `${i * 100}ms` }}
+              >
+                <div className="text-4xl">{role.icon}</div>
+                <h3 className="font-bold text-gray-900">{role.title}</h3>
+                <p className="text-xs text-gray-500 leading-relaxed">{role.desc}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── CTA Banner ─────────────────────────────────── */}
+      <section className="py-20 px-6 bg-gradient-to-l from-[#1B5E20] to-[#2D7A35] text-white">
         <div className="max-w-3xl mx-auto text-center">
-          <h2 className="text-3xl md:text-4xl font-extrabold mb-4">
-            ابدأ رحلتك الجامعية اليوم
-          </h2>
+          <h2 className="text-3xl md:text-4xl font-extrabold mb-4">ابدأ رحلتك الجامعية اليوم</h2>
           <p className="text-green-200 text-lg mb-8 max-w-xl mx-auto leading-relaxed">
             سجّل دخولك للوصول إلى جميع الخدمات الجامعية المتاحة لك في ثوانٍ.
           </p>
@@ -295,52 +384,79 @@ export default async function LandingPage() {
             href="/login"
             className="inline-block px-12 py-4 bg-white text-[#1B5E20] rounded-xl font-bold text-base shadow-xl hover:bg-green-50 hover:scale-105 transition-all duration-200"
           >
-            {t("Common.signIn")} →
+            {t("signIn")} →
           </Link>
         </div>
       </section>
 
-      {/* ── Footer ────────────────────────────────────── */}
+      {/* ── Footer ─────────────────────────────────────── */}
       <footer className="bg-[#0f3d18] text-green-300 py-12 px-6">
         <div className="max-w-7xl mx-auto">
           <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-8 mb-8 pb-8 border-b border-green-800">
+
             {/* Brand */}
             <div>
               <Image
                 src="/assets/logos/logo-white.svg"
-                alt={t("Common.universityName")}
+                alt={t("universityName")}
                 width={160}
                 height={38}
                 style={{ height: "38px", width: "auto" }}
                 className="mb-3 opacity-90"
               />
               <p className="text-sm text-green-400 max-w-xs leading-relaxed">
-                بوابة جامعة سليمان الراجحي — منصة رقمية متكاملة للخدمات الجامعية.
+                بوابة جامعة سليمان الراجحي — منصة رقمية متكاملة لجميع الخدمات الجامعية.
               </p>
             </div>
 
             {/* Quick links */}
             <nav className="flex flex-col gap-2 text-sm">
-              <p className="font-semibold text-green-200 mb-1">{t("Landing.footerLinks")}</p>
-              <Link href="/" className="hover:text-white transition-colors">{t("Landing.footerHome")}</Link>
-              <Link href="/login" className="hover:text-white transition-colors">{t("Landing.footerLogin")}</Link>
-              <a href="#services" className="hover:text-white transition-colors">الخدمات</a>
+              <p className="font-semibold text-green-200 mb-1">{tl("footerLinks")}</p>
+              <Link href="/"      className="hover:text-white transition-colors">{tl("footerHome")}</Link>
+              <Link href="/login" className="hover:text-white transition-colors">{tl("footerLogin")}</Link>
+              <a    href="#services" className="hover:text-white transition-colors">الخدمات</a>
             </nav>
 
-            {/* Portal access */}
-            <div className="flex flex-col gap-2 text-sm">
-              <p className="font-semibold text-green-200 mb-1">دخول المستخدمين</p>
-              <Link href="/student" className="hover:text-white transition-colors">بوابة الطلاب</Link>
-              <Link href="/faculty" className="hover:text-white transition-colors">بوابة هيئة التدريس</Link>
-              <Link href="/admin" className="hover:text-white transition-colors">لوحة الإدارة</Link>
-            </div>
+            {/* Module links */}
+            <nav className="flex flex-col gap-2 text-sm">
+              <p className="font-semibold text-green-200 mb-1">الخدمات الطلابية</p>
+              {[
+                { label: "الخدمات المالية",   href: "/financial"   },
+                { label: "المنح الدراسية",    href: "/scholarships" },
+                { label: "التدريب التعاوني",  href: "/training"    },
+                { label: "الأنشطة الطلابية",  href: "/activities"  },
+                { label: "الأندية الرياضية",  href: "/clubs"       },
+              ].map((l) => (
+                <Link key={l.href} href={l.href} className="hover:text-white transition-colors">
+                  {l.label}
+                </Link>
+              ))}
+            </nav>
+
+            {/* More links */}
+            <nav className="flex flex-col gap-2 text-sm">
+              <p className="font-semibold text-green-200 mb-1">روابط أخرى</p>
+              {[
+                { label: "التطوع",           href: "/volunteers" },
+                { label: "الخدمات الطلابية", href: "/services"   },
+                { label: "الخريجون",         href: "/alumni"     },
+                { label: "الأخبار",          href: "/news"       },
+                { label: "هلا بك",           href: "/hala"       },
+              ].map((l) => (
+                <Link key={l.href} href={l.href} className="hover:text-white transition-colors">
+                  {l.label}
+                </Link>
+              ))}
+            </nav>
+
           </div>
 
           <p className="text-center text-xs text-green-600">
-            {t("Common.copyright", { year })}
+            {t("copyright", { year })}
           </p>
         </div>
       </footer>
+
     </main>
   );
 }
