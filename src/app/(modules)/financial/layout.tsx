@@ -1,3 +1,4 @@
+import { redirect } from "next/navigation";
 import { getCurrentUser } from "@/lib/dal";
 import FinancialSidebar from "./_components/FinancialSidebar";
 
@@ -11,6 +12,7 @@ const ROLE_LABELS: Record<string, string> = {
 
 export default async function FinancialLayout({ children }: { children: React.ReactNode }) {
   const user = await getCurrentUser();
+  if (!user) redirect("/login");
 
   return (
     <div className="flex" style={{ minHeight: "calc(100vh - 64px)" }}>

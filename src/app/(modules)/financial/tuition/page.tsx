@@ -1,5 +1,7 @@
 import Link from "next/link";
-import { tuitionDetails, financialSummary, mockStudent } from "@/lib/mock/financial";
+import { redirect } from "next/navigation";
+import { getCurrentUser } from "@/lib/dal";
+import { tuitionDetails, financialSummary } from "@/lib/mock/financial";
 
 const statusConfig = {
   paid:    { label: "مسدد",          color: "#16A34A", bg: "#DCFCE7", icon: "✅" },
@@ -13,7 +15,9 @@ function fmt(n: number) {
   return n.toLocaleString("ar-SA");
 }
 
-export default function TuitionPage() {
+export default async function TuitionPage() {
+  const user = await getCurrentUser();
+  if (!user) redirect("/login");
   const { totalFees, paid, remaining, dueDate, currency } = financialSummary;
   const paidPct = Math.round((paid / totalFees) * 100);
 
@@ -36,7 +40,7 @@ export default function TuitionPage() {
           <div>
             <h1 className="text-xl font-bold">الرسوم الدراسية</h1>
             <p className="text-white/80 text-sm">
-              {mockStudent.semester} — {mockStudent.name}
+              {user.name} — الفصل الثاني 1446-1447
             </p>
           </div>
         </div>

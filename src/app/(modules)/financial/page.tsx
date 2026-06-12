@@ -1,11 +1,20 @@
 import Link from "next/link";
+import { redirect } from "next/navigation";
+import { getCurrentUser } from "@/lib/dal";
 import {
-  mockStudent,
   financialSummary,
   financialAlerts,
   paymentsHistory,
   type AlertType,
 } from "@/lib/mock/financial";
+
+const ROLE_LABELS: Record<string, string> = {
+  STUDENT:   "طالب",
+  FACULTY:   "عضو هيئة التدريس",
+  ADMIN:     "مدير النظام",
+  ORGANIZER: "منظم فعاليات",
+  SUBADMIN:  "مشرف النظام",
+};
 
 const statusConfig: Record<string, { label: string; color: string; bg: string }> = {
   paid:     { label: "مسدد بالكامل", color: "#16A34A", bg: "#DCFCE7" },
@@ -33,10 +42,14 @@ function fmt(n: number) {
   return n.toLocaleString("ar-SA");
 }
 
-export default function FinancialDashboard() {
+export default async function FinancialDashboard() {
+  const user = await getCurrentUser();
+  if (!user) redirect("/login");
+
   const { totalFees, paid, remaining, dueDate, status, currency } = financialSummary;
   const paidPct = Math.round((paid / totalFees) * 100);
   const cfg = statusConfig[status];
+  const roleLabel = ROLE_LABELS[user.role] ?? "";
   const dueDateFmt = new Date(dueDate).toLocaleDateString("ar-SA", {
     day: "numeric", month: "long", year: "numeric",
   });
@@ -50,16 +63,21 @@ export default function FinancialDashboard() {
       >
         <div className="flex items-start justify-between gap-4 flex-wrap">
           <div>
-            <p className="text-white/70 text-xs mb-1">الرقم الجامعي: {mockStudent.id}</p>
-            <h1 className="text-xl font-bold">مرحباً، {mockStudent.name.split(" ")[0]} 👋</h1>
-            <p className="text-white/80 text-sm mt-0.5">{mockStudent.major} – السنة {mockStudent.year} | {mockStudent.semester}</p>
+            <p className="text-white/70 text-xs mb-1">{roleLabel} — جامعة سليمان الراجحي</p>
+            <h1 className="text-xl font-bold">مرحباً، {user.name.split(" ")[0]} 👋</h1>
+            <p className="text-white/80 text-sm mt-0.5">{user.email}</p>
           </div>
-          <span
-            className="text-xs font-bold px-3 py-1.5 rounded-full shrink-0"
-            style={{ background: "rgba(255,255,255,0.2)", color: "#fff" }}
-          >
-            {cfg.label}
-          </span>
+          <div className="flex flex-col items-end gap-2">
+            <span
+              className="text-xs font-bold px-3 py-1.5 rounded-full shrink-0"
+              style={{ background: "rgba(255,255,255,0.2)", color: "#fff" }}
+            >
+              {cfg.label}
+            </span>
+            <div className="w-12 h-12 rounded-full bg-white/20 flex items-center justify-center text-xl font-bold">
+              {user.name.charAt(0)}
+            </div>
+          </div>
         </div>
 
         {/* Progress bar */}
@@ -155,7 +173,6 @@ export default function FinancialDashboard() {
                 key={link.href}
                 href={link.href}
                 className="flex flex-col items-center gap-2 p-4 rounded-xl border border-[#E8EDEF] hover:shadow-sm transition-all group text-center"
-                style={{ borderColor: "#E8EDEF" }}
               >
                 <div
                   className="w-10 h-10 rounded-xl flex items-center justify-center text-xl"
