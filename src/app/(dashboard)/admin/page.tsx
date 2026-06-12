@@ -1,89 +1,98 @@
-import { redirect } from "next/navigation";
-import { getCurrentUser } from "@/lib/dal";
-import { getTranslations } from "next-intl/server";
 import { prisma } from "@/lib/db";
 
-export default async function AdminDashboard() {
-  const user = await getCurrentUser();
-  if (!user || user.role !== "ADMIN") redirect("/dashboard");
-  const t = await getTranslations("Admin");
-  const td = await getTranslations("Dashboard");
-
-  const [totalUsers, students, faculty] = await Promise.all([
+export default async function AdminOverview() {
+  const [
+    totalUsers,
+    students,
+    faculty,
+    admins,
+    totalScholarships,
+    activeScholarships,
+    pendingApplications,
+    totalApplications,
+    totalTrainings,
+    upcomingTrainings,
+    pendingEnrollments,
+    totalEnrollments,
+  ] = await Promise.all([
     prisma.user.count(),
     prisma.user.count({ where: { role: "STUDENT" } }),
     prisma.user.count({ where: { role: "FACULTY" } }),
+    prisma.user.count({ where: { role: "ADMIN" } }),
+    prisma.scholarship.count(),
+    prisma.scholarship.count({
+      where: { OR: [{ deadline: null }, { deadline: { gte: new Date() } }] },
+    }),
+    prisma.scholarshipApplication.count({ where: { status: "PENDING" } }),
+    prisma.scholarshipApplication.count(),
+    prisma.training.count(),
+    prisma.training.count({ where: { status: "UPCOMING" } }),
+    prisma.trainingEnrollment.count({ where: { status: "PENDING" } }),
+    prisma.trainingEnrollment.count(),
   ]);
 
-  const recentUsers = await prisma.user.findMany({
-    orderBy: { createdAt: "desc" },
-    take: 5,
-    select: { id: true, name: true, email: true, role: true, createdAt: true },
-  });
-
-  const cards = [
-    { title: t("totalUsers"), value: totalUsers, color: "bg-gray-50 border-gray-200 text-gray-700" },
-    { title: t("students"), value: students, color: "bg-blue-50 border-blue-200 text-blue-700" },
-    { title: t("faculty"), value: faculty, color: "bg-green-50 border-green-200 text-green-700" },
+  const statGroups = [
+    {
+      title: "المستخدمون",
+      color: "border-blue-200 bg-blue-50",
+      titleColor: "text-blue-600",
+      stats: [
+        { label: "إجمالي المستخدمين", value: totalUsers, sub: null },
+        { label: "الطلاب", value: students, sub: null },
+        { label: "أعضاء هيئة التدريس", value: faculty, sub: null },
+        { label: "المدراء", value: admins, sub: null },
+      ],
+    },
+    {
+      title: "المنح الدراسية",
+      color: "border-emerald-200 bg-emerald-50",
+      titleColor: "text-emerald-600",
+      stats: [
+        { label: "إجمالي المنح", value: totalScholarships, sub: null },
+        { label: "المنح النشطة", value: activeScholarships, sub: null },
+        { label: "الطلبات المعلّقة", value: pendingApplications, sub: "يحتاج مراجعة" },
+        { label: "إجمالي الطلبات", value: totalApplications, sub: null },
+      ],
+    },
+    {
+      title: "التدريب التعاوني",
+      color: "border-purple-200 bg-purple-50",
+      titleColor: "text-purple-600",
+      stats: [
+        { label: "إجمالي التدريبات", value: totalTrainings, sub: null },
+        { label: "تدريبات قادمة", value: upcomingTrainings, sub: null },
+        { label: "تسجيلات معلّقة", value: pendingEnrollments, sub: "يحتاج مراجعة" },
+        { label: "إجمالي التسجيلات", value: totalEnrollments, sub: null },
+      ],
+    },
   ];
 
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-bold text-gray-900">{t("title")}</h1>
-        <p className="text-gray-500 text-sm mt-1">{t("subtitle")}</p>
+        <h1 className="text-2xl font-bold text-gray-900">نظرة عامة</h1>
+        <p className="text-gray-500 text-sm mt-1">إحصائيات النظام في الوقت الفعلي</p>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-        {cards.map((card) => (
-          <div key={card.title} className={`rounded-xl border p-5 ${card.color}`}>
-            <p className="text-sm font-medium opacity-80">{card.title}</p>
-            <p className="text-3xl font-bold mt-1">{card.value}</p>
+      <div className="space-y-6">
+        {statGroups.map((group) => (
+          <div key={group.title} className={`rounded-xl border p-5 ${group.color}`}>
+            <h2 className={`text-sm font-semibold uppercase tracking-wide mb-4 ${group.titleColor}`}>
+              {group.title}
+            </h2>
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+              {group.stats.map((s) => (
+                <div key={s.label} className="bg-white rounded-lg p-4 border border-white/60 shadow-sm">
+                  <p className="text-2xl font-bold text-gray-800">{s.value.toLocaleString("ar")}</p>
+                  <p className="text-xs text-gray-500 mt-1">{s.label}</p>
+                  {s.sub && (
+                    <p className="text-[10px] text-orange-500 font-medium mt-0.5">{s.sub}</p>
+                  )}
+                </div>
+              ))}
+            </div>
           </div>
         ))}
-      </div>
-
-      <div className="bg-white rounded-xl border border-gray-200 overflow-hidden">
-        <div className="px-5 py-4 border-b border-gray-100">
-          <h2 className="font-semibold text-gray-800">{t("recentUsers")}</h2>
-        </div>
-        <table className="w-full text-sm">
-          <thead className="bg-gray-50 text-gray-500 text-xs uppercase">
-            <tr>
-              <th className="px-5 py-3 text-start">{t("name")}</th>
-              <th className="px-5 py-3 text-start">{t("email")}</th>
-              <th className="px-5 py-3 text-start">{t("role")}</th>
-              <th className="px-5 py-3 text-start">{t("joined")}</th>
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-gray-100">
-            {recentUsers.map((u: typeof recentUsers[number]) => (
-              <tr key={u.id} className="hover:bg-gray-50">
-                <td className="px-5 py-3 font-medium text-gray-900">{u.name}</td>
-                <td className="px-5 py-3 text-gray-500">{u.email}</td>
-                <td className="px-5 py-3">
-                  <span className={`px-2 py-0.5 rounded-full text-xs font-medium ${
-                    u.role === "ADMIN" ? "bg-purple-100 text-purple-700" :
-                    u.role === "FACULTY" ? "bg-green-100 text-green-700" :
-                    "bg-blue-100 text-blue-700"
-                  }`}>
-                    {td(`roles.${u.role}`)}
-                  </span>
-                </td>
-                <td className="px-5 py-3 text-gray-400">
-                  {u.createdAt.toLocaleDateString()}
-                </td>
-              </tr>
-            ))}
-            {recentUsers.length === 0 && (
-              <tr>
-                <td colSpan={4} className="px-5 py-6 text-center text-gray-400">
-                  {t("noUsers")}
-                </td>
-              </tr>
-            )}
-          </tbody>
-        </table>
       </div>
     </div>
   );
