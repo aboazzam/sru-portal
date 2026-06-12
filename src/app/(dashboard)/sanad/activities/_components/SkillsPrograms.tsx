@@ -1,61 +1,94 @@
 "use client";
-import { useState } from "react";
-import { skillsPrograms } from "@/lib/sanad-mock";
+import Link from "next/link";
 
-const levelColors: Record<string, string> = {
-  مبتدئ: "#00B4C8",
-  متوسط: "#3D1F6E",
-  متقدم: "#6B46C1",
+type Training = {
+  id: string;
+  title: string;
+  category: string | null;
+  startDate: Date | null;
+  capacity: number | null;
+  status: string;
+  _count: { enrollments: number };
 };
 
-export default function SkillsPrograms() {
-  const [enrolled, setEnrolled] = useState<Set<number>>(
-    new Set(skillsPrograms.filter((p) => p.enrolled).map((p) => p.id))
-  );
+interface Props {
+  trainings: Training[];
+  enrolledIds: Set<string>;
+}
 
-  function toggle(id: number) {
-    setEnrolled((prev) => {
-      const next = new Set(prev);
-      if (next.has(id)) next.delete(id); else next.add(id);
-      return next;
-    });
+const statusLabel: Record<string, string> = {
+  UPCOMING: "قادم",
+  ONGOING:  "جارٍ",
+};
+
+const statusStyle: Record<string, string> = {
+  UPCOMING: "bg-blue-100 text-blue-600",
+  ONGOING:  "bg-green-100 text-green-700",
+};
+
+export default function SkillsPrograms({ trainings, enrolledIds }: Props) {
+  if (trainings.length === 0) {
+    return (
+      <div className="text-center py-8">
+        <p className="text-gray-400 text-sm">لا توجد برامج تدريب متاحة حالياً</p>
+        <Link href="/student/trainings" className="text-xs text-[#3D1F6E] hover:underline mt-2 block">
+          عرض جميع البرامج ←
+        </Link>
+      </div>
+    );
   }
 
   return (
     <div className="space-y-3">
-      {skillsPrograms.map((prog) => {
-        const isEnrolled = enrolled.has(prog.id);
-        const color = levelColors[prog.level] ?? "#3D1F6E";
+      {trainings.map((t) => {
+        const enrolled = enrolledIds.has(t.id);
+        const full = t.capacity !== null && t._count.enrollments >= t.capacity;
         return (
           <div
-            key={prog.id}
+            key={t.id}
             className={`flex items-center gap-4 rounded-xl p-4 border transition-all ${
-              isEnrolled ? "border-[#00B4C8] bg-[#E0F7FA]" : "border-gray-100 bg-white hover:border-purple-200"
+              enrolled ? "border-[#00B4C8] bg-[#E0F7FA]" : "border-gray-100 bg-white hover:border-purple-200"
             }`}
           >
             <div className="flex-1 min-w-0">
-              <p className="font-semibold text-[#1F2937] text-sm">{prog.name}</p>
-              <p className="text-gray-400 text-xs mt-0.5">المدة: {prog.duration}</p>
+              <div className="flex items-center gap-2 flex-wrap">
+                <p className="font-semibold text-[#1F2937] text-sm">{t.title}</p>
+                <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${statusStyle[t.status] ?? "bg-gray-100 text-gray-500"}`}>
+                  {statusLabel[t.status] ?? t.status}
+                </span>
+              </div>
+              <p className="text-gray-400 text-xs mt-0.5">
+                {t.category && `${t.category} · `}
+                {t.startDate && `البدء: ${t.startDate.toLocaleDateString("ar-SA")} · `}
+                {t._count.enrollments}{t.capacity ? `/${t.capacity}` : ""} مسجّل
+              </p>
             </div>
-            <span
-              className="text-xs font-medium px-2 py-0.5 rounded-full shrink-0"
-              style={{ background: color + "22", color }}
-            >
-              {prog.level}
-            </span>
-            <button
-              onClick={() => toggle(prog.id)}
-              className={`shrink-0 px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors ${
-                isEnrolled
-                  ? "bg-gray-200 text-gray-600 hover:bg-gray-300"
-                  : "bg-[#3D1F6E] text-white hover:bg-[#2C1650]"
-              }`}
-            >
-              {isEnrolled ? "إلغاء التسجيل" : "التسجيل"}
-            </button>
+
+            {enrolled ? (
+              <span className="shrink-0 px-3 py-1.5 rounded-lg text-xs font-semibold bg-[#00B4C8] text-white">
+                ✓ مسجّل
+              </span>
+            ) : full ? (
+              <span className="shrink-0 px-3 py-1.5 rounded-lg text-xs font-semibold bg-gray-100 text-gray-500">
+                مكتمل
+              </span>
+            ) : (
+              <Link
+                href="/student/trainings"
+                className="shrink-0 px-3 py-1.5 rounded-lg text-xs font-semibold bg-[#3D1F6E] text-white hover:bg-[#2C1650] transition-colors"
+              >
+                التسجيل
+              </Link>
+            )}
           </div>
         );
       })}
+
+      <div className="text-center pt-1">
+        <Link href="/student/trainings" className="text-xs text-[#3D1F6E] hover:underline">
+          عرض جميع برامج التدريب ←
+        </Link>
+      </div>
     </div>
   );
 }

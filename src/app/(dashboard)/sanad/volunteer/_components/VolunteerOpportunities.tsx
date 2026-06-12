@@ -1,30 +1,46 @@
 "use client";
-import { useState } from "react";
-import { volunteerOpportunities } from "@/lib/sanad-mock";
+import { useState, useTransition } from "react";
+import { applyForVolunteer } from "../../_actions";
 
-const categories = ["الكل", "تعليمي", "بيئي", "اجتماعي", "رياضي", "ثقافي"];
-
-const categoryColors: Record<string, string> = {
-  تعليمي: "#3D1F6E",
-  بيئي: "#22c55e",
-  اجتماعي: "#00B4C8",
-  رياضي: "#f59e0b",
-  ثقافي: "#6B46C1",
+type Opportunity = {
+  id: string;
+  title: string;
+  description: string | null;
+  date: Date | null;
+  _count: { applications: number };
 };
 
-export default function VolunteerOpportunities() {
-  const [filter, setFilter]       = useState("الكل");
-  const [registered, setRegistered] = useState<Set<number>>(new Set());
-  const [success, setSuccess]     = useState<string | null>(null);
+interface Props {
+  opportunities: Opportunity[];
+  appliedIds: Set<string>;
+}
 
-  const filtered = filter === "الكل"
-    ? volunteerOpportunities
-    : volunteerOpportunities.filter((o) => o.category === filter);
+export default function VolunteerOpportunities({ opportunities, appliedIds }: Props) {
+  const [applied, setApplied] = useState<Set<string>>(new Set(appliedIds));
+  const [error, setError] = useState<string | null>(null);
+  const [success, setSuccess] = useState<string | null>(null);
+  const [isPending, startTransition] = useTransition();
 
-  function register(id: number, title: string) {
-    setRegistered((prev) => new Set([...prev, id]));
-    setSuccess(`تم التسجيل في "${title}" بنجاح!`);
-    setTimeout(() => setSuccess(null), 4000);
+  function handleApply(id: string, title: string) {
+    setError(null);
+    startTransition(async () => {
+      const res = await applyForVolunteer(id);
+      if (res.error) {
+        setError(res.error);
+      } else {
+        setApplied((prev) => new Set([...prev, id]));
+        setSuccess(`تم التسجيل في "${title}" بنجاح!`);
+        setTimeout(() => setSuccess(null), 4000);
+      }
+    });
+  }
+
+  if (opportunities.length === 0) {
+    return (
+      <p className="text-center text-gray-400 text-sm py-8">
+        لا توجد فرص تطوعية متاحة حالياً
+      </p>
+    );
   }
 
   return (
@@ -34,32 +50,15 @@ export default function VolunteerOpportunities() {
           ✅ {success}
         </div>
       )}
+      {error && (
+        <div className="bg-red-50 border border-red-200 text-red-600 rounded-lg px-4 py-2.5 text-sm">
+          {error}
+        </div>
+      )}
 
-      {/* Category filter */}
-      <div className="flex flex-wrap gap-2">
-        {categories.map((cat) => (
-          <button
-            key={cat}
-            onClick={() => setFilter(cat)}
-            className={`px-3 py-1.5 rounded-full text-xs font-semibold transition-colors ${
-              filter === cat
-                ? "bg-[#3D1F6E] text-white"
-                : "bg-white border border-gray-200 text-gray-600 hover:border-[#3D1F6E]"
-            }`}
-          >
-            {cat}
-          </button>
-        ))}
-      </div>
-
-      {/* Opportunities */}
       <div className="space-y-3">
-        {filtered.length === 0 && (
-          <p className="text-center text-gray-400 text-sm py-8">لا توجد فرص في هذه الفئة</p>
-        )}
-        {filtered.map((opp) => {
-          const done = registered.has(opp.id);
-          const color = categoryColors[opp.category] ?? "#3D1F6E";
+        {opportunities.map((opp) => {
+          const done = applied.has(opp.id);
           return (
             <div
               key={opp.id}
@@ -69,32 +68,27 @@ export default function VolunteerOpportunities() {
             >
               <div className="flex items-start justify-between gap-3">
                 <div className="flex-1 min-w-0">
-                  <div className="flex items-center gap-2 flex-wrap">
-                    <h4 className="font-bold text-[#1F2937] text-sm">{opp.title}</h4>
-                    <span
-                      className="text-xs px-2 py-0.5 rounded-full font-medium"
-                      style={{ background: color + "22", color }}
-                    >
-                      {opp.category}
-                    </span>
-                  </div>
-                  <p className="text-gray-500 text-xs mt-1">🏢 {opp.org}</p>
-                  <div className="flex gap-4 mt-2 text-xs text-gray-400">
-                    <span>⏱️ {opp.hours} ساعات</span>
-                    <span>👥 {opp.spots} مقعد</span>
-                    <span>📅 آخر موعد: {new Date(opp.deadline).toLocaleDateString("ar-SA")}</span>
+                  <h4 className="font-bold text-[#1F2937] text-sm">{opp.title}</h4>
+                  {opp.description && (
+                    <p className="text-gray-500 text-xs mt-1 line-clamp-2">{opp.description}</p>
+                  )}
+                  <div className="flex gap-4 mt-2 text-xs text-gray-400 flex-wrap">
+                    {opp.date && (
+                      <span>📅 {opp.date.toLocaleDateString("ar-SA")}</span>
+                    )}
+                    <span>👥 {opp._count.applications} مسجّل</span>
                   </div>
                 </div>
                 <button
-                  onClick={() => !done && register(opp.id, opp.title)}
-                  disabled={done}
+                  onClick={() => !done && !isPending && handleApply(opp.id, opp.title)}
+                  disabled={done || isPending}
                   className={`shrink-0 px-4 py-2 rounded-lg text-xs font-semibold transition-colors ${
                     done
                       ? "bg-green-100 text-green-700 cursor-default"
-                      : "bg-[#3D1F6E] text-white hover:bg-[#2C1650]"
+                      : "bg-[#3D1F6E] text-white hover:bg-[#2C1650] disabled:opacity-60"
                   }`}
                 >
-                  {done ? "✓ مسجّل" : "التسجيل"}
+                  {done ? "✓ مسجّل" : isPending ? "..." : "التسجيل"}
                 </button>
               </div>
             </div>

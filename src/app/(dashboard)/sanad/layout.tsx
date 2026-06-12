@@ -1,8 +1,10 @@
+import { redirect } from "next/navigation";
 import { getCurrentUser } from "@/lib/dal";
 import SanadSidebar from "./_components/SanadSidebar";
 
 export default async function SanadLayout({ children }: { children: React.ReactNode }) {
   const user = await getCurrentUser();
+  if (!user) redirect("/login");
 
   return (
     <div

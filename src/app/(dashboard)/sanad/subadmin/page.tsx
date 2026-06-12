@@ -1,7 +1,7 @@
 import { redirect } from "next/navigation";
 import Link from "next/link";
 import { getCurrentUser } from "@/lib/dal";
-import { subadminStats, organizersList, requestsByMonth } from "@/lib/sanad-mock";
+import { prisma } from "@/lib/db";
 
 const ALLOWED = ["SUBADMIN", "ADMIN"];
 
@@ -9,7 +9,47 @@ export default async function SubadminPage() {
   const user = await getCurrentUser();
   if (!user || !ALLOWED.includes(user.role)) redirect("/sanad");
 
-  const maxCount = Math.max(...requestsByMonth.map((m) => m.count));
+  const [
+    totalActivityApps,
+    pendingActivityApps,
+    totalVolunteerApps,
+    pendingVolunteerApps,
+    totalServiceApps,
+    pendingServiceApps,
+    organizers,
+    recentVolunteerApps,
+  ] = await Promise.all([
+    prisma.activityApplication.count(),
+    prisma.activityApplication.count({ where: { status: "PENDING" } }),
+    prisma.volunteerApplication.count(),
+    prisma.volunteerApplication.count({ where: { status: "PENDING" } }),
+    prisma.serviceApplications.count(),
+    prisma.serviceApplications.count({ where: { status: "PENDING" } }),
+    prisma.user.findMany({
+      where: { role: "ORGANIZER" },
+      select: { id: true, name: true, email: true, createdAt: true, _count: { select: { activityApplications: true } } },
+      take: 6,
+    }),
+    prisma.volunteerApplication.findMany({
+      orderBy: { createdAt: "desc" },
+      take: 6,
+      select: {
+        id: true, status: true, createdAt: true,
+        user: { select: { name: true } },
+        opportunity: { select: { title: true } },
+      },
+    }),
+  ]);
+
+  const totalRequests  = totalActivityApps + totalVolunteerApps + totalServiceApps;
+  const pendingAll     = pendingActivityApps + pendingVolunteerApps + pendingServiceApps;
+
+  const kpis = [
+    { label: "إجمالي الطلبات",    value: totalRequests,    color: "#3D1F6E" },
+    { label: "قيد المراجعة",      value: pendingAll,       color: "#d97706" },
+    { label: "طلبات الأنشطة",     value: totalActivityApps, color: "#6B46C1" },
+    { label: "طلبات التطوع",      value: totalVolunteerApps, color: "#00B4C8" },
+  ];
 
   return (
     <div className="space-y-6">
@@ -28,12 +68,7 @@ export default async function SubadminPage() {
 
       {/* KPI cards */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-        {[
-          { label: "إجمالي الطلبات",     value: subadminStats.totalRequests,       color: "#3D1F6E" },
-          { label: "قيد المراجعة",       value: subadminStats.pendingRequests,      color: "#d97706" },
-          { label: "مكتملة هذا الشهر",   value: subadminStats.completedThisMonth,  color: "#16a34a" },
-          { label: "المنظمون النشطون",    value: subadminStats.activeOrganizers,    color: "#00B4C8" },
-        ].map((kpi) => (
+        {kpis.map((kpi) => (
           <div key={kpi.label} className="bg-white rounded-xl border border-purple-100 p-4 text-center">
             <p className="text-2xl font-bold" style={{ color: kpi.color }}>{kpi.value}</p>
             <p className="text-xs text-gray-500 mt-1">{kpi.label}</p>
@@ -42,58 +77,108 @@ export default async function SubadminPage() {
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* Monthly requests chart */}
+        {/* Breakdown by type */}
         <div className="bg-white rounded-2xl shadow-sm border border-purple-100 p-6">
-          <h2 className="font-bold text-[#3D1F6E] mb-5">الطلبات الشهرية</h2>
-          <div className="flex items-end gap-2 h-36">
-            {requestsByMonth.map((m) => {
-              const height = Math.round((m.count / maxCount) * 100);
+          <h2 className="font-bold text-[#3D1F6E] mb-5">توزيع الطلبات</h2>
+          <div className="space-y-4">
+            {[
+              { label: "أنشطة طلابية", total: totalActivityApps, pending: pendingActivityApps, color: "#6B46C1" },
+              { label: "فرص تطوعية",   total: totalVolunteerApps, pending: pendingVolunteerApps, color: "#00B4C8" },
+              { label: "خدمات طلابية", total: totalServiceApps,  pending: pendingServiceApps,  color: "#3D1F6E" },
+            ].map((row) => {
+              const pct = totalRequests > 0 ? Math.round((row.total / totalRequests) * 100) : 0;
               return (
-                <div key={m.month} className="flex-1 flex flex-col items-center gap-1">
-                  <span className="text-[10px] text-gray-500 font-medium">{m.count}</span>
-                  <div
-                    className="w-full rounded-t-md transition-all"
-                    style={{ height: `${height}%`, background: "linear-gradient(180deg,#3D1F6E,#6B46C1)" }}
-                  />
-                  <span className="text-[10px] text-gray-400 text-center leading-tight">{m.month}</span>
+                <div key={row.label}>
+                  <div className="flex justify-between text-xs text-gray-500 mb-1">
+                    <span className="font-medium" style={{ color: row.color }}>{row.label}</span>
+                    <span>{row.total} طلب ({row.pending} قيد المراجعة)</span>
+                  </div>
+                  <div className="h-2 bg-gray-100 rounded-full overflow-hidden">
+                    <div
+                      className="h-full rounded-full transition-all"
+                      style={{ width: `${pct}%`, background: row.color }}
+                    />
+                  </div>
                 </div>
               );
             })}
           </div>
         </div>
 
-        {/* Organizers management */}
+        {/* Organizers list */}
         <div className="bg-white rounded-2xl shadow-sm border border-purple-100 overflow-hidden">
           <div className="px-5 py-4 border-b border-purple-50 flex items-center justify-between">
             <h2 className="font-bold text-[#3D1F6E]">المنظمون</h2>
-            <button className="px-3 py-1.5 bg-[#00B4C8] text-white rounded-lg text-xs font-semibold hover:bg-[#0097AA]">
-              + إضافة منظم
-            </button>
+            <span className="text-xs text-gray-400">{organizers.length} منظم</span>
           </div>
-          <div className="divide-y divide-gray-50">
-            {organizersList.map((org) => (
-              <div key={org.id} className="px-5 py-3 flex items-center gap-3">
-                <div className="w-8 h-8 rounded-full bg-[#F5F3FF] flex items-center justify-center text-sm font-bold text-[#3D1F6E] shrink-0">
-                  {org.name[0]}
-                </div>
-                <div className="flex-1 min-w-0">
-                  <p className="text-sm font-medium text-[#1F2937] truncate">{org.name}</p>
-                  <p className="text-xs text-gray-400">{org.eventsManaged} فعاليات</p>
-                </div>
-                <div className="flex items-center gap-2 shrink-0">
-                  <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${
-                    org.status === "نشط" ? "bg-green-100 text-green-700" : "bg-amber-100 text-amber-600"
-                  }`}>
-                    {org.status}
+          {organizers.length === 0 ? (
+            <div className="py-10 text-center">
+              <p className="text-gray-400 text-sm">لا يوجد منظمون مسجّلون</p>
+            </div>
+          ) : (
+            <div className="divide-y divide-gray-50">
+              {organizers.map((org) => (
+                <div key={org.id} className="px-5 py-3 flex items-center gap-3">
+                  <div className="w-8 h-8 rounded-full bg-[#F5F3FF] flex items-center justify-center text-sm font-bold text-[#3D1F6E] shrink-0">
+                    {org.name.charAt(0)}
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm font-medium text-[#1F2937] truncate">{org.name}</p>
+                    <p className="text-xs text-gray-400 truncate">{org.email}</p>
+                  </div>
+                  <span className="text-xs bg-green-100 text-green-700 px-2 py-0.5 rounded-full font-medium shrink-0">
+                    نشط
                   </span>
-                  <button className="text-xs text-gray-400 hover:text-[#3D1F6E] transition-colors">
-                    ⚙️
-                  </button>
                 </div>
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
+          )}
         </div>
+      </div>
+
+      {/* Recent volunteer applications */}
+      <div className="bg-white rounded-2xl shadow-sm border border-purple-100 overflow-hidden">
+        <div className="px-6 py-4 border-b border-purple-50">
+          <h2 className="font-bold text-[#3D1F6E]">آخر طلبات التطوع</h2>
+        </div>
+        {recentVolunteerApps.length === 0 ? (
+          <div className="py-10 text-center">
+            <p className="text-gray-400 text-sm">لا توجد طلبات تطوع بعد</p>
+          </div>
+        ) : (
+          <div className="overflow-x-auto">
+            <table className="w-full text-sm">
+              <thead className="bg-[#F5F3FF]">
+                <tr>
+                  <th className="px-4 py-3 text-start text-xs font-bold text-[#3D1F6E]">الطالب</th>
+                  <th className="px-4 py-3 text-start text-xs font-bold text-[#3D1F6E]">الفرصة</th>
+                  <th className="px-4 py-3 text-start text-xs font-bold text-[#3D1F6E] hidden sm:table-cell">التاريخ</th>
+                  <th className="px-4 py-3 text-start text-xs font-bold text-[#3D1F6E]">الحالة</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-gray-50">
+                {recentVolunteerApps.map((app) => (
+                  <tr key={app.id} className="hover:bg-[#F5F3FF]/50">
+                    <td className="px-4 py-3 font-medium text-[#1F2937]">{app.user.name}</td>
+                    <td className="px-4 py-3 text-gray-500 max-w-[160px] truncate">{app.opportunity.title}</td>
+                    <td className="px-4 py-3 text-gray-400 text-xs hidden sm:table-cell">
+                      {app.createdAt.toLocaleDateString("ar-SA")}
+                    </td>
+                    <td className="px-4 py-3">
+                      <span className={`text-xs font-medium px-2 py-0.5 rounded-full ${
+                        app.status === "APPROVED" ? "bg-green-100 text-green-700"
+                        : app.status === "REJECTED" ? "bg-red-100 text-red-600"
+                        : "bg-amber-100 text-amber-600"
+                      }`}>
+                        {app.status === "PENDING" ? "قيد المراجعة" : app.status === "APPROVED" ? "مقبول" : "مرفوض"}
+                      </span>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
       </div>
     </div>
   );

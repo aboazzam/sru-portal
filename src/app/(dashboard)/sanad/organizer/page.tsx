@@ -1,7 +1,7 @@
 import { redirect } from "next/navigation";
 import Link from "next/link";
 import { getCurrentUser } from "@/lib/dal";
-import { organizerEvents } from "@/lib/sanad-mock";
+import { prisma } from "@/lib/db";
 
 const ALLOWED = ["ORGANIZER", "SUBADMIN", "ADMIN"];
 
@@ -9,13 +9,32 @@ export default async function OrganizerPage() {
   const user = await getCurrentUser();
   if (!user || !ALLOWED.includes(user.role)) redirect("/sanad");
 
-  const upcoming = organizerEvents.filter((e) => e.status === "قادم");
-  const completed = organizerEvents.filter((e) => e.status === "مكتمل");
+  const [activities, recentApps, totalVolunteers, pendingApps] = await Promise.all([
+    prisma.studentActivity.findMany({
+      orderBy: { date: "asc" },
+      select: {
+        id: true, title: true, date: true,
+        _count: { select: { applications: true } },
+      },
+    }),
+    prisma.activityApplication.findMany({
+      orderBy: { createdAt: "desc" },
+      take: 5,
+      select: {
+        id: true, status: true, createdAt: true,
+        user: { select: { name: true } },
+        activity: { select: { title: true } },
+      },
+    }),
+    prisma.volunteerApplication.count(),
+    prisma.activityApplication.count({ where: { status: "PENDING" } }),
+  ]);
 
   const stats = [
-    { label: "الفعاليات القادمة",    value: upcoming.length,                     color: "#3D1F6E" },
-    { label: "إجمالي المسجّلين",    value: upcoming.reduce((s, e) => s + e.registered, 0), color: "#00B4C8" },
-    { label: "الفعاليات المكتملة",  value: completed.length,                     color: "#6B46C1" },
+    { label: "الأنشطة المسجّلة",   value: activities.length,                                   color: "#3D1F6E" },
+    { label: "إجمالي التسجيلات",   value: activities.reduce((s, a) => s + a._count.applications, 0), color: "#00B4C8" },
+    { label: "طلبات التطوع",       value: totalVolunteers,                                     color: "#6B46C1" },
+    { label: "طلبات قيد المراجعة", value: pendingApps,                                          color: "#d97706" },
   ];
 
   return (
@@ -34,7 +53,7 @@ export default async function OrganizerPage() {
       </div>
 
       {/* Stats */}
-      <div className="grid grid-cols-3 gap-4">
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
         {stats.map((s) => (
           <div key={s.label} className="bg-white rounded-xl border border-purple-100 p-4 text-center">
             <p className="text-2xl font-bold" style={{ color: s.color }}>{s.value}</p>
@@ -43,60 +62,77 @@ export default async function OrganizerPage() {
         ))}
       </div>
 
-      {/* Events table */}
-      <div className="bg-white rounded-2xl shadow-sm border border-purple-100 overflow-hidden">
-        <div className="px-6 py-4 border-b border-purple-50 flex items-center justify-between">
-          <h2 className="font-bold text-[#3D1F6E]">الفعاليات</h2>
-          <button className="px-4 py-1.5 bg-[#00B4C8] text-white rounded-lg text-xs font-semibold hover:bg-[#0097AA] transition-colors">
-            + إضافة فعالية
-          </button>
-        </div>
-        <div className="overflow-x-auto">
-          <table className="w-full text-sm">
-            <thead className="bg-[#F5F3FF]">
-              <tr>
-                <th className="px-4 py-3 text-start text-xs font-bold text-[#3D1F6E]">الفعالية</th>
-                <th className="px-4 py-3 text-start text-xs font-bold text-[#3D1F6E]">التاريخ</th>
-                <th className="px-4 py-3 text-start text-xs font-bold text-[#3D1F6E]">المسجّلون</th>
-                <th className="px-4 py-3 text-start text-xs font-bold text-[#3D1F6E]">الحالة</th>
-                <th className="px-4 py-3 text-start text-xs font-bold text-[#3D1F6E]">إجراء</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-gray-50">
-              {organizerEvents.map((ev) => {
-                const pct = Math.round((ev.registered / ev.capacity) * 100);
-                return (
-                  <tr key={ev.id} className="hover:bg-[#F5F3FF]/50">
-                    <td className="px-4 py-3 font-medium text-[#1F2937]">{ev.title}</td>
-                    <td className="px-4 py-3 text-gray-400 text-xs">
-                      {new Date(ev.date).toLocaleDateString("ar-SA")}
-                    </td>
-                    <td className="px-4 py-3">
-                      <div className="flex items-center gap-2">
-                        <div className="flex-1 bg-gray-100 rounded-full h-1.5 min-w-[60px]">
-                          <div
-                            className="h-1.5 rounded-full"
-                            style={{ width: `${pct}%`, background: pct >= 90 ? "#ef4444" : "#3D1F6E" }}
-                          />
-                        </div>
-                        <span className="text-xs text-gray-500 shrink-0">{ev.registered}/{ev.capacity}</span>
-                      </div>
-                    </td>
-                    <td className="px-4 py-3">
-                      <span className={`text-xs font-medium px-2 py-0.5 rounded-full ${
-                        ev.status === "قادم" ? "bg-[#E0F7FA] text-[#0097AA]" : "bg-green-100 text-green-700"
-                      }`}>
-                        {ev.status}
-                      </span>
-                    </td>
-                    <td className="px-4 py-3">
-                      <button className="text-xs text-[#3D1F6E] hover:underline font-medium">تعديل</button>
-                    </td>
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
+        {/* Activities table */}
+        <div className="bg-white rounded-2xl shadow-sm border border-purple-100 overflow-hidden">
+          <div className="px-6 py-4 border-b border-purple-50 flex items-center justify-between">
+            <h2 className="font-bold text-[#3D1F6E]">الأنشطة الطلابية</h2>
+            <span className="text-xs text-gray-400">{activities.length} نشاط</span>
+          </div>
+
+          {activities.length === 0 ? (
+            <div className="py-10 text-center">
+              <p className="text-gray-400 text-sm">لا توجد أنشطة مسجّلة</p>
+            </div>
+          ) : (
+            <div className="overflow-x-auto">
+              <table className="w-full text-sm">
+                <thead className="bg-[#F5F3FF]">
+                  <tr>
+                    <th className="px-4 py-3 text-start text-xs font-bold text-[#3D1F6E]">النشاط</th>
+                    <th className="px-4 py-3 text-start text-xs font-bold text-[#3D1F6E]">التاريخ</th>
+                    <th className="px-4 py-3 text-start text-xs font-bold text-[#3D1F6E]">المسجّلون</th>
                   </tr>
-                );
-              })}
-            </tbody>
-          </table>
+                </thead>
+                <tbody className="divide-y divide-gray-50">
+                  {activities.map((act) => (
+                    <tr key={act.id} className="hover:bg-[#F5F3FF]/50">
+                      <td className="px-4 py-3 font-medium text-[#1F2937] max-w-[160px] truncate">{act.title}</td>
+                      <td className="px-4 py-3 text-gray-400 text-xs">
+                        {act.date ? act.date.toLocaleDateString("ar-SA") : "—"}
+                      </td>
+                      <td className="px-4 py-3">
+                        <span className="text-[#3D1F6E] font-bold">{act._count.applications}</span>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
+        </div>
+
+        {/* Recent applications */}
+        <div className="bg-white rounded-2xl shadow-sm border border-purple-100 overflow-hidden">
+          <div className="px-5 py-4 border-b border-purple-50">
+            <h2 className="font-bold text-[#3D1F6E]">آخر التسجيلات</h2>
+          </div>
+          {recentApps.length === 0 ? (
+            <div className="py-10 text-center">
+              <p className="text-gray-400 text-sm">لا توجد تسجيلات بعد</p>
+            </div>
+          ) : (
+            <div className="divide-y divide-gray-50">
+              {recentApps.map((app) => (
+                <div key={app.id} className="px-5 py-3 flex items-center gap-3">
+                  <div className="w-8 h-8 rounded-full bg-[#F5F3FF] flex items-center justify-center text-sm font-bold text-[#3D1F6E] shrink-0">
+                    {app.user.name.charAt(0)}
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm font-medium text-[#1F2937] truncate">{app.user.name}</p>
+                    <p className="text-xs text-gray-400 truncate">{app.activity.title}</p>
+                  </div>
+                  <span className={`text-xs px-2 py-0.5 rounded-full font-medium shrink-0 ${
+                    app.status === "APPROVED" ? "bg-green-100 text-green-700"
+                    : app.status === "REJECTED" ? "bg-red-100 text-red-600"
+                    : "bg-amber-100 text-amber-600"
+                  }`}>
+                    {app.status === "PENDING" ? "قيد المراجعة" : app.status === "APPROVED" ? "مقبول" : "مرفوض"}
+                  </span>
+                </div>
+              ))}
+            </div>
+          )}
         </div>
       </div>
     </div>
