@@ -1,22 +1,45 @@
 import Link from "next/link";
+import { redirect } from "next/navigation";
+import { getCurrentUser } from "@/lib/dal";
+import { prisma } from "@/lib/db";
 import {
   scholarshipStats,
-  myScholarshipStatus,
   generalTerms,
   applicationJourney,
 } from "@/lib/mock/scholarships";
 
 function fmt(n: number) { return n.toLocaleString("ar-SA"); }
 
-const quickLinks = [
-  { href: "/scholarships/full",    label: "المنح الكاملة",    icon: "🎓", desc: `${scholarshipStats.fullScholarships} منح`,    color: "#6CAEBD" },
-  { href: "/scholarships/partial", label: "المنح الجزئية",    icon: "📊", desc: `${scholarshipStats.partialCategories} فئات`,   color: "#875E9E" },
-  { href: "/scholarships/funding", label: "الحلول التمويلية", icon: "💡", desc: `${scholarshipStats.fundingSolutions} حلول`,    color: "#8FA4AB" },
-  { href: "/scholarships/apply",   label: "تقديم طلب",       icon: "📝", desc: "تقديم جديد",                                   color: "#6CAEBD" },
-];
+const statusConfig: Record<string, { label: string; color: string; bg: string; icon: string }> = {
+  APPROVED: { label: "مقبول",         color: "#16A34A", bg: "#DCFCE7", icon: "✅" },
+  REJECTED: { label: "مرفوض",         color: "#DC2626", bg: "#FEE2E2", icon: "❌" },
+  PENDING:  { label: "قيد المراجعة",  color: "#D97706", bg: "#FEF3C7", icon: "⏳" },
+};
 
-export default function ScholarshipsOverview() {
-  const { scholarship, applicationHistory } = myScholarshipStatus;
+export default async function ScholarshipsOverview() {
+  const user = await getCurrentUser();
+  if (!user) redirect("/login");
+
+  const [myApplications, availableCount] = await Promise.all([
+    prisma.scholarshipApplication.findMany({
+      where: { userId: user.id },
+      include: { scholarship: { select: { title: true, amount: true } } },
+      orderBy: { createdAt: "desc" },
+    }),
+    prisma.scholarship.count({
+      where: { OR: [{ deadline: null }, { deadline: { gte: new Date() } }] },
+    }),
+  ]);
+
+  const activeApp = myApplications.find((a) => a.status === "APPROVED");
+  const hasActiveScholarship = !!activeApp;
+
+  const quickLinks = [
+    { href: "/scholarships/full",    label: "المنح الكاملة",    icon: "🎓", desc: `${scholarshipStats.fullScholarships} منح`,    color: "#6CAEBD" },
+    { href: "/scholarships/partial", label: "المنح الجزئية",    icon: "📊", desc: `${scholarshipStats.partialCategories} فئات`,   color: "#875E9E" },
+    { href: "/scholarships/funding", label: "الحلول التمويلية", icon: "💡", desc: `${scholarshipStats.fundingSolutions} حلول`,    color: "#8FA4AB" },
+    { href: "/scholarships/apply",   label: "تقديم طلب",       icon: "📝", desc: availableCount > 0 ? `${availableCount} منح متاحة` : "تقديم جديد", color: "#6CAEBD" },
+  ];
 
   return (
     <div className="space-y-6">
@@ -31,13 +54,15 @@ export default function ScholarshipsOverview() {
               <span className="text-3xl">🎁</span>
               <h1 className="text-xl font-bold">المنح والحلول المالية</h1>
             </div>
-            <p className="text-white/80 text-sm">جامعة سليمان الراجحي — {scholarshipStats.academicYear}</p>
+            <p className="text-white/80 text-sm">
+              مرحباً، {user.name.split(" ")[0]} — {scholarshipStats.academicYear}
+            </p>
           </div>
           <span
             className="text-xs font-bold px-3 py-1.5 rounded-full shrink-0"
             style={{ background: "rgba(255,255,255,0.2)" }}
           >
-            ✅ لديك منحة نشطة
+            {hasActiveScholarship ? "✅ لديك منحة نشطة" : myApplications.length > 0 ? "⏳ طلب قيد المراجعة" : "📝 لا توجد منحة نشطة"}
           </span>
         </div>
 
@@ -47,7 +72,7 @@ export default function ScholarshipsOverview() {
             { label: "منح كاملة",       value: `+${scholarshipStats.fullScholarships}`, icon: "🎓" },
             { label: "فئات جزئية",      value: `+${scholarshipStats.partialCategories}`, icon: "📊" },
             { label: "تغطية كاملة",     value: `${scholarshipStats.fullCoverage}%`,      icon: "💯" },
-            { label: "حلول تمويلية",    value: scholarshipStats.fundingSolutions,         icon: "💡" },
+            { label: "طلباتي",          value: myApplications.length,                    icon: "📋" },
           ].map((s) => (
             <div key={s.label} className="text-center bg-white/10 rounded-xl p-3">
               <p className="text-lg">{s.icon}</p>
@@ -59,40 +84,44 @@ export default function ScholarshipsOverview() {
       </div>
 
       {/* Active scholarship card */}
-      {myScholarshipStatus.hasActiveScholarship && (
+      {hasActiveScholarship && activeApp && (
         <div className="bg-white rounded-2xl shadow-sm border border-[#E8EDEF] overflow-hidden">
           <div className="px-5 py-4 border-b border-[#E8EDEF] flex items-center gap-2">
             <span>✨</span>
             <h2 className="font-bold text-[#1A2A30] text-sm">منحتك الحالية</h2>
+            <span
+              className="ms-auto text-xs font-semibold px-2.5 py-1 rounded-full"
+              style={{ background: "#DCFCE7", color: "#16A34A" }}
+            >
+              ✅ نشطة
+            </span>
           </div>
           <div className="p-5">
             <div className="flex items-start justify-between gap-4 flex-wrap">
               <div>
-                <p className="font-bold text-[#1F2937] text-base">{scholarship.title}</p>
-                <p className="text-[#8FA4AB] text-sm mt-0.5">{scholarship.college} — {scholarship.year}</p>
-                <div className="flex items-center gap-3 mt-3 flex-wrap">
-                  <div className="text-center px-4 py-2 rounded-xl" style={{ background: "#E8F6F8" }}>
-                    <p className="text-xs text-[#8FA4AB]">الرسوم الأصلية</p>
-                    <p className="font-bold text-sm text-[#1A2A30]">{fmt(scholarship.feesOrigin)} ر</p>
+                <p className="font-bold text-[#1F2937] text-base">{activeApp.scholarship.title}</p>
+                <p className="text-[#8FA4AB] text-sm mt-0.5">
+                  {new Date(activeApp.createdAt).toLocaleDateString("ar-SA", {
+                    day: "numeric", month: "long", year: "numeric",
+                  })}
+                </p>
+                {activeApp.scholarship.amount != null && (
+                  <div className="mt-3 flex items-center gap-3 flex-wrap">
+                    <div className="text-center px-4 py-2 rounded-xl" style={{ background: "#E8F6F8" }}>
+                      <p className="text-xs text-[#8FA4AB]">قيمة المنحة</p>
+                      <p className="font-bold text-sm text-[#1A2A30]">{fmt(activeApp.scholarship.amount)} ر</p>
+                    </div>
                   </div>
-                  <div className="text-center px-4 py-2 rounded-xl" style={{ background: "#DCFCE7" }}>
-                    <p className="text-xs text-[#8FA4AB]">قيمة الخصم</p>
-                    <p className="font-bold text-sm" style={{ color: "#16A34A" }}>{fmt(scholarship.discount)} ر</p>
-                  </div>
-                  <div className="text-center px-4 py-2 rounded-xl" style={{ background: "#F3EEF7" }}>
-                    <p className="text-xs text-[#8FA4AB]">بعد المنحة</p>
-                    <p className="font-bold text-sm" style={{ color: "#875E9E" }}>{fmt(scholarship.feesAfter)} ر</p>
-                  </div>
-                </div>
+                )}
               </div>
               <div className="text-center shrink-0">
                 <div
                   className="w-16 h-16 rounded-2xl flex items-center justify-center mx-auto"
                   style={{ background: "linear-gradient(135deg, #875E9E18, #6CAEBD18)" }}
                 >
-                  <span className="text-2xl font-bold" style={{ color: "#875E9E" }}>{scholarship.percentage}%</span>
+                  <span className="text-2xl">🏅</span>
                 </div>
-                <p className="text-xs text-[#8FA4AB] mt-1.5">نسبة المنحة</p>
+                <p className="text-xs text-[#8FA4AB] mt-1.5">منحة مقبولة</p>
               </div>
             </div>
           </div>
@@ -129,14 +158,12 @@ export default function ScholarshipsOverview() {
         <div className="flex flex-col sm:flex-row gap-0">
           {applicationJourney.map((step, idx) => (
             <div key={step.step} className="flex sm:flex-col items-start sm:items-center gap-3 sm:gap-2 flex-1 relative">
-              {/* Connector line */}
               {idx < applicationJourney.length - 1 && (
                 <div
                   className="hidden sm:block absolute top-5 start-1/2 w-full h-0.5"
                   style={{ background: "#E8EDEF", zIndex: 0 }}
                 />
               )}
-              {/* Circle */}
               <div
                 className="w-10 h-10 rounded-full flex items-center justify-center text-sm font-bold text-white shrink-0 relative z-10"
                 style={{
@@ -187,33 +214,40 @@ export default function ScholarshipsOverview() {
         </div>
       </div>
 
-      {/* History */}
-      {applicationHistory.length > 0 && (
+      {/* Application history */}
+      {myApplications.length > 0 && (
         <div className="bg-white rounded-2xl shadow-sm border border-[#E8EDEF] overflow-hidden">
           <div className="px-5 py-4 border-b border-[#E8EDEF] flex items-center justify-between">
             <div className="flex items-center gap-2">
               <span>📜</span>
-              <h2 className="font-bold text-[#1A2A30] text-sm">سجل الطلبات</h2>
+              <h2 className="font-bold text-[#1A2A30] text-sm">سجل طلباتي</h2>
             </div>
             <Link href="/scholarships/track" className="text-xs font-medium hover:underline" style={{ color: "#875E9E" }}>
               عرض الكل
             </Link>
           </div>
           <div className="divide-y divide-[#F4F7F8]">
-            {applicationHistory.map((h) => (
-              <div key={h.id} className="px-5 py-3.5 flex items-center justify-between gap-3 hover:bg-[#F9FAFB]">
-                <div>
-                  <p className="font-semibold text-sm text-[#1F2937]">{h.type}</p>
-                  <p className="text-xs text-[#9CA3AF] mt-0.5">{h.year} · {new Date(h.date).toLocaleDateString("ar-SA")}</p>
+            {myApplications.slice(0, 3).map((app) => {
+              const cfg = statusConfig[app.status] ?? statusConfig.PENDING;
+              return (
+                <div key={app.id} className="px-5 py-3.5 flex items-center justify-between gap-3 hover:bg-[#F9FAFB]">
+                  <div>
+                    <p className="font-semibold text-sm text-[#1F2937]">{app.scholarship.title}</p>
+                    <p className="text-xs text-[#9CA3AF] mt-0.5">
+                      {new Date(app.createdAt).toLocaleDateString("ar-SA", {
+                        day: "numeric", month: "long", year: "numeric",
+                      })}
+                    </p>
+                  </div>
+                  <span
+                    className="text-xs font-semibold px-2.5 py-1 rounded-full shrink-0"
+                    style={{ color: cfg.color, background: cfg.bg }}
+                  >
+                    {cfg.icon} {cfg.label}
+                  </span>
                 </div>
-                <span
-                  className="text-xs font-semibold px-2.5 py-1 rounded-full"
-                  style={{ background: "#DCFCE7", color: "#16A34A" }}
-                >
-                  ✅ مقبول
-                </span>
-              </div>
-            ))}
+              );
+            })}
           </div>
         </div>
       )}

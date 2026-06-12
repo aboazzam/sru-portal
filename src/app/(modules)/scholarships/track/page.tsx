@@ -1,18 +1,26 @@
 import Link from "next/link";
-import { myScholarshipStatus } from "@/lib/mock/scholarships";
-
-function fmt(n: number) { return n.toLocaleString("ar-SA"); }
+import { redirect } from "next/navigation";
+import { getCurrentUser } from "@/lib/dal";
+import { prisma } from "@/lib/db";
 
 const statusConfig: Record<string, { label: string; color: string; bg: string; icon: string }> = {
-  approved:  { label: "مقبول",    color: "#16A34A", bg: "#DCFCE7", icon: "✅" },
-  rejected:  { label: "مرفوض",   color: "#DC2626", bg: "#FEE2E2", icon: "❌" },
-  pending:   { label: "قيد المراجعة", color: "#D97706", bg: "#FEF3C7", icon: "⏳" },
-  completed: { label: "مكتمل",   color: "#2563EB", bg: "#DBEAFE", icon: "🏁" },
-  active:    { label: "نشطة",    color: "#16A34A", bg: "#DCFCE7", icon: "✨" },
+  APPROVED: { label: "مقبول",         color: "#16A34A", bg: "#DCFCE7", icon: "✅" },
+  REJECTED: { label: "مرفوض",         color: "#DC2626", bg: "#FEE2E2", icon: "❌" },
+  PENDING:  { label: "قيد المراجعة",  color: "#D97706", bg: "#FEF3C7", icon: "⏳" },
 };
 
-export default function TrackPage() {
-  const { hasActiveScholarship, scholarship, applicationHistory } = myScholarshipStatus;
+export default async function TrackPage() {
+  const user = await getCurrentUser();
+  if (!user) redirect("/login");
+
+  const applications = await prisma.scholarshipApplication.findMany({
+    where: { userId: user.id },
+    include: { scholarship: { select: { title: true, amount: true } } },
+    orderBy: { createdAt: "desc" },
+  });
+
+  const activeApp = applications.find((a) => a.status === "APPROVED");
+  const hasActiveScholarship = !!activeApp;
 
   return (
     <div className="space-y-6">
@@ -32,13 +40,17 @@ export default function TrackPage() {
           <span className="text-4xl">🔍</span>
           <div>
             <h1 className="text-xl font-bold">تتبع حالة الطلب</h1>
-            <p className="text-white/80 text-sm mt-0.5">اطلع على حالة منحتك الحالية وسجل طلباتك السابقة</p>
+            <p className="text-white/80 text-sm mt-0.5">
+              {applications.length === 0
+                ? "لا توجد طلبات مقدّمة بعد"
+                : `${applications.length} طلب مقدّم`}
+            </p>
           </div>
         </div>
       </div>
 
-      {/* Active scholarship status */}
-      {hasActiveScholarship && (
+      {/* Active scholarship */}
+      {hasActiveScholarship && activeApp && (
         <div className="bg-white rounded-2xl shadow-sm border border-[#E8EDEF] overflow-hidden">
           <div
             className="px-5 py-3 flex items-center gap-2"
@@ -56,48 +68,24 @@ export default function TrackPage() {
           <div className="p-5">
             <div className="flex items-start justify-between gap-4 flex-wrap">
               <div>
-                <h3 className="font-bold text-[#1F2937] text-base">{scholarship.title}</h3>
-                <p className="text-[#8FA4AB] text-sm mt-0.5">{scholarship.college} — {scholarship.year}</p>
-                <p className="text-xs text-[#9CA3AF] mt-1">
-                  منحة {scholarship.type === "partial" ? "جزئية" : "كاملة"}
+                <h3 className="font-bold text-[#1F2937] text-base">{activeApp.scholarship.title}</h3>
+                <p className="text-[#8FA4AB] text-sm mt-0.5">
+                  تاريخ القبول:{" "}
+                  {new Date(activeApp.updatedAt).toLocaleDateString("ar-SA", {
+                    day: "numeric", month: "long", year: "numeric",
+                  })}
                 </p>
+                {activeApp.scholarship.amount != null && (
+                  <p className="text-sm font-semibold mt-2" style={{ color: "#16A34A" }}>
+                    قيمة المنحة: {activeApp.scholarship.amount.toLocaleString("ar-SA")} ر.س
+                  </p>
+                )}
               </div>
               <div
                 className="w-16 h-16 rounded-2xl flex flex-col items-center justify-center shrink-0"
                 style={{ background: "linear-gradient(135deg, #875E9E18, #6CAEBD18)" }}
               >
-                <span className="font-bold text-xl" style={{ color: "#875E9E" }}>{scholarship.percentage}%</span>
-                <span className="text-xs text-[#8FA4AB]">خصم</span>
-              </div>
-            </div>
-
-            {/* Financial breakdown */}
-            <div className="mt-4 grid grid-cols-3 gap-3">
-              <div className="rounded-xl p-3 text-center" style={{ background: "#F4F7F8" }}>
-                <p className="text-xs text-[#8FA4AB]">الرسوم الأصلية</p>
-                <p className="font-bold text-sm text-[#1A2A30] mt-0.5">{fmt(scholarship.feesOrigin)} ر</p>
-              </div>
-              <div className="rounded-xl p-3 text-center" style={{ background: "#DCFCE7" }}>
-                <p className="text-xs text-[#8FA4AB]">قيمة الخصم</p>
-                <p className="font-bold text-sm mt-0.5" style={{ color: "#16A34A" }}>{fmt(scholarship.discount)} ر</p>
-              </div>
-              <div className="rounded-xl p-3 text-center" style={{ background: "#F3EEF7" }}>
-                <p className="text-xs text-[#8FA4AB]">بعد المنحة</p>
-                <p className="font-bold text-sm mt-0.5" style={{ color: "#875E9E" }}>{fmt(scholarship.feesAfter)} ر</p>
-              </div>
-            </div>
-
-            {/* Progress bar */}
-            <div className="mt-4">
-              <div className="flex justify-between text-xs text-[#8FA4AB] mb-1">
-                <span>الخصم المطبَّق</span>
-                <span>{scholarship.percentage}%</span>
-              </div>
-              <div className="w-full bg-[#E8EDEF] rounded-full h-2">
-                <div
-                  className="h-2 rounded-full"
-                  style={{ width: `${scholarship.percentage}%`, background: "linear-gradient(to left, #875E9E, #6CAEBD)" }}
-                />
+                <span className="text-2xl">🏅</span>
               </div>
             </div>
           </div>
@@ -124,10 +112,10 @@ export default function TrackPage() {
       <div className="bg-white rounded-2xl shadow-sm border border-[#E8EDEF] overflow-hidden">
         <div className="px-5 py-4 border-b border-[#E8EDEF] flex items-center gap-2">
           <span>📜</span>
-          <h2 className="font-bold text-[#1A2A30] text-sm">سجل الطلبات السابقة</h2>
+          <h2 className="font-bold text-[#1A2A30] text-sm">سجل الطلبات</h2>
         </div>
 
-        {applicationHistory.length === 0 ? (
+        {applications.length === 0 ? (
           <div className="p-10 text-center">
             <p className="text-[#8FA4AB]">لا يوجد سجل طلبات سابقة</p>
           </div>
@@ -136,23 +124,25 @@ export default function TrackPage() {
             <table className="w-full text-sm">
               <thead className="bg-[#F4F7F8]">
                 <tr>
-                  <th className="px-5 py-3 text-start text-xs font-bold text-[#506570]">رقم الطلب</th>
                   <th className="px-5 py-3 text-start text-xs font-bold text-[#506570]">نوع المنحة</th>
-                  <th className="px-5 py-3 text-start text-xs font-bold text-[#506570]">العام</th>
                   <th className="px-5 py-3 text-start text-xs font-bold text-[#506570]">تاريخ التقديم</th>
+                  <th className="px-5 py-3 text-start text-xs font-bold text-[#506570]">آخر تحديث</th>
                   <th className="px-5 py-3 text-center text-xs font-bold text-[#506570]">الحالة</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-[#F4F7F8]">
-                {applicationHistory.map((h) => {
-                  const cfg = statusConfig[h.status] ?? statusConfig.pending;
+                {applications.map((app) => {
+                  const cfg = statusConfig[app.status] ?? statusConfig.PENDING;
                   return (
-                    <tr key={h.id} className="hover:bg-[#F9FAFB] transition-colors">
-                      <td className="px-5 py-3.5 font-mono text-xs text-[#6B7280]">{h.id}</td>
-                      <td className="px-5 py-3.5 font-semibold text-[#1F2937]">{h.type}</td>
-                      <td className="px-5 py-3.5 text-[#506570]">{h.year}</td>
+                    <tr key={app.id} className="hover:bg-[#F9FAFB] transition-colors">
+                      <td className="px-5 py-3.5 font-semibold text-[#1F2937]">{app.scholarship.title}</td>
                       <td className="px-5 py-3.5 text-[#6B7280]">
-                        {new Date(h.date).toLocaleDateString("ar-SA", {
+                        {new Date(app.createdAt).toLocaleDateString("ar-SA", {
+                          day: "numeric", month: "long", year: "numeric",
+                        })}
+                      </td>
+                      <td className="px-5 py-3.5 text-[#6B7280]">
+                        {new Date(app.updatedAt).toLocaleDateString("ar-SA", {
                           day: "numeric", month: "long", year: "numeric",
                         })}
                       </td>
