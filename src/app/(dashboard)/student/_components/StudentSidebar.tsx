@@ -12,28 +12,29 @@ const navGroups = [
     ],
   },
   {
-    label: "الأكاديمي والمالي",
+    label: "سجلاتي",
     items: [
-      { href: "/financial",    label: "الخدمات المالية",   icon: "💳", exact: false },
-      { href: "/scholarships", label: "المنح الدراسية",    icon: "🎓", exact: false },
-      { href: "/training",     label: "التدريب التعاوني",  icon: "🏢", exact: false },
+      { href: "/student/my-applications", label: "جميع طلباتي",       icon: "📋", exact: false },
+      { href: "/student/scholarships",    label: "المنح الدراسية",     icon: "🎓", exact: false },
+      { href: "/student/trainings",       label: "التدريب التعاوني",   icon: "🏢", exact: false },
     ],
   },
   {
-    label: "الحياة الجامعية",
+    label: "الخدمات",
     items: [
-      { href: "/activities",  label: "الأنشطة الطلابية",  icon: "🎯", exact: false },
-      { href: "/clubs",       label: "الأندية الرياضية",  icon: "⚽", exact: false },
-      { href: "/volunteers",  label: "التطوع",             icon: "🌱", exact: false },
-      { href: "/services",    label: "الخدمات الطلابية",  icon: "🛎️", exact: false },
+      { href: "/financial",   label: "الخدمات المالية",  icon: "💳", exact: false },
+      { href: "/activities",  label: "الأنشطة الطلابية", icon: "🎯", exact: false },
+      { href: "/clubs",       label: "الأندية الرياضية", icon: "⚽", exact: false },
+      { href: "/volunteers",  label: "التطوع",            icon: "🌱", exact: false },
+      { href: "/services",    label: "الخدمات الطلابية", icon: "🛎️", exact: false },
     ],
   },
   {
     label: "المزيد",
     items: [
       { href: "/news",   label: "الأخبار الجامعية", icon: "📰", exact: false },
-      { href: "/alumni", label: "الخريجون",         icon: "🤝", exact: false },
-      { href: "/hala",   label: "هلا بك",           icon: "👋", exact: false },
+      { href: "/alumni", label: "الخريجون",          icon: "🤝", exact: false },
+      { href: "/hala",   label: "هلا بك",            icon: "👋", exact: false },
     ],
   },
 ];
@@ -49,7 +50,6 @@ export default function StudentSidebar({ userName, points }: Props) {
 
   const NavContent = () => (
     <nav className="flex flex-col h-full">
-      {/* Logo */}
       <div className="px-5 py-5 border-b border-slate-700 flex items-center shrink-0">
         <Image
           src="/assets/logos/logo-white.svg"
@@ -61,7 +61,6 @@ export default function StudentSidebar({ userName, points }: Props) {
         />
       </div>
 
-      {/* User info */}
       <div className="px-4 py-3 border-b border-slate-700 shrink-0">
         <div className="flex items-center justify-between gap-2">
           <div className="min-w-0">
@@ -75,7 +74,6 @@ export default function StudentSidebar({ userName, points }: Props) {
         </div>
       </div>
 
-      {/* Nav groups */}
       <div className="flex-1 overflow-y-auto px-3 py-3 space-y-4">
         {navGroups.map((group, gi) => (
           <div key={gi}>
@@ -94,7 +92,7 @@ export default function StudentSidebar({ userName, points }: Props) {
                       onClick={() => setOpen(false)}
                       className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all duration-150 ${
                         isActive
-                          ? "bg-[#6CAEBD] text-white shadow"
+                          ? "bg-cyan-600 text-white shadow"
                           : "text-slate-300 hover:bg-slate-700 hover:text-white"
                       }`}
                     >
@@ -109,7 +107,6 @@ export default function StudentSidebar({ userName, points }: Props) {
         ))}
       </div>
 
-      {/* Footer */}
       <div className="px-5 py-4 border-t border-slate-700 shrink-0">
         <p className="text-slate-500 text-[10px] mb-0.5">مسجّل الدخول</p>
         <p className="text-white text-sm font-medium truncate">{userName}</p>
