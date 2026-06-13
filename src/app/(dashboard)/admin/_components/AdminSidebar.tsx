@@ -34,6 +34,12 @@ const navGroups = [
       { href: "/admin/clubs",       label: "طلبات الأندية", icon: "⚽", exact: false },
     ],
   },
+  {
+    label: "أدوات",
+    items: [
+      { href: "/admin/import", label: "استيراد Excel", icon: "📥", exact: false },
+    ],
+  },
 ];
 
 interface Props { userName: string }
