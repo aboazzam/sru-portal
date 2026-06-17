@@ -2,15 +2,23 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import { getCurrentUser } from "@/lib/dal";
 import { graduationRequirements, clearanceSteps, type RequirementStatus } from "@/lib/mock/graduates";
+import { getTranslations } from "next-intl/server";
 
-const statusConfig: Record<RequirementStatus, { label: string; color: string; bg: string; icon: string }> = {
-  completed:   { label: "مكتمل",   color: "#16A34A", bg: "#DCFCE7", icon: "✅" },
-  in_progress: { label: "جارٍ",    color: "#D97706", bg: "#FEF3C7", icon: "🔄" },
-  pending:     { label: "معلّق",   color: "#DC2626", bg: "#FEE2E2", icon: "⏳" },
-  waived:      { label: "مُعفى",   color: "#6B7280", bg: "#F3F4F6", icon: "➖" },
+const statusIcons: Record<RequirementStatus, string> = {
+  completed:   "✅",
+  in_progress: "🔄",
+  pending:     "⏳",
+  waived:      "➖",
+};
+const statusColors: Record<RequirementStatus, { color: string; bg: string }> = {
+  completed:   { color: "#16A34A", bg: "#DCFCE7" },
+  in_progress: { color: "#D97706", bg: "#FEF3C7" },
+  pending:     { color: "#DC2626", bg: "#FEE2E2" },
+  waived:      { color: "#6B7280", bg: "#F3F4F6" },
 };
 
-const categories = ["الكل", "أكاديمي", "مالي", "إداري", "تدريب"];
+// Arabic category values MUST match mock data field values exactly
+const categories = ["الكل", "أكاديمي", "مالي", "إداري", "تدريب"] as const;
 
 export default async function RequirementsPage({
   searchParams,
@@ -19,6 +27,24 @@ export default async function RequirementsPage({
 }) {
   const user = await getCurrentUser();
   if (!user) redirect("/login");
+
+  const t = await getTranslations("Graduates");
+
+  const statusConfig: Record<RequirementStatus, { label: string; color: string; bg: string; icon: string }> = {
+    completed:   { label: t("status.completed"),   ...statusColors.completed,   icon: statusIcons.completed   },
+    in_progress: { label: t("status.in_progress"), ...statusColors.in_progress, icon: statusIcons.in_progress },
+    pending:     { label: t("status.pending"),      ...statusColors.pending,     icon: statusIcons.pending     },
+    waived:      { label: t("status.waived"),       ...statusColors.waived,      icon: statusIcons.waived      },
+  };
+
+  // Display labels for category tabs (URL params stay as Arabic to match mock data)
+  const categoryLabels: Record<string, string> = {
+    "الكل":    t("requirements.categories.all"),
+    "أكاديمي": t("requirements.categories.academic"),
+    "مالي":    t("requirements.categories.financial"),
+    "إداري":   t("requirements.categories.admin"),
+    "تدريب":   t("requirements.categories.training"),
+  };
 
   const { category } = await searchParams;
   const filtered = (!category || category === "الكل")
@@ -35,29 +61,29 @@ export default async function RequirementsPage({
   return (
     <div className="space-y-5">
       <div className="flex items-center gap-2 text-sm text-gray-500">
-        <Link href="/graduates" className="hover:text-rose-600 transition-colors">الخريجون</Link>
+        <Link href="/graduates" className="hover:text-rose-600 transition-colors">{t("requirements.breadcrumbParent")}</Link>
         <span>/</span>
-        <span className="text-gray-800 font-medium">متطلبات التخرج</span>
+        <span className="text-gray-800 font-medium">{t("requirements.title")}</span>
       </div>
 
       <div className="flex items-start justify-between gap-4 flex-wrap">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">متطلبات التخرج</h1>
-          <p className="text-gray-500 text-sm mt-0.5">{completed} مكتملة من أصل {total} متطلب</p>
+          <h1 className="text-2xl font-bold text-gray-900">{t("requirements.title")}</h1>
+          <p className="text-gray-500 text-sm mt-0.5">{t("requirements.subtitle", { done: completed, total })}</p>
         </div>
         <div
           className="flex items-center gap-3 px-4 py-2 rounded-xl text-white text-sm font-bold"
           style={{ background: overallPct === 100 ? "#16A34A" : overallPct >= 70 ? "#D97706" : "#DC2626" }}
         >
-          <span>{overallPct}%</span>
-          <span className="text-xs font-normal opacity-80">جاهزية التخرج</span>
+          <span>{t("requirements.readinessPct", { pct: overallPct })}</span>
+          <span className="text-xs font-normal opacity-80">{t("requirements.readinessLabel")}</span>
         </div>
       </div>
 
       {/* Overall progress */}
       <div className="bg-white rounded-xl border border-gray-200 p-5">
         <div className="flex justify-between text-sm text-gray-600 mb-2">
-          <span className="font-medium">التقدم الإجمالي</span>
+          <span className="font-medium">{t("requirements.progressTitle")}</span>
           <span>{completed} / {total}</span>
         </div>
         <div className="h-3 bg-gray-100 rounded-full overflow-hidden">
@@ -81,7 +107,7 @@ export default async function RequirementsPage({
         </div>
       </div>
 
-      {/* Category filters */}
+      {/* Category filters — URL params are Arabic to match mock data, display labels are translated */}
       <div className="flex gap-2 flex-wrap">
         {categories.map((cat) => {
           const href = cat === "الكل" ? "/graduates/requirements" : `/graduates/requirements?category=${cat}`;
@@ -94,7 +120,7 @@ export default async function RequirementsPage({
                 isActive ? "bg-rose-600 text-white shadow-sm" : "bg-white text-gray-600 hover:bg-gray-50 border border-gray-200"
               }`}
             >
-              {cat}
+              {categoryLabels[cat]}
             </Link>
           );
         })}
@@ -132,7 +158,7 @@ export default async function RequirementsPage({
                   {req.status !== "waived" && (
                     <div className="mt-3">
                       <div className="flex justify-between text-xs text-gray-400 mb-1">
-                        <span>التقدم</span>
+                        <span>{t("requirements.progress")}</span>
                         <span>{req.progress}%</span>
                       </div>
                       <div className="h-1.5 bg-gray-100 rounded-full overflow-hidden">
@@ -155,9 +181,9 @@ export default async function RequirementsPage({
         <div className="px-5 py-4 border-b border-gray-100 flex items-center justify-between">
           <div className="flex items-center gap-2">
             <span>🏛️</span>
-            <h2 className="font-semibold text-gray-800 text-sm">تفاصيل إخلاء الطرف</h2>
+            <h2 className="font-semibold text-gray-800 text-sm">{t("requirements.clearanceTitle")}</h2>
           </div>
-          <span className="text-xs text-gray-500">{clearanceDone} / {clearanceTotal} أقسام</span>
+          <span className="text-xs text-gray-500">{t("requirements.clearanceSections", { done: clearanceDone, total: clearanceTotal })}</span>
         </div>
         <div className="divide-y divide-gray-50">
           {clearanceSteps.map((step, idx) => (
@@ -173,7 +199,7 @@ export default async function RequirementsPage({
               <span className={`text-xs font-semibold px-2.5 py-0.5 rounded-full ${
                 step.signed ? "bg-green-100 text-green-700" : "bg-gray-100 text-gray-500"
               }`}>
-                {step.signed ? "موقّع" : "في الانتظار"}
+                {step.signed ? t("requirements.signed") : t("requirements.waiting")}
               </span>
             </div>
           ))}

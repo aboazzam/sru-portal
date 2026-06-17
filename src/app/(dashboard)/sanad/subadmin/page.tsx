@@ -1,5 +1,8 @@
+export const dynamic = 'force-dynamic';
+
 import { redirect } from "next/navigation";
 import Link from "next/link";
+import { getTranslations } from "next-intl/server";
 import { getCurrentUser } from "@/lib/dal";
 import { prisma } from "@/lib/db";
 
@@ -8,6 +11,9 @@ const ALLOWED = ["SUBADMIN", "ADMIN"];
 export default async function SubadminPage() {
   const user = await getCurrentUser();
   if (!user || !ALLOWED.includes(user.role)) redirect("/sanad");
+
+  const t  = await getTranslations("Sanad");
+  const ts = await getTranslations("Status");
 
   const [
     totalActivityApps,
@@ -41,29 +47,37 @@ export default async function SubadminPage() {
     }),
   ]);
 
-  const totalRequests  = totalActivityApps + totalVolunteerApps + totalServiceApps;
-  const pendingAll     = pendingActivityApps + pendingVolunteerApps + pendingServiceApps;
+  const totalRequests = totalActivityApps + totalVolunteerApps + totalServiceApps;
+  const pendingAll    = pendingActivityApps + pendingVolunteerApps + pendingServiceApps;
 
   const kpis = [
-    { label: "إجمالي الطلبات",    value: totalRequests,    color: "#3D1F6E" },
-    { label: "قيد المراجعة",      value: pendingAll,       color: "#d97706" },
-    { label: "طلبات الأنشطة",     value: totalActivityApps, color: "#6B46C1" },
-    { label: "طلبات التطوع",      value: totalVolunteerApps, color: "#00B4C8" },
+    { label: t("subadmin.kpis.total"),      value: totalRequests,     color: "#3D1F6E" },
+    { label: t("subadmin.kpis.pending"),     value: pendingAll,        color: "#d97706" },
+    { label: t("subadmin.kpis.activities"),  value: totalActivityApps, color: "#6B46C1" },
+    { label: t("subadmin.kpis.volunteer"),   value: totalVolunteerApps,color: "#00B4C8" },
   ];
+
+  const statusLabel = (s: string) =>
+    s === "PENDING" ? ts("pending") : s === "APPROVED" ? ts("approved") : ts("rejected");
+
+  const statusClass = (s: string) =>
+    s === "APPROVED" ? "bg-green-100 text-green-700"
+    : s === "REJECTED" ? "bg-red-100 text-red-600"
+    : "bg-amber-100 text-amber-600";
 
   return (
     <div className="space-y-6">
       <div className="flex items-center gap-2 text-sm text-gray-500">
-        <Link href="/sanad" className="hover:text-[#3D1F6E] transition-colors">سند</Link>
+        <Link href="/sanad" className="hover:text-[#3D1F6E] transition-colors">{t("breadcrumb")}</Link>
         <span>/</span>
-        <span className="text-[#3D1F6E] font-medium">لوحة الإدارة</span>
+        <span className="text-[#3D1F6E] font-medium">{t("subadmin.pageTitle")}</span>
       </div>
 
       {/* Welcome */}
       <div className="bg-gradient-to-l from-[#2C1650] to-[#3D1F6E] rounded-2xl p-6 text-white">
-        <p className="text-purple-300 text-sm">لوحة إدارة سند</p>
-        <h1 className="text-xl font-bold mt-1">مرحباً، {user.name}</h1>
-        <p className="text-purple-300 text-sm mt-1">نظرة عامة على الطلبات والمنظمين وأداء المنصة</p>
+        <p className="text-purple-300 text-sm">{t("subadmin.module")}</p>
+        <h1 className="text-xl font-bold mt-1">{t("subadmin.welcome", { name: user.name })}</h1>
+        <p className="text-purple-300 text-sm mt-1">{t("subadmin.overview")}</p>
       </div>
 
       {/* KPI cards */}
@@ -77,27 +91,24 @@ export default async function SubadminPage() {
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* Breakdown by type */}
+        {/* Distribution */}
         <div className="bg-white rounded-2xl shadow-sm border border-purple-100 p-6">
-          <h2 className="font-bold text-[#3D1F6E] mb-5">توزيع الطلبات</h2>
+          <h2 className="font-bold text-[#3D1F6E] mb-5">{t("subadmin.distribution.title")}</h2>
           <div className="space-y-4">
             {[
-              { label: "أنشطة طلابية", total: totalActivityApps, pending: pendingActivityApps, color: "#6B46C1" },
-              { label: "فرص تطوعية",   total: totalVolunteerApps, pending: pendingVolunteerApps, color: "#00B4C8" },
-              { label: "خدمات طلابية", total: totalServiceApps,  pending: pendingServiceApps,  color: "#3D1F6E" },
+              { label: t("subadmin.distribution.activities"), total: totalActivityApps,  pending: pendingActivityApps,  color: "#6B46C1" },
+              { label: t("subadmin.distribution.volunteer"),  total: totalVolunteerApps,  pending: pendingVolunteerApps,  color: "#00B4C8" },
+              { label: t("subadmin.distribution.services"),   total: totalServiceApps,    pending: pendingServiceApps,    color: "#3D1F6E" },
             ].map((row) => {
               const pct = totalRequests > 0 ? Math.round((row.total / totalRequests) * 100) : 0;
               return (
                 <div key={row.label}>
                   <div className="flex justify-between text-xs text-gray-500 mb-1">
                     <span className="font-medium" style={{ color: row.color }}>{row.label}</span>
-                    <span>{row.total} طلب ({row.pending} قيد المراجعة)</span>
+                    <span>{row.total} {t("subadmin.distribution.requestSuffix")} ({row.pending} {t("subadmin.distribution.pendingSuffix")})</span>
                   </div>
                   <div className="h-2 bg-gray-100 rounded-full overflow-hidden">
-                    <div
-                      className="h-full rounded-full transition-all"
-                      style={{ width: `${pct}%`, background: row.color }}
-                    />
+                    <div className="h-full rounded-full transition-all" style={{ width: `${pct}%`, background: row.color }} />
                   </div>
                 </div>
               );
@@ -105,15 +116,15 @@ export default async function SubadminPage() {
           </div>
         </div>
 
-        {/* Organizers list */}
+        {/* Organizers */}
         <div className="bg-white rounded-2xl shadow-sm border border-purple-100 overflow-hidden">
           <div className="px-5 py-4 border-b border-purple-50 flex items-center justify-between">
-            <h2 className="font-bold text-[#3D1F6E]">المنظمون</h2>
-            <span className="text-xs text-gray-400">{organizers.length} منظم</span>
+            <h2 className="font-bold text-[#3D1F6E]">{t("subadmin.organizers.title")}</h2>
+            <span className="text-xs text-gray-400">{organizers.length} {t("subadmin.organizers.countSuffix")}</span>
           </div>
           {organizers.length === 0 ? (
             <div className="py-10 text-center">
-              <p className="text-gray-400 text-sm">لا يوجد منظمون مسجّلون</p>
+              <p className="text-gray-400 text-sm">{t("subadmin.organizers.empty")}</p>
             </div>
           ) : (
             <div className="divide-y divide-gray-50">
@@ -127,7 +138,7 @@ export default async function SubadminPage() {
                     <p className="text-xs text-gray-400 truncate">{org.email}</p>
                   </div>
                   <span className="text-xs bg-green-100 text-green-700 px-2 py-0.5 rounded-full font-medium shrink-0">
-                    نشط
+                    {t("subadmin.organizers.active")}
                   </span>
                 </div>
               ))}
@@ -139,21 +150,21 @@ export default async function SubadminPage() {
       {/* Recent volunteer applications */}
       <div className="bg-white rounded-2xl shadow-sm border border-purple-100 overflow-hidden">
         <div className="px-6 py-4 border-b border-purple-50">
-          <h2 className="font-bold text-[#3D1F6E]">آخر طلبات التطوع</h2>
+          <h2 className="font-bold text-[#3D1F6E]">{t("subadmin.recentVolunteer.title")}</h2>
         </div>
         {recentVolunteerApps.length === 0 ? (
           <div className="py-10 text-center">
-            <p className="text-gray-400 text-sm">لا توجد طلبات تطوع بعد</p>
+            <p className="text-gray-400 text-sm">{t("subadmin.recentVolunteer.empty")}</p>
           </div>
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
               <thead className="bg-[#F5F3FF]">
                 <tr>
-                  <th className="px-4 py-3 text-start text-xs font-bold text-[#3D1F6E]">الطالب</th>
-                  <th className="px-4 py-3 text-start text-xs font-bold text-[#3D1F6E]">الفرصة</th>
-                  <th className="px-4 py-3 text-start text-xs font-bold text-[#3D1F6E] hidden sm:table-cell">التاريخ</th>
-                  <th className="px-4 py-3 text-start text-xs font-bold text-[#3D1F6E]">الحالة</th>
+                  <th className="px-4 py-3 text-start text-xs font-bold text-[#3D1F6E]">{t("subadmin.recentVolunteer.student")}</th>
+                  <th className="px-4 py-3 text-start text-xs font-bold text-[#3D1F6E]">{t("subadmin.recentVolunteer.opportunity")}</th>
+                  <th className="px-4 py-3 text-start text-xs font-bold text-[#3D1F6E] hidden sm:table-cell">{t("subadmin.recentVolunteer.date")}</th>
+                  <th className="px-4 py-3 text-start text-xs font-bold text-[#3D1F6E]">{t("subadmin.recentVolunteer.status")}</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-50">
@@ -165,12 +176,8 @@ export default async function SubadminPage() {
                       {app.createdAt.toLocaleDateString("ar-SA")}
                     </td>
                     <td className="px-4 py-3">
-                      <span className={`text-xs font-medium px-2 py-0.5 rounded-full ${
-                        app.status === "APPROVED" ? "bg-green-100 text-green-700"
-                        : app.status === "REJECTED" ? "bg-red-100 text-red-600"
-                        : "bg-amber-100 text-amber-600"
-                      }`}>
-                        {app.status === "PENDING" ? "قيد المراجعة" : app.status === "APPROVED" ? "مقبول" : "مرفوض"}
+                      <span className={`text-xs font-medium px-2 py-0.5 rounded-full ${statusClass(app.status)}`}>
+                        {statusLabel(app.status)}
                       </span>
                     </td>
                   </tr>

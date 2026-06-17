@@ -1,6 +1,7 @@
 import { redirect } from "next/navigation";
 import { getCurrentUser } from "@/lib/dal";
 import { prisma } from "@/lib/db";
+import { getTranslations } from "next-intl/server";
 
 export default async function FacultyStudentsPage({
   searchParams,
@@ -9,6 +10,8 @@ export default async function FacultyStudentsPage({
 }) {
   const user = await getCurrentUser();
   if (!user || user.role !== "FACULTY") redirect("/dashboard");
+
+  const t = await getTranslations("Faculty");
 
   const { college: collegeFilter } = await searchParams;
 
@@ -38,9 +41,9 @@ export default async function FacultyStudentsPage({
     <div className="space-y-5">
       <div className="flex items-start justify-between gap-4 flex-wrap">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">قائمة الطلاب</h1>
+          <h1 className="text-2xl font-bold text-gray-900">{t("studentsPage.title")}</h1>
           <p className="text-gray-500 text-sm mt-0.5">
-            {students.length} طالب {collegeFilter ? "في هذه الكلية" : "مسجّل"}
+            {t("studentsPage.subtitle", { n: students.length, location: collegeFilter ? t("studentsPage.inCollege") : t("studentsPage.enrolled") })}
           </p>
         </div>
       </div>
@@ -54,7 +57,7 @@ export default async function FacultyStudentsPage({
               !collegeFilter ? "bg-amber-600 text-white shadow-sm" : "bg-white text-gray-600 hover:bg-gray-50 border border-gray-200"
             }`}
           >
-            الكل
+            {t("studentsPage.all")}
           </a>
           {colleges.map((c) => (
             <a
@@ -73,7 +76,7 @@ export default async function FacultyStudentsPage({
       {students.length === 0 ? (
         <div className="bg-white rounded-xl border border-gray-200 py-16 text-center">
           <p className="text-3xl mb-2">👥</p>
-          <p className="text-gray-400">لا يوجد طلاب في هذه الكلية</p>
+          <p className="text-gray-400">{t("studentsPage.empty")}</p>
         </div>
       ) : (
         <div className="bg-white rounded-xl border border-gray-200 overflow-hidden">
@@ -82,13 +85,13 @@ export default async function FacultyStudentsPage({
               <thead className="bg-gray-50 border-b border-gray-200 text-gray-500 text-xs uppercase">
                 <tr>
                   <th className="px-5 py-3 text-start">#</th>
-                  <th className="px-5 py-3 text-start">الطالب</th>
-                  <th className="px-5 py-3 text-start">الكلية</th>
-                  <th className="px-5 py-3 text-start">النقاط</th>
-                  <th className="px-5 py-3 text-start">المنح</th>
-                  <th className="px-5 py-3 text-start">التدريب</th>
-                  <th className="px-5 py-3 text-start">الأنشطة</th>
-                  <th className="px-5 py-3 text-start">تاريخ الانضمام</th>
+                  <th className="px-5 py-3 text-start">{t("studentsPage.cols.student")}</th>
+                  <th className="px-5 py-3 text-start">{t("studentsPage.cols.college")}</th>
+                  <th className="px-5 py-3 text-start">{t("studentsPage.cols.points")}</th>
+                  <th className="px-5 py-3 text-start">{t("studentsPage.cols.scholarships")}</th>
+                  <th className="px-5 py-3 text-start">{t("studentsPage.cols.training")}</th>
+                  <th className="px-5 py-3 text-start">{t("studentsPage.cols.activities")}</th>
+                  <th className="px-5 py-3 text-start">{t("studentsPage.cols.joinDate")}</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-100">
@@ -109,7 +112,7 @@ export default async function FacultyStudentsPage({
                     <td className="px-5 py-3 text-gray-500 text-xs">{s.college?.name ?? "—"}</td>
                     <td className="px-5 py-3">
                       <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-amber-50 text-amber-700 text-xs font-semibold border border-amber-200">
-                        {s.points} نقطة
+                        {t("studentsPage.points", { n: s.points })}
                       </span>
                     </td>
                     <td className="px-5 py-3 text-gray-600 tabular-nums text-center">{s._count.scholarshipApplications}</td>

@@ -2,25 +2,12 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import { getCurrentUser } from "@/lib/dal";
 import { prisma } from "@/lib/db";
-
-const statusConfig: Record<string, { label: string; bg: string; color: string }> = {
-  PENDING:   { label: "قيد المراجعة", bg: "#FEF3C7", color: "#D97706" },
-  APPROVED:  { label: "مقبول",        bg: "#DCFCE7", color: "#16A34A" },
-  REJECTED:  { label: "مرفوض",        bg: "#FEE2E2", color: "#DC2626" },
-  COMPLETED: { label: "مكتمل",        bg: "#DBEAFE", color: "#2563EB" },
-};
+import { getTranslations } from "next-intl/server";
 
 type AppItem = { id: string; title: string; status: string; date: Date; type: string; icon: string; href: string };
 
-const typeFilters = ["الكل", "المنح", "التدريب", "الخدمات", "التطوع", "الأنشطة", "الأندية"] as const;
-const statusFilters = ["الكل الحالات", "قيد المراجعة", "مقبول", "مرفوض", "مكتمل"] as const;
-
-const statusKeyMap: Record<string, string> = {
-  "قيد المراجعة": "PENDING",
-  "مقبول":        "APPROVED",
-  "مرفوض":        "REJECTED",
-  "مكتمل":        "COMPLETED",
-};
+const typeFilters = ["all", "scholarships", "training", "services", "volunteer", "activities", "clubs"] as const;
+const statusFilters = ["all", "PENDING", "APPROVED", "REJECTED", "COMPLETED"] as const;
 
 export default async function MyApplicationsPage({
   searchParams,
@@ -31,7 +18,17 @@ export default async function MyApplicationsPage({
   if (!user) redirect("/login");
   if (user.role !== "STUDENT") redirect("/dashboard");
 
+  const t = await getTranslations("Student");
+  const ts = await getTranslations("Status");
+
   const { type, status } = await searchParams;
+
+  const statusConfig: Record<string, { label: string; bg: string; color: string }> = {
+    PENDING:   { label: ts("pending"),   bg: "#FEF3C7", color: "#D97706" },
+    APPROVED:  { label: ts("approved"),  bg: "#DCFCE7", color: "#16A34A" },
+    REJECTED:  { label: ts("rejected"),  bg: "#FEE2E2", color: "#DC2626" },
+    COMPLETED: { label: ts("completed"), bg: "#DBEAFE", color: "#2563EB" },
+  };
 
   const [
     scholarshipApps,
@@ -74,17 +71,17 @@ export default async function MyApplicationsPage({
   ]);
 
   const allItems: AppItem[] = [
-    ...scholarshipApps.map((a)    => ({ id: a.id, title: a.scholarship.title,  status: a.status, date: a.createdAt, type: "المنح",   icon: "🎓", href: "/student/scholarships" })),
-    ...trainingEnrollments.map((a) => ({ id: a.id, title: a.training.title,     status: a.status, date: a.createdAt, type: "التدريب", icon: "🏢", href: "/student/trainings"    })),
-    ...serviceApps.map((a)         => ({ id: a.id, title: a.service.title,      status: a.status, date: a.createdAt, type: "الخدمات", icon: "🛎️", href: "/services"             })),
-    ...volunteerApps.map((a)       => ({ id: a.id, title: a.opportunity.title,  status: a.status, date: a.createdAt, type: "التطوع",  icon: "🌱", href: "/volunteers"           })),
-    ...activityApps.map((a)        => ({ id: a.id, title: a.activity.title,     status: a.status, date: a.createdAt, type: "الأنشطة", icon: "🎯", href: "/activities"           })),
-    ...clubMemberships.map((a)     => ({ id: a.id, title: a.club.name,          status: a.status, date: a.createdAt, type: "الأندية", icon: "⚽", href: "/clubs"                })),
+    ...scholarshipApps.map((a)    => ({ id: a.id, title: a.scholarship.title,  status: a.status, date: a.createdAt, type: "scholarships", icon: "🎓", href: "/student/scholarships" })),
+    ...trainingEnrollments.map((a) => ({ id: a.id, title: a.training.title,     status: a.status, date: a.createdAt, type: "training",     icon: "🏢", href: "/student/trainings"    })),
+    ...serviceApps.map((a)         => ({ id: a.id, title: a.service.title,      status: a.status, date: a.createdAt, type: "services",     icon: "🛎️", href: "/services"             })),
+    ...volunteerApps.map((a)       => ({ id: a.id, title: a.opportunity.title,  status: a.status, date: a.createdAt, type: "volunteer",    icon: "🌱", href: "/volunteers"           })),
+    ...activityApps.map((a)        => ({ id: a.id, title: a.activity.title,     status: a.status, date: a.createdAt, type: "activities",   icon: "🎯", href: "/activities"           })),
+    ...clubMemberships.map((a)     => ({ id: a.id, title: a.club.name,          status: a.status, date: a.createdAt, type: "clubs",        icon: "⚽", href: "/clubs"                })),
   ].sort((a, b) => b.date.getTime() - a.date.getTime());
 
   const filteredItems = allItems.filter((item) => {
-    const typeMatch   = !type || type === "الكل"          || item.type === type;
-    const statusMatch = !status || status === "الكل الحالات" || item.status === statusKeyMap[status];
+    const typeMatch   = !type || type === "all" || item.type === type;
+    const statusMatch = !status || status === "all" || item.status === status;
     return typeMatch && statusMatch;
   });
 
@@ -92,26 +89,44 @@ export default async function MyApplicationsPage({
   const approvedCount = allItems.filter((i) => i.status === "APPROVED").length;
   const totalCount    = allItems.length;
 
+  const statusFilterLabels: Record<string, string> = {
+    all:       t("myApps.statusFilters.all"),
+    PENDING:   t("myApps.statusFilters.pending"),
+    APPROVED:  t("myApps.statusFilters.approved"),
+    REJECTED:  t("myApps.statusFilters.rejected"),
+    COMPLETED: t("myApps.statusFilters.completed"),
+  };
+
+  const typeFilterLabels: Record<string, string> = {
+    all:          t("myApps.filters.all"),
+    scholarships: t("myApps.filters.scholarships"),
+    training:     t("myApps.filters.training"),
+    services:     t("myApps.filters.services"),
+    volunteer:    t("myApps.filters.volunteer"),
+    activities:   t("myApps.filters.activities"),
+    clubs:        t("myApps.filters.clubs"),
+  };
+
   return (
     <div className="space-y-5">
 
       <div className="flex items-center gap-2 text-sm text-gray-500">
-        <Link href="/student" className="hover:text-cyan-600 transition-colors">لوحة الطالب</Link>
+        <Link href="/student" className="hover:text-cyan-600 transition-colors">{t("myApps.breadcrumb")}</Link>
         <span>/</span>
-        <span className="text-gray-800 font-medium">جميع طلباتي</span>
+        <span className="text-gray-800 font-medium">{t("myApps.title")}</span>
       </div>
 
       <div>
-        <h1 className="text-2xl font-bold text-gray-900">جميع طلباتي</h1>
-        <p className="text-gray-500 text-sm mt-0.5">{totalCount} طلب إجمالاً</p>
+        <h1 className="text-2xl font-bold text-gray-900">{t("myApps.title")}</h1>
+        <p className="text-gray-500 text-sm mt-0.5">{t("myApps.total", { n: totalCount })}</p>
       </div>
 
       {/* Summary cards */}
       <div className="grid grid-cols-3 gap-3">
         {[
-          { label: "إجمالي الطلبات", value: totalCount,    bg: "bg-gray-50   border-gray-200",   color: "text-gray-700"   },
-          { label: "قيد المراجعة",  value: pendingCount,  bg: "bg-amber-50  border-amber-200",  color: "text-amber-700"  },
-          { label: "مقبولة",        value: approvedCount, bg: "bg-green-50  border-green-200",  color: "text-green-700"  },
+          { label: t("myApps.totalLabel"),   value: totalCount,    bg: "bg-gray-50   border-gray-200",   color: "text-gray-700"   },
+          { label: t("myApps.pendingLabel"), value: pendingCount,  bg: "bg-amber-50  border-amber-200",  color: "text-amber-700"  },
+          { label: t("myApps.approvedLabel"), value: approvedCount, bg: "bg-green-50  border-green-200",  color: "text-green-700"  },
         ].map((s) => (
           <div key={s.label} className={`rounded-xl border p-4 text-center ${s.bg}`}>
             <p className={`text-2xl font-bold tabular-nums ${s.color}`}>{s.value}</p>
@@ -122,13 +137,13 @@ export default async function MyApplicationsPage({
 
       {/* Type filters */}
       <div className="space-y-2">
-        <p className="text-xs font-medium text-gray-500 uppercase tracking-wide">نوع الطلب</p>
+        <p className="text-xs font-medium text-gray-500 uppercase tracking-wide">{t("myApps.typeFilterLabel")}</p>
         <div className="flex gap-2 flex-wrap">
           {typeFilters.map((f) => {
-            const isActive = (!type && f === "الكل") || type === f;
+            const isActive = (!type && f === "all") || type === f;
             const params = new URLSearchParams();
-            if (f !== "الكل") params.set("type", f);
-            if (status && status !== "الكل الحالات") params.set("status", status);
+            if (f !== "all") params.set("type", f);
+            if (status && status !== "all") params.set("status", status);
             const href = `/student/my-applications${params.toString() ? `?${params}` : ""}`;
             return (
               <Link
@@ -138,7 +153,7 @@ export default async function MyApplicationsPage({
                   isActive ? "bg-cyan-600 text-white shadow-sm" : "bg-white text-gray-600 hover:bg-gray-50 border border-gray-200"
                 }`}
               >
-                {f}
+                {typeFilterLabels[f]}
               </Link>
             );
           })}
@@ -147,13 +162,13 @@ export default async function MyApplicationsPage({
 
       {/* Status filters */}
       <div className="space-y-2">
-        <p className="text-xs font-medium text-gray-500 uppercase tracking-wide">الحالة</p>
+        <p className="text-xs font-medium text-gray-500 uppercase tracking-wide">{t("myApps.statusFilterLabel")}</p>
         <div className="flex gap-2 flex-wrap">
           {statusFilters.map((f) => {
-            const isActive = (!status && f === "الكل الحالات") || status === f;
+            const isActive = (!status && f === "all") || status === f;
             const params = new URLSearchParams();
-            if (type && type !== "الكل") params.set("type", type);
-            if (f !== "الكل الحالات") params.set("status", f);
+            if (type && type !== "all") params.set("type", type);
+            if (f !== "all") params.set("status", f);
             const href = `/student/my-applications${params.toString() ? `?${params}` : ""}`;
             return (
               <Link
@@ -163,7 +178,7 @@ export default async function MyApplicationsPage({
                   isActive ? "bg-gray-800 text-white shadow-sm" : "bg-white text-gray-600 hover:bg-gray-50 border border-gray-200"
                 }`}
               >
-                {f}
+                {statusFilterLabels[f]}
               </Link>
             );
           })}
@@ -174,12 +189,12 @@ export default async function MyApplicationsPage({
       {filteredItems.length === 0 ? (
         <div className="bg-white rounded-xl border border-gray-200 py-14 text-center">
           <p className="text-3xl mb-2">📭</p>
-          <p className="text-gray-400 text-sm">لا توجد طلبات تطابق هذا التصنيف</p>
+          <p className="text-gray-400 text-sm">{t("myApps.empty")}</p>
         </div>
       ) : (
         <div className="bg-white rounded-xl border border-gray-200 overflow-hidden">
           <div className="px-5 py-3 border-b border-gray-100 bg-gray-50">
-            <p className="text-xs text-gray-500">{filteredItems.length} نتيجة</p>
+            <p className="text-xs text-gray-500">{t("myApps.results", { n: filteredItems.length })}</p>
           </div>
           <div className="divide-y divide-gray-50">
             {filteredItems.map((item) => {
@@ -195,7 +210,7 @@ export default async function MyApplicationsPage({
                     <div className="min-w-0">
                       <p className="font-medium text-gray-800 text-sm truncate">{item.title}</p>
                       <div className="flex items-center gap-2 mt-0.5">
-                        <span className="text-xs text-gray-400">{item.type}</span>
+                        <span className="text-xs text-gray-400">{typeFilterLabels[item.type] ?? item.type}</span>
                         <span className="text-gray-300">·</span>
                         <span className="text-xs text-gray-400">
                           {item.date.toLocaleDateString("ar-SA", { day: "numeric", month: "long", year: "numeric" })}

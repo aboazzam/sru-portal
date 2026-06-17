@@ -3,14 +3,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
-
-const navItems = [
-  { href: "/training",              label: "لوحة التحكم",     icon: "🏠" },
-  { href: "/training/catalog",      label: "كتالوج البرامج",  icon: "📚" },
-  { href: "/training/my-courses",   label: "دوراتي",          icon: "🎓" },
-  { href: "/training/certificates", label: "الشهادات",        icon: "🏆" },
-  { href: "/training/requests",     label: "الطلبات",         icon: "📝" },
-];
+import { useTranslations } from "next-intl";
 
 interface Props {
   userName: string;
@@ -18,8 +11,17 @@ interface Props {
 }
 
 export default function TrainingSidebar({ userName, userRole }: Props) {
+  const t = useTranslations("Training");
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
+
+  const navItems = [
+    { href: "/training",              label: t("nav.dashboard"),    icon: "🏠" },
+    { href: "/training/catalog",      label: t("nav.catalog"),      icon: "📚" },
+    { href: "/training/my-courses",   label: t("nav.myCourses"),    icon: "🎓" },
+    { href: "/training/certificates", label: t("nav.certificates"), icon: "🏆" },
+    { href: "/training/requests",     label: t("nav.requests"),     icon: "📝" },
+  ];
 
   const NavContent = () => (
     <nav className="flex flex-col h-full">
@@ -44,7 +46,7 @@ export default function TrainingSidebar({ userName, userRole }: Props) {
           >
             🎯
           </div>
-          <span className="text-xs font-bold text-[#4A8FA0]">التدريب والتطوير</span>
+          <span className="text-xs font-bold text-[#4A8FA0]">{t("nav.moduleLabel")}</span>
         </div>
       </div>
 
@@ -77,7 +79,7 @@ export default function TrainingSidebar({ userName, userRole }: Props) {
 
       {/* User info */}
       <div className="px-5 py-4 border-t border-[#C8D4D8] bg-[#F4F7F8]">
-        <p className="text-[#8FA4AB] text-xs mb-0.5">مسجّل الدخول</p>
+        <p className="text-[#8FA4AB] text-xs mb-0.5">{t("nav.loggedInAs")}</p>
         <p className="text-[#1A2A30] text-sm font-semibold truncate">{userName}</p>
         <p className="text-[#8FA4AB] text-xs">{userRole}</p>
       </div>

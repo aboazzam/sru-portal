@@ -2,20 +2,13 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import { getCurrentUser } from "@/lib/dal";
 import { prisma } from "@/lib/db";
+import { getTranslations } from "next-intl/server";
 
-const statusLabel: Record<string, string> = { PENDING: "معلّق", APPROVED: "مقبول", REJECTED: "مرفوض" };
 const statusStyle: Record<string, string> = {
   PENDING:  "bg-yellow-100 text-yellow-700",
   APPROVED: "bg-green-100  text-green-700",
   REJECTED: "bg-red-100    text-red-600",
 };
-
-const FILTERS = [
-  { value: "",         label: "الكل"    },
-  { value: "PENDING",  label: "معلّقة"  },
-  { value: "APPROVED", label: "مقبولة"  },
-  { value: "REJECTED", label: "مرفوضة" },
-];
 
 export default async function FacultyScholarshipsPage({
   searchParams,
@@ -24,6 +17,22 @@ export default async function FacultyScholarshipsPage({
 }) {
   const user = await getCurrentUser();
   if (!user || user.role !== "FACULTY") redirect("/dashboard");
+
+  const t  = await getTranslations("Faculty");
+  const ts = await getTranslations("Status");
+
+  const statusLabel: Record<string, string> = {
+    PENDING:  ts("pending"),
+    APPROVED: ts("approved"),
+    REJECTED: ts("rejected"),
+  };
+
+  const FILTERS = [
+    { value: "",         label: t("scholarshipsPage.filters.all")      },
+    { value: "PENDING",  label: t("scholarshipsPage.filters.pending")  },
+    { value: "APPROVED", label: t("scholarshipsPage.filters.approved") },
+    { value: "REJECTED", label: t("scholarshipsPage.filters.rejected") },
+  ];
 
   const { filter } = await searchParams;
   const validFilter = ["PENDING", "APPROVED", "REJECTED"].includes(filter ?? "")
@@ -53,9 +62,9 @@ export default async function FacultyScholarshipsPage({
     <div className="space-y-5">
       <div className="flex items-start justify-between gap-4 flex-wrap">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">المنح الدراسية</h1>
+          <h1 className="text-2xl font-bold text-gray-900">{t("scholarshipsPage.title")}</h1>
           <p className="text-gray-500 text-sm mt-0.5">
-            {scholarships.length} منحة متاحة · {total} طلب إجمالاً
+            {t("scholarshipsPage.subtitle", { n: scholarships.length, m: total })}
           </p>
         </div>
         <div className="flex gap-2 flex-wrap">
@@ -77,9 +86,9 @@ export default async function FacultyScholarshipsPage({
                 <p className="font-semibold text-gray-800 text-sm truncate">{s.title}</p>
                 {s.description && <p className="text-xs text-gray-400 mt-0.5 line-clamp-2">{s.description}</p>}
                 <div className="flex items-center gap-3 mt-2 text-xs text-gray-500">
-                  <span>{s._count.applications} طلب</span>
+                  <span>{t("scholarshipsPage.appsCount", { n: s._count.applications })}</span>
                   {s.amount != null && <span>· {s.amount.toLocaleString("ar-SA")} ريال</span>}
-                  {s.deadline && <span>· ينتهي: {s.deadline.toLocaleDateString("ar-SA")}</span>}
+                  {s.deadline && <span>· {t("scholarshipsPage.expires", { date: s.deadline.toLocaleDateString("ar-SA") })}</span>}
                 </div>
               </div>
             </div>
@@ -88,7 +97,7 @@ export default async function FacultyScholarshipsPage({
       </div>
 
       <div className="border-t border-gray-200 pt-5">
-        <h2 className="font-semibold text-gray-800 mb-4 text-sm">طلبات المنح</h2>
+        <h2 className="font-semibold text-gray-800 mb-4 text-sm">{t("scholarshipsPage.appsSection")}</h2>
 
         {/* Filters */}
         <div className="flex gap-2 flex-wrap mb-4">
@@ -119,16 +128,20 @@ export default async function FacultyScholarshipsPage({
             <table className="w-full text-sm">
               <thead className="bg-gray-50 text-gray-500 text-xs uppercase">
                 <tr>
-                  <th className="px-5 py-3 text-start">الطالب</th>
-                  <th className="px-5 py-3 text-start">البريد الإلكتروني</th>
-                  <th className="px-5 py-3 text-start">المنحة</th>
-                  <th className="px-5 py-3 text-start">تاريخ التقديم</th>
-                  <th className="px-5 py-3 text-start">الحالة</th>
+                  <th className="px-5 py-3 text-start">{t("scholarshipsPage.cols.student")}</th>
+                  <th className="px-5 py-3 text-start">{t("scholarshipsPage.cols.email")}</th>
+                  <th className="px-5 py-3 text-start">{t("scholarshipsPage.cols.scholarship")}</th>
+                  <th className="px-5 py-3 text-start">{t("scholarshipsPage.cols.applyDate")}</th>
+                  <th className="px-5 py-3 text-start">{t("scholarshipsPage.cols.status")}</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-100">
                 {applications.length === 0 && (
-                  <tr><td colSpan={5} className="px-5 py-8 text-center text-gray-400">لا توجد طلبات</td></tr>
+                  <tr>
+                    <td colSpan={5} className="px-5 py-8 text-center text-gray-400">
+                      {t("scholarshipsPage.empty")}
+                    </td>
+                  </tr>
                 )}
                 {applications.map((app) => (
                   <tr key={app.id} className="hover:bg-gray-50 transition-colors">

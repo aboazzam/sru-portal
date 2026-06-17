@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
+import { getTranslations } from "next-intl/server";
 import { getCurrentUser } from "@/lib/dal";
 import { prisma } from "@/lib/db";
 import { trainingAlerts, type AlertType } from "@/lib/mock/training";
@@ -11,23 +12,26 @@ const alertConfig: Record<AlertType, { icon: string; border: string; bg: string;
   info:    { icon: "ℹ️",  border: "#6CAEBD", bg: "#E8F6F8", text: "#4A8FA0" },
 };
 
-const statusColors: Record<string, { bg: string; color: string; label: string }> = {
-  PENDING:   { bg: "#FEF3C7", color: "#D97706", label: "قيد المراجعة" },
-  APPROVED:  { bg: "#DCFCE7", color: "#16A34A", label: "مقبول" },
-  REJECTED:  { bg: "#FEE2E2", color: "#DC2626", label: "مرفوض" },
-  COMPLETED: { bg: "#DBEAFE", color: "#2563EB", label: "مكتمل" },
-};
-
-const quickLinks = [
-  { href: "/training/catalog",      label: "كتالوج البرامج",  icon: "📚", color: "#6CAEBD" },
-  { href: "/training/my-courses",   label: "دوراتي",          icon: "🎓", color: "#875E9E" },
-  { href: "/training/certificates", label: "الشهادات",        icon: "🏆", color: "#4A8FA0" },
-  { href: "/training/requests",     label: "طلب تدريبي",      icon: "📝", color: "#6CAEBD" },
-];
-
 export default async function TrainingDashboard() {
   const user = await getCurrentUser();
   if (!user) redirect("/login");
+
+  const t  = await getTranslations("Training");
+  const ts = await getTranslations("Status");
+
+  const statusColors: Record<string, { bg: string; color: string; label: string }> = {
+    PENDING:   { bg: "#FEF3C7", color: "#D97706", label: ts("pending") },
+    APPROVED:  { bg: "#DCFCE7", color: "#16A34A", label: ts("approved") },
+    REJECTED:  { bg: "#FEE2E2", color: "#DC2626", label: ts("rejected") },
+    COMPLETED: { bg: "#DBEAFE", color: "#2563EB", label: ts("completed") },
+  };
+
+  const quickLinks = [
+    { href: "/training/catalog",      label: t("quickLinks.catalog"),      icon: "📚", color: "#6CAEBD" },
+    { href: "/training/my-courses",   label: t("quickLinks.myCourses"),    icon: "🎓", color: "#875E9E" },
+    { href: "/training/certificates", label: t("quickLinks.certificates"), icon: "🏆", color: "#4A8FA0" },
+    { href: "/training/requests",     label: t("quickLinks.requests"),     icon: "📝", color: "#6CAEBD" },
+  ];
 
   const [myEnrollments, availableCount] = await Promise.all([
     prisma.trainingEnrollment.findMany({
@@ -67,8 +71,8 @@ export default async function TrainingDashboard() {
       >
         <div className="flex items-start justify-between gap-4 flex-wrap">
           <div>
-            <p className="text-white/70 text-xs mb-1">التدريب والتطوير — جامعة سليمان الراجحي</p>
-            <h1 className="text-xl font-bold">مرحباً، {user.name.split(" ")[0]} 👋</h1>
+            <p className="text-white/70 text-xs mb-1">{t("module")}</p>
+            <h1 className="text-xl font-bold">{t("welcome", { name: user.name.split(" ")[0] })} 👋</h1>
             <p className="text-white/80 text-sm mt-0.5">{user.email}</p>
           </div>
           <div className="flex flex-col items-end gap-2">
@@ -76,7 +80,7 @@ export default async function TrainingDashboard() {
               className="text-xs font-bold px-3 py-1.5 rounded-full"
               style={{ background: "rgba(255,255,255,0.2)" }}
             >
-              🎯 {myEnrollments.length} تسجيل
+              🎯 {t("enrollments", { count: myEnrollments.length })}
             </span>
             <div className="w-12 h-12 rounded-full bg-white/20 flex items-center justify-center text-xl font-bold">
               {user.name.charAt(0)}
@@ -87,8 +91,8 @@ export default async function TrainingDashboard() {
         {/* Completion progress */}
         <div className="mt-5">
           <div className="flex justify-between text-xs text-white/80 mb-1.5">
-            <span>المكتملة: {completedEnrollments.length} برنامج</span>
-            <span>الجارية: {activeEnrollments.length} برنامج</span>
+            <span>{t("completedCount", { count: completedEnrollments.length })}</span>
+            <span>{t("activeCount", { count: activeEnrollments.length })}</span>
           </div>
           <div className="w-full bg-white/20 rounded-full h-2.5">
             <div
@@ -97,8 +101,8 @@ export default async function TrainingDashboard() {
             />
           </div>
           <div className="flex justify-between text-xs text-white/70 mt-1.5">
-            <span>{completedPct}% نسبة الإكمال</span>
-            <span>الكل: {myEnrollments.length} برنامج</span>
+            <span>{t("completionPct", { pct: completedPct })}</span>
+            <span>{t("totalCount", { count: myEnrollments.length })}</span>
           </div>
         </div>
       </div>
@@ -106,10 +110,10 @@ export default async function TrainingDashboard() {
       {/* Stats */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
         {[
-          { label: "الجارية والمسجّلة",  value: String(activeEnrollments.length),   icon: "📖", color: "#6CAEBD" },
-          { label: "المكتملة",            value: String(completedEnrollments.length), icon: "✅", color: "#16A34A" },
-          { label: "برامج متاحة",         value: String(availableCount),              icon: "📚", color: "#4A8FA0" },
-          { label: "إجمالي التسجيلات",    value: String(myEnrollments.length),        icon: "🏆", color: "#875E9E" },
+          { label: t("stats.active"),     value: String(activeEnrollments.length),   icon: "📖", color: "#6CAEBD" },
+          { label: t("stats.completed"), value: String(completedEnrollments.length), icon: "✅", color: "#16A34A" },
+          { label: t("stats.available"), value: String(availableCount),              icon: "📚", color: "#4A8FA0" },
+          { label: t("stats.total"),     value: String(myEnrollments.length),        icon: "🏆", color: "#875E9E" },
         ].map((s) => (
           <div key={s.label} className="bg-white rounded-xl border border-[#E8EDEF] p-4 hover:shadow-sm transition-shadow">
             <div className="text-2xl mb-1">{s.icon}</div>
@@ -123,7 +127,7 @@ export default async function TrainingDashboard() {
       {trainingAlerts.length > 0 && (
         <div className="space-y-3">
           <h2 className="font-bold text-[#1A2A30] text-sm flex items-center gap-2">
-            <span>🔔</span> التنبيهات
+            <span>🔔</span> {t("alerts.title")}
           </h2>
           {trainingAlerts.map((alert) => {
             const ac = alertConfig[alert.type];
@@ -142,7 +146,7 @@ export default async function TrainingDashboard() {
                 </div>
                 {alert.daysLeft != null && (
                   <span className="shrink-0 text-xs font-bold px-2 py-1 rounded-full" style={{ background: ac.bg, color: ac.text }}>
-                    بعد {alert.daysLeft} يوم
+                    {t("alerts.daysLeft", { days: alert.daysLeft })}
                   </span>
                 )}
               </div>
@@ -156,7 +160,7 @@ export default async function TrainingDashboard() {
         {/* Quick links */}
         <div className="bg-white rounded-2xl shadow-sm border border-[#E8EDEF] p-5">
           <h2 className="font-bold text-[#1A2A30] text-sm mb-4 flex items-center gap-2">
-            <span>⚡</span> روابط سريعة
+            <span>⚡</span> {t("quickLinks.title")}
           </h2>
           <div className="grid grid-cols-2 gap-3">
             {quickLinks.map((link) => (
@@ -179,17 +183,17 @@ export default async function TrainingDashboard() {
           <div className="px-5 py-4 border-b border-[#E8EDEF] flex items-center justify-between">
             <div className="flex items-center gap-2">
               <span>📅</span>
-              <h2 className="font-bold text-[#1A2A30] text-sm">الجلسات القادمة</h2>
+              <h2 className="font-bold text-[#1A2A30] text-sm">{t("upcomingSessions.title")}</h2>
             </div>
             <Link href="/training/my-courses" className="text-xs font-medium hover:underline" style={{ color: "#6CAEBD" }}>
-              عرض الكل
+              {t("upcomingSessions.viewAll")}
             </Link>
           </div>
           {upcomingSessions.length === 0 ? (
             <div className="px-5 py-8 text-center">
-              <p className="text-[#8FA4AB] text-sm">لا توجد جلسات قادمة</p>
+              <p className="text-[#8FA4AB] text-sm">{t("upcomingSessions.empty")}</p>
               <Link href="/training/catalog" className="text-xs font-semibold mt-2 block hover:underline" style={{ color: "#6CAEBD" }}>
-                تصفّح البرامج المتاحة ←
+                {t("upcomingSessions.browseCatalog")}
               </Link>
             </div>
           ) : (
@@ -209,7 +213,7 @@ export default async function TrainingDashboard() {
                     </p>
                   </div>
                   <span className="shrink-0 text-xs font-medium px-2 py-0.5 rounded-full" style={{ background: "#E8F6F8", color: "#4A8FA0" }}>
-                    {e.training.status === "ONGOING" ? "جارٍ" : "قادم"}
+                    {e.training.status === "ONGOING" ? ts("ongoing") : ts("upcoming")}
                   </span>
                 </div>
               ))}
@@ -224,10 +228,10 @@ export default async function TrainingDashboard() {
           <div className="px-5 py-4 border-b border-[#E8EDEF] flex items-center justify-between">
             <div className="flex items-center gap-2">
               <span>🎓</span>
-              <h2 className="font-bold text-[#1A2A30] text-sm">الدورات الجارية والمسجّلة</h2>
+              <h2 className="font-bold text-[#1A2A30] text-sm">{t("activeCourses.title")}</h2>
             </div>
             <Link href="/training/my-courses" className="text-xs font-medium hover:underline" style={{ color: "#6CAEBD" }}>
-              إدارة دوراتي
+              {t("activeCourses.manage")}
             </Link>
           </div>
           <div className="divide-y divide-[#F4F7F8]">

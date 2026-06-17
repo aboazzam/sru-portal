@@ -2,18 +2,22 @@
 import Link from "next/link";
 import { useState } from "react";
 import { graduationDocuments, type DocumentType } from "@/lib/mock/graduates";
-
-const typeLabel: Record<DocumentType, string> = {
-  transcript:      "كشف درجات",
-  certificate:     "شهادة",
-  clearance:       "إخلاء طرف",
-  honor:           "تميز أكاديمي",
-  recommendation:  "توصية",
-};
+import { useTranslations } from "next-intl";
 
 type RequestState = "idle" | "submitting" | "done";
 
 export default function GraduatesDocumentsPage() {
+  const t = useTranslations("Graduates");
+
+  const typeLabel: Record<DocumentType, string> = {
+    transcript:     t("documents.types.transcript"),
+    certificate:    t("documents.types.certificate"),
+    clearance:      t("documents.types.clearance"),
+    honor:          t("documents.types.honor"),
+    recommendation: t("documents.types.recommendation"),
+  };
+  // All types resolved from JSON Graduates.documents.types.*
+
   const [requests, setRequests] = useState<Record<string, RequestState>>({});
   const [copies, setCopies]     = useState<Record<string, number>>({});
 
@@ -30,19 +34,19 @@ export default function GraduatesDocumentsPage() {
   return (
     <div className="space-y-5">
       <div className="flex items-center gap-2 text-sm text-gray-500">
-        <Link href="/graduates" className="hover:text-rose-600 transition-colors">الخريجون</Link>
+        <Link href="/graduates" className="hover:text-rose-600 transition-colors">{t("documents.breadcrumbParent")}</Link>
         <span>/</span>
-        <span className="text-gray-800 font-medium">وثائق التخرج</span>
+        <span className="text-gray-800 font-medium">{t("documents.title")}</span>
       </div>
 
       <div>
-        <h1 className="text-2xl font-bold text-gray-900">وثائق التخرج</h1>
-        <p className="text-gray-500 text-sm mt-0.5">اطلب وثائقك الرسمية — جميع الوثائق مجانية</p>
+        <h1 className="text-2xl font-bold text-gray-900">{t("documents.title")}</h1>
+        <p className="text-gray-500 text-sm mt-0.5">{t("documents.subtitle")}</p>
       </div>
 
       <div className="bg-amber-50 border border-amber-200 rounded-xl px-4 py-3 flex items-center gap-3">
         <span className="text-lg">ℹ️</span>
-        <p className="text-amber-700 text-sm">بعض الوثائق تتطلب إتمام إخلاء الطرف أولاً قبل إصدارها.</p>
+        <p className="text-amber-700 text-sm">{t("documents.clearanceNote")}</p>
       </div>
 
       <div className="grid grid-cols-1 gap-4">
@@ -70,15 +74,15 @@ export default function GraduatesDocumentsPage() {
                         </span>
                         {!doc.available && (
                           <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-amber-100 text-amber-700">
-                            🔒 غير متاح بعد
+                            {t("documents.lockedBadge")}
                           </span>
                         )}
                       </div>
                       <p className="text-xs text-gray-500 mt-1 leading-relaxed">{doc.desc}</p>
                       <div className="flex gap-4 mt-2 text-xs text-gray-400">
                         <span>💰 {doc.fee}</span>
-                        {doc.deliveryDays > 0 && <span>⏱️ {doc.deliveryDays} أيام عمل</span>}
-                        {doc.deliveryDays === 0 && <span>⏱️ يُسلَّم في الحفل</span>}
+                        {doc.deliveryDays > 0 && <span>⏱️ {t("documents.deliveryDays", { n: doc.deliveryDays })}</span>}
+                        {doc.deliveryDays === 0 && <span>⏱️ {t("documents.deliveredAtCeremony")}</span>}
                       </div>
                     </div>
                   </div>
@@ -87,7 +91,7 @@ export default function GraduatesDocumentsPage() {
                     <div className="mt-4 flex items-center gap-3 flex-wrap">
                       {doc.type !== "certificate" && (
                         <div className="flex items-center gap-2">
-                          <label className="text-xs text-gray-500">عدد النسخ:</label>
+                          <label className="text-xs text-gray-500">{t("documents.copiesLabel")}</label>
                           <select
                             value={n}
                             onChange={(e) => setCopies((prev) => ({ ...prev, [doc.id]: Number(e.target.value) }))}
@@ -109,7 +113,11 @@ export default function GraduatesDocumentsPage() {
                             : "bg-rose-600 text-white hover:bg-rose-700"
                         }`}
                       >
-                        {state === "done" ? "✅ تم تقديم الطلب" : state === "submitting" ? "جارٍ الإرسال..." : "طلب الوثيقة"}
+                        {state === "done"
+                          ? t("documents.submittedBtn")
+                          : state === "submitting"
+                          ? t("documents.submittingBtn")
+                          : t("documents.requestBtn")}
                       </button>
                       {state === "done" && (
                         <p className="text-xs text-gray-400">
@@ -126,12 +134,13 @@ export default function GraduatesDocumentsPage() {
       </div>
 
       <div className="bg-white rounded-xl border border-gray-200 p-5">
-        <h2 className="font-semibold text-gray-800 text-sm mb-3">ملاحظات مهمة</h2>
+        <h2 className="font-semibold text-gray-800 text-sm mb-3">{t("documents.notesTitle")}</h2>
+
         <ul className="space-y-2 text-sm text-gray-500">
-          <li className="flex items-start gap-2"><span className="shrink-0 text-rose-500">•</span>تُرسل الوثائق إلى بريدك الجامعي عند الاستعداد أو تُستلم من إدارة شؤون الطلاب.</li>
-          <li className="flex items-start gap-2"><span className="shrink-0 text-rose-500">•</span>شهادة التخرج تُسلَّم حصراً في حفل التخرج أو بالبريد المسجّل.</li>
-          <li className="flex items-start gap-2"><span className="shrink-0 text-rose-500">•</span>وثيقة إخلاء الطرف تتطلب توقيع جميع الأقسام قبل الإصدار.</li>
-          <li className="flex items-start gap-2"><span className="shrink-0 text-rose-500">•</span>للاستفسار تواصل مع عمادة شؤون الطلاب: students@sru.edu.sa | داخلي 2100</li>
+          <li className="flex items-start gap-2"><span className="shrink-0 text-rose-500">•</span>{t("documents.notes.delivery")}</li>
+          <li className="flex items-start gap-2"><span className="shrink-0 text-rose-500">•</span>{t("documents.notes.certificate")}</li>
+          <li className="flex items-start gap-2"><span className="shrink-0 text-rose-500">•</span>{t("documents.notes.clearance")}</li>
+          <li className="flex items-start gap-2"><span className="shrink-0 text-rose-500">•</span>{t("documents.notes.contact")}</li>
         </ul>
       </div>
     </div>

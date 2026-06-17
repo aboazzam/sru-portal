@@ -1,25 +1,34 @@
 import Link from "next/link";
 import { prisma } from "@/lib/db";
 import { MembershipStatusButtons, CouncilStatusButtons } from "./_components/ClubStatusButtons";
-
-const statusLabel: Record<string, string> = { PENDING: "معلّق", APPROVED: "مقبول", REJECTED: "مرفوض" };
-const FILTERS = [
-  { value: "",         label: "الكل"   },
-  { value: "PENDING",  label: "معلّق"  },
-  { value: "APPROVED", label: "مقبول"  },
-  { value: "REJECTED", label: "مرفوض"  },
-];
+import { getTranslations } from "next-intl/server";
 
 export default async function ClubsAdminPage({
   searchParams,
 }: {
   searchParams: Promise<{ filter?: string; tab?: string }>;
 }) {
+  const t = await getTranslations("Admin");
+  const ts = await getTranslations("Status");
+
   const { filter, tab } = await searchParams;
   const activeTab = tab === "council" ? "council" : "memberships";
   const validFilter = ["PENDING", "APPROVED", "REJECTED"].includes(filter ?? "")
     ? (filter as "PENDING" | "APPROVED" | "REJECTED")
     : undefined;
+
+  const statusLabel: Record<string, string> = {
+    PENDING:  ts("pending"),
+    APPROVED: ts("approved"),
+    REJECTED: ts("rejected"),
+  };
+
+  const FILTERS = [
+    { value: "",         label: t("requests.filters.all")      },
+    { value: "PENDING",  label: t("requests.filters.pending")  },
+    { value: "APPROVED", label: t("requests.filters.approved") },
+    { value: "REJECTED", label: t("requests.filters.rejected") },
+  ];
 
   const [memberships, membershipCounts, councilApps, councilCounts] = await Promise.all([
     prisma.clubMembership.findMany({
@@ -55,9 +64,11 @@ export default async function ClubsAdminPage({
     <div className="space-y-5">
       <div className="flex items-start justify-between gap-4 flex-wrap">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">طلبات الأندية الرياضية</h1>
+          <h1 className="text-2xl font-bold text-gray-900">{t("clubsPage.title")}</h1>
           <p className="text-gray-500 text-sm mt-0.5">
-            {validFilter ? `${displayData.length} طلب — ${statusLabel[validFilter]}` : `${total} طلب إجمالاً`}
+            {validFilter
+              ? t("requests.filtered", { n: displayData.length }) + ` — ${statusLabel[validFilter]}`
+              : t("requests.total", { n: total })}
           </p>
         </div>
         <div className="flex gap-2 flex-wrap">
@@ -75,7 +86,7 @@ export default async function ClubsAdminPage({
           href="/admin/clubs?tab=memberships"
           className={`px-4 py-1.5 rounded-lg text-sm font-medium transition-colors ${activeTab === "memberships" ? "bg-green-600 text-white shadow-sm" : "bg-white text-gray-600 hover:bg-gray-50 border border-gray-200"}`}
         >
-          عضويات الأندية
+          {t("clubsPage.memberships")}
           <span className={`ms-1.5 text-xs ${activeTab === "memberships" ? "opacity-80" : "text-gray-400"}`}>
             ({Object.values(memCountMap).reduce((s, v) => s + v, 0)})
           </span>
@@ -84,7 +95,7 @@ export default async function ClubsAdminPage({
           href="/admin/clubs?tab=council"
           className={`px-4 py-1.5 rounded-lg text-sm font-medium transition-colors ${activeTab === "council" ? "bg-green-600 text-white shadow-sm" : "bg-white text-gray-600 hover:bg-gray-50 border border-gray-200"}`}
         >
-          طلبات المجلس
+          {t("clubsPage.council")}
           <span className={`ms-1.5 text-xs ${activeTab === "council" ? "opacity-80" : "text-gray-400"}`}>
             ({Object.values(councilCountMap).reduce((s, v) => s + v, 0)})
           </span>
@@ -111,16 +122,16 @@ export default async function ClubsAdminPage({
           <table className="w-full text-sm">
             <thead className="bg-gray-50 text-gray-500 text-xs uppercase">
               <tr>
-                <th className="px-5 py-3 text-start">المتقدّم</th>
-                <th className="px-5 py-3 text-start">البريد الإلكتروني</th>
-                <th className="px-5 py-3 text-start">النادي</th>
-                <th className="px-5 py-3 text-start">تاريخ الطلب</th>
-                <th className="px-5 py-3 text-start">الحالة والإجراء</th>
+                <th className="px-5 py-3 text-start">{t("requests.cols.applicant")}</th>
+                <th className="px-5 py-3 text-start">{t("requests.cols.email")}</th>
+                <th className="px-5 py-3 text-start">{t("requests.cols.club")}</th>
+                <th className="px-5 py-3 text-start">{t("requests.cols.requestDate")}</th>
+                <th className="px-5 py-3 text-start">{t("requests.cols.statusAction")}</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-100">
               {displayData.length === 0 && (
-                <tr><td colSpan={5} className="px-5 py-8 text-center text-gray-400">لا توجد طلبات</td></tr>
+                <tr><td colSpan={5} className="px-5 py-8 text-center text-gray-400">{t("requests.noRequests")}</td></tr>
               )}
               {activeTab === "memberships" && memberships.map((m) => (
                 <tr key={m.id} className="hover:bg-gray-50 transition-colors">

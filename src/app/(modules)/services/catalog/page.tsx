@@ -1,4 +1,7 @@
+export const dynamic = 'force-dynamic';
+
 import { redirect } from "next/navigation";
+import { getTranslations } from "next-intl/server";
 import { getCurrentUser } from "@/lib/dal";
 import { prisma } from "@/lib/db";
 import ApplyButton from "./_components/ApplyButton";
@@ -8,6 +11,8 @@ const serviceIcons = ["📋", "📄", "🎓", "📝", "🏠", "🚌", "🏥", "�
 export default async function ServiceCatalogPage() {
   const user = await getCurrentUser();
   if (!user) redirect("/login");
+
+  const t = await getTranslations("Services");
 
   const [services, myApplications] = await Promise.all([
     prisma.studentService.findMany({
@@ -27,17 +32,17 @@ export default async function ServiceCatalogPage() {
 
       {/* Header */}
       <div>
-        <h1 className="text-2xl font-bold text-[#1A2A30]">كتالوج الخدمات</h1>
+        <h1 className="text-2xl font-bold text-[#1A2A30]">{t("catalog.title")}</h1>
         <p className="text-[#8FA4AB] text-sm mt-0.5">
-          {services.length} خدمة متاحة · تقدَّم بطلبك بنقرة واحدة
+          {t("catalog.subtitle", { count: services.length })}
         </p>
       </div>
 
       {services.length === 0 ? (
         <div className="bg-white rounded-2xl border border-[#E8EDEF] py-20 text-center">
           <p className="text-4xl mb-3">🛎️</p>
-          <h3 className="font-bold text-[#1A2A30] text-base">لا توجد خدمات متاحة حالياً</h3>
-          <p className="text-[#8FA4AB] text-sm mt-1">تفقّد الصفحة لاحقاً</p>
+          <h3 className="font-bold text-[#1A2A30] text-base">{t("catalog.empty")}</h3>
+          <p className="text-[#8FA4AB] text-sm mt-1">{t("catalog.emptyDesc")}</p>
         </div>
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">

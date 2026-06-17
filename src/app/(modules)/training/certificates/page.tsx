@@ -1,4 +1,5 @@
 import { redirect } from "next/navigation";
+import { getTranslations } from "next-intl/server";
 import { getCurrentUser } from "@/lib/dal";
 import { prisma } from "@/lib/db";
 
@@ -19,6 +20,8 @@ function genSerial(enrollmentId: string, date: Date): string {
 export default async function CertificatesPage() {
   const user = await getCurrentUser();
   if (!user) redirect("/login");
+
+  const t = await getTranslations("Training");
 
   const completedEnrollments = await prisma.trainingEnrollment.findMany({
     where: { userId: user.id, status: "COMPLETED" },
@@ -42,18 +45,18 @@ export default async function CertificatesPage() {
     <div className="space-y-6">
       {/* Header */}
       <div>
-        <h1 className="text-2xl font-bold text-[#1A2A30]">الشهادات</h1>
+        <h1 className="text-2xl font-bold text-[#1A2A30]">{t("certificates.title")}</h1>
         <p className="text-[#8FA4AB] text-sm mt-0.5">
-          {completedEnrollments.length} شهادة تدريبية
+          {t("certificates.count", { count: completedEnrollments.length })}
         </p>
       </div>
 
       {completedEnrollments.length === 0 ? (
         <div className="bg-white rounded-2xl border border-[#E8EDEF] py-20 text-center">
           <p className="text-4xl mb-3">🏆</p>
-          <h3 className="font-bold text-[#1A2A30] text-base">لا توجد شهادات بعد</h3>
+          <h3 className="font-bold text-[#1A2A30] text-base">{t("certificates.empty")}</h3>
           <p className="text-[#8FA4AB] text-sm mt-1">
-            أكمل برامجك التدريبية لتحصل على شهاداتك
+            {t("certificates.emptyDesc")}
           </p>
         </div>
       ) : (
@@ -89,7 +92,7 @@ export default async function CertificatesPage() {
                   </div>
                   <div className="shrink-0">
                     <span className="text-xs font-bold px-2.5 py-1 rounded-full bg-[#DCFCE7] text-[#16A34A]">
-                      ✅ صادرة
+                      {t("certificates.issuedBadge")}
                     </span>
                   </div>
                 </div>
@@ -98,7 +101,7 @@ export default async function CertificatesPage() {
                 <div className="px-5 py-4 space-y-3">
                   <div className="grid grid-cols-2 gap-3 text-xs">
                     <div>
-                      <p className="text-[#9CA3AF]">تاريخ الإصدار</p>
+                      <p className="text-[#9CA3AF]">{t("certificates.issueDate")}</p>
                       <p className="font-semibold text-[#374151] mt-0.5">
                         {issueDate.toLocaleDateString("ar-SA", {
                           day: "numeric",
@@ -108,7 +111,7 @@ export default async function CertificatesPage() {
                       </p>
                     </div>
                     <div>
-                      <p className="text-[#9CA3AF]">الفئة</p>
+                      <p className="text-[#9CA3AF]">{t("certificates.category")}</p>
                       <p className="font-semibold text-[#374151] mt-0.5">
                         {enr.training.category ?? "—"}
                       </p>
@@ -118,14 +121,14 @@ export default async function CertificatesPage() {
                   {/* Serial */}
                   <div className="bg-[#F4F7F8] rounded-xl px-3 py-2.5 flex items-center justify-between gap-2">
                     <div>
-                      <p className="text-[10px] text-[#9CA3AF]">رقم الشهادة</p>
+                      <p className="text-[10px] text-[#9CA3AF]">{t("certificates.serialLabel")}</p>
                       <p className="text-xs font-mono font-bold text-[#4A8FA0] mt-0.5">{serial}</p>
                     </div>
                     <span className="text-lg">🎓</span>
                   </div>
 
                   <p className="text-[10px] text-[#B0BEC5] text-center leading-relaxed">
-                    صادرة عن جامعة سليمان الراجحي — مركز التدريب والتطوير
+                    {t("certificates.issuer")}
                   </p>
                 </div>
               </div>

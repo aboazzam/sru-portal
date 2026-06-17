@@ -3,34 +3,37 @@ import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
-
-const navGroups = [
-  {
-    label: null,
-    items: [
-      { href: "/faculty", label: "نظرة عامة", icon: "🏠", exact: true },
-    ],
-  },
-  {
-    label: "الأكاديمي",
-    items: [
-      { href: "/faculty/trainings",   label: "البرامج التدريبية", icon: "🏢", exact: false },
-      { href: "/faculty/scholarships", label: "المنح الدراسية",   icon: "🎓", exact: false },
-    ],
-  },
-  {
-    label: "الطلاب",
-    items: [
-      { href: "/faculty/students", label: "قائمة الطلاب", icon: "👥", exact: false },
-    ],
-  },
-];
+import { useTranslations } from "next-intl";
 
 interface Props { userName: string }
 
 export default function FacultySidebar({ userName }: Props) {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
+  const t = useTranslations("Faculty");
+  const tc = useTranslations("Common");
+
+  const navGroups = [
+    {
+      label: null,
+      items: [
+        { href: "/faculty", label: t("sidebar.overview"), icon: "🏠", exact: true },
+      ],
+    },
+    {
+      label: t("sidebar.academic"),
+      items: [
+        { href: "/faculty/trainings",    label: t("sidebar.trainings"),    icon: "🏢", exact: false },
+        { href: "/faculty/scholarships", label: t("sidebar.scholarships"), icon: "🎓", exact: false },
+      ],
+    },
+    {
+      label: t("students"),
+      items: [
+        { href: "/faculty/students", label: t("sidebar.studentsList"), icon: "👥", exact: false },
+      ],
+    },
+  ];
 
   const NavContent = () => (
     <nav className="flex flex-col h-full">
@@ -46,7 +49,7 @@ export default function FacultySidebar({ userName }: Props) {
       </div>
 
       <div className="px-4 py-3 border-b border-amber-950 shrink-0">
-        <p className="text-amber-400 text-[10px] uppercase tracking-wider mb-0.5">بوابة هيئة التدريس</p>
+        <p className="text-amber-400 text-[10px] uppercase tracking-wider mb-0.5">{t("sidebar.portal")}</p>
         <p className="text-amber-100 text-xs font-medium truncate">{userName}</p>
       </div>
 
@@ -84,7 +87,7 @@ export default function FacultySidebar({ userName }: Props) {
       </div>
 
       <div className="px-5 py-4 border-t border-amber-950 shrink-0">
-        <p className="text-amber-600 text-[10px] mb-0.5">مسجّل الدخول</p>
+        <p className="text-amber-600 text-[10px] mb-0.5">{tc("loggedIn")}</p>
         <p className="text-white text-sm font-medium truncate">{userName}</p>
       </div>
     </nav>
@@ -95,7 +98,7 @@ export default function FacultySidebar({ userName }: Props) {
       <button
         onClick={() => setOpen(!open)}
         className="md:hidden fixed bottom-6 start-6 z-50 w-12 h-12 rounded-full bg-amber-900 text-white shadow-xl flex items-center justify-center text-xl"
-        aria-label="فتح القائمة"
+        aria-label={tc("openMenu")}
       >
         {open ? "✕" : "☰"}
       </button>

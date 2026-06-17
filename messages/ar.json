@@ -6,7 +6,32 @@
     "signOut": "تسجيل الخروج",
     "backToHome": "العودة للرئيسية",
     "langSwitch": "EN",
-    "copyright": "© {year} جامعة سليمان الراجحي. جميع الحقوق محفوظة."
+    "copyright": "© {year} جامعة سليمان الراجحي. جميع الحقوق محفوظة.",
+    "viewAll": "عرض الكل",
+    "loading": "جارٍ التحميل...",
+    "save": "حفظ",
+    "cancel": "إلغاء",
+    "delete": "حذف",
+    "edit": "تعديل",
+    "submit": "تقديم",
+    "confirm": "تأكيد",
+    "close": "إغلاق",
+    "search": "بحث",
+    "filter": "تصفية",
+    "noData": "لا توجد بيانات",
+    "error": "حدث خطأ",
+    "success": "تمت العملية بنجاح",
+    "home": "الرئيسية",
+    "about": "عن الجامعة",
+    "contact": "تواصل معنا",
+    "settings": "الإعدادات",
+    "profile": "الملف الشخصي",
+    "dashboard": "لوحة التحكم",
+    "notifications": "الإشعارات",
+    "help": "المساعدة",
+    "logout": "تسجيل الخروج",
+    "loggedIn": "مسجّل الدخول",
+    "openMenu": "فتح القائمة"
   },
   "Landing": {
     "heroTitle": "بوابة جامعة سليمان الراجحي",
@@ -23,51 +48,15 @@
     "footerAbout": "عن الجامعة"
   },
   "Modules": {
-    "hala": {
-      "name": "هلا بك",
-      "description": "التواصل والشكاوى والاستفسارات",
-      "party": "عمادة شؤون الطلاب"
-    },
-    "sanad": {
-      "name": "سند - خدمات الطلاب",
-      "description": "جميع الخدمات الطلابية في مكان واحد",
-      "party": "عمادة شؤون الطلاب"
-    },
-    "facultyServices": {
-      "name": "خدمات هيئة التدريس",
-      "description": "الخدمات الأكاديمية لأعضاء هيئة التدريس",
-      "party": "عمادة شؤون أعضاء هيئة التدريس والموظفين"
-    },
-    "clubs": {
-      "name": "الأندية الطلابية",
-      "description": "الأنشطة والأندية والفعاليات الطلابية",
-      "party": "عمادة شؤون الطلاب"
-    },
-    "financial": {
-      "name": "الخدمات المالية",
-      "description": "الرسوم الدراسية والمدفوعات والكشوف المالية",
-      "party": "الإدارة المالية"
-    },
-    "scholarships": {
-      "name": "المنح والحلول المالية",
-      "description": "المنح الدراسية والدعم المالي للطلاب",
-      "party": "عمادة شؤون الطلاب"
-    },
-    "training": {
-      "name": "التدريب التعاوني",
-      "description": "فرص التدريب وخدمات التوظيف",
-      "party": "عمادة التطوير الوظيفي"
-    },
-    "graduates": {
-      "name": "الخريجون",
-      "description": "خدمات ما بعد التخرج وشبكة الخريجين",
-      "party": "عمادة خدمة المجتمع"
-    },
-    "admin": {
-      "name": "لوحة التحكم",
-      "description": "إدارة النظام والصلاحيات",
-      "party": "إدارة النظام"
-    }
+    "hala": { "name": "هلا بك", "description": "التواصل والشكاوى والاستفسارات", "party": "عمادة شؤون الطلاب" },
+    "sanad": { "name": "سند - خدمات الطلاب", "description": "جميع الخدمات الطلابية في مكان واحد", "party": "عمادة شؤون الطلاب" },
+    "facultyServices": { "name": "خدمات هيئة التدريس", "description": "الخدمات الأكاديمية لأعضاء هيئة التدريس", "party": "عمادة شؤون أعضاء هيئة التدريس والموظفين" },
+    "clubs": { "name": "الأندية الطلابية", "description": "الأنشطة والأندية والفعاليات الطلابية", "party": "عمادة شؤون الطلاب" },
+    "financial": { "name": "الخدمات المالية", "description": "الرسوم الدراسية والمدفوعات والكشوف المالية", "party": "الإدارة المالية" },
+    "scholarships": { "name": "المنح والحلول المالية", "description": "المنح الدراسية والدعم المالي للطلاب", "party": "عمادة شؤون الطلاب" },
+    "training": { "name": "التدريب التعاوني", "description": "فرص التدريب وخدمات التوظيف", "party": "عمادة التطوير الوظيفي" },
+    "graduates": { "name": "الخريجون", "description": "خدمات ما بعد التخرج وشبكة الخريجين", "party": "عمادة خدمة المجتمع" },
+    "admin": { "name": "لوحة التحكم", "description": "إدارة النظام والصلاحيات", "party": "إدارة النظام" }
   },
   "Login": {
     "title": "تسجيل الدخول إلى البوابة",
@@ -104,7 +93,121 @@
     "schedule": "الجدول الدراسي",
     "exams": "جدول الاختبارات",
     "library": "الموارد المكتبية",
-    "financial": "الملخص المالي"
+    "financial": "الملخص المالي",
+    "sidebar": {
+      "overview": "نظرة عامة",
+      "records": "سجلاتي",
+      "myApps": "جميع طلباتي",
+      "scholarships": "المنح الدراسية",
+      "training": "التدريب التعاوني",
+      "services": "الخدمات",
+      "financial": "الخدمات المالية",
+      "activities": "الأنشطة الطلابية",
+      "clubs": "الأندية الرياضية",
+      "volunteer": "التطوع",
+      "studentServices": "الخدمات الطلابية",
+      "more": "المزيد",
+      "news": "الأخبار الجامعية",
+      "alumni": "الخريجون",
+      "hala": "هلا بك",
+      "portal": "بوابة الطالب",
+      "points": "نقطة"
+    },
+    "overview": {
+      "module": "بوابة الطالب — جامعة سليمان الراجحي",
+      "welcomeHero": "مرحباً، {name}",
+      "memberSince": "عضو منذ {date}",
+      "earnedPoints": "نقطة مكتسبة",
+      "pendingMsg": "لديك {n} طلب قيد المراجعة",
+      "viewAllApps": "عرض جميع الطلبات ←",
+      "availableServices": "الخدمات المتاحة",
+      "enterLink": "دخول ←",
+      "recentActivity": "آخر النشاطات",
+      "viewAll": "عرض الكل",
+      "noRequests": "لا توجد طلبات حتى الآن",
+      "upcomingEvents": "الفعاليات القادمة",
+      "noEvents": "لا توجد فعاليات قريبة",
+      "activityType": "نشاط",
+      "volunteerType": "تطوع",
+      "dateTbd": "يحدد لاحقاً",
+      "activitiesLink": "الأنشطة ←",
+      "volunteerLink": "التطوع ←",
+      "bannerTitle": "استفد من جميع الخدمات المتاحة",
+      "bannerDesc": "سجّل في أنشطة وأندية وبرامج تطوع لكسب نقاط تُضاف لملفك الجامعي.",
+      "studentGuide": "دليل الطالب ←",
+      "typeLabels": {
+        "scholarships": "المنح",
+        "training": "التدريب",
+        "services": "الخدمات",
+        "volunteer": "التطوع",
+        "activities": "الأنشطة",
+        "clubs": "الأندية"
+      }
+    },
+    "myApps": {
+      "title": "جميع طلباتي",
+      "breadcrumb": "لوحة الطالب",
+      "total": "{n} طلب إجمالاً",
+      "totalLabel": "إجمالي الطلبات",
+      "pendingLabel": "قيد المراجعة",
+      "approvedLabel": "مقبولة",
+      "typeFilterLabel": "نوع الطلب",
+      "statusFilterLabel": "الحالة",
+      "empty": "لا توجد طلبات تطابق هذا التصنيف",
+      "results": "{n} نتيجة",
+      "filters": {
+        "all": "الكل",
+        "scholarships": "المنح",
+        "training": "التدريب",
+        "services": "الخدمات",
+        "volunteer": "التطوع",
+        "activities": "الأنشطة",
+        "clubs": "الأندية"
+      },
+      "statusFilters": {
+        "all": "الكل",
+        "pending": "قيد المراجعة",
+        "approved": "مقبول",
+        "rejected": "مرفوض",
+        "completed": "مكتمل"
+      }
+    },
+    "scholarshipsPage": {
+      "breadcrumb": "لوحة الطالب",
+      "title": "المنح الدراسية",
+      "subtitle": "{available} متاحة — تقدّمت لـ {applied}",
+      "browseAll": "استعراض كل المنح ←",
+      "myApps": "تقديماتي",
+      "appliedOn": "تقدّمت {date}",
+      "empty": "لا توجد منح في هذا التصنيف",
+      "applicants": "{n} متقدّم",
+      "daysLeft": "{n} يوم متبقٍ",
+      "expiredBadge": "منتهية",
+      "filters": {
+        "all": "الكل",
+        "available": "متاحة",
+        "mine": "تقديماتي",
+        "expired": "منتهية"
+      }
+    },
+    "trainingsPage": {
+      "breadcrumb": "لوحة الطالب",
+      "title": "التدريب التعاوني",
+      "subtitle": "{available} برنامج متاح — سجّلت في {enrolled}",
+      "browseAll": "استعراض كل البرامج ←",
+      "myEnrollments": "تسجيلاتي",
+      "empty": "لا توجد برامج في هذا التصنيف",
+      "enrolledBadge": "✓ مسجّل",
+      "enrolled": "{n} / {cap} مسجّل",
+      "full": "ممتلئ",
+      "filters": {
+        "all": "الكل",
+        "upcoming": "قادمة",
+        "ongoing": "جارية",
+        "mine": "تسجيلاتي",
+        "expired": "منتهية"
+      }
+    }
   },
   "Faculty": {
     "welcome": "مرحباً، {name}",
@@ -120,7 +223,103 @@
     "grades": "تسليم الدرجات",
     "attendance": "سجلات الحضور",
     "students": "قائمة الطلاب",
-    "office": "ساعات الدوام"
+    "office": "ساعات الدوام",
+    "sidebar": {
+      "overview": "نظرة عامة",
+      "academic": "الأكاديمي",
+      "trainings": "البرامج التدريبية",
+      "scholarships": "المنح الدراسية",
+      "studentsList": "قائمة الطلاب",
+      "portal": "بوابة هيئة التدريس"
+    },
+    "overview": {
+      "module": "بوابة هيئة التدريس",
+      "welcomeHero": "مرحباً، {name}",
+      "trainerIn": "أنت مدرّب في {n} برنامج تدريبي",
+      "notAssigned": "لم يتم تعيينك مدرباً في أي برنامج بعد",
+      "stats": {
+        "totalStudents": "إجمالي الطلاب",
+        "thisMonth": "+{n} هذا الشهر",
+        "programs": "برامج تدريبية",
+        "active": "{n} نشط",
+        "mine": "برامجي",
+        "iAmTrainer": "أنا المدرّب",
+        "scholarships": "فرص المنح",
+        "pending": "{n} معلّق"
+      },
+      "myTrainings": "برامجي التدريبية",
+      "viewAll": "عرض الكل",
+      "noTrainings": "لم يتم تعيينك مدرباً في أي برنامج",
+      "browseAll": "استعرض جميع البرامج",
+      "enrolled": "{n} مسجّل",
+      "recentStudents": "أحدث الطلاب المسجّلين",
+      "quickAccess": "وصول سريع",
+      "links": {
+        "trainings": "البرامج التدريبية",
+        "scholarships": "المنح الدراسية",
+        "students": "قائمة الطلاب"
+      }
+    },
+    "trainingsPage": {
+      "title": "البرامج التدريبية",
+      "total": "{n} برنامج إجمالاً",
+      "trainerIn": "أنت مدرّب في {n}",
+      "iAmTrainer": "⭐ أنا المدرّب",
+      "trainerBadge": "⭐ أنت مدرّب في {n} برنامج",
+      "empty": "لا توجد برامج في هذا الفلتر",
+      "viewAll": "عرض الكل",
+      "startDate": "البدء:",
+      "endDate": "الانتهاء:",
+      "enrolled": "{n} / {cap} مسجّل",
+      "enrolledCount": "تسجيل",
+      "filters": {
+        "all": "الكل",
+        "mine": "برامجي",
+        "upcoming": "قادمة",
+        "ongoing": "جارية",
+        "expired": "منتهية"
+      }
+    },
+    "scholarshipsPage": {
+      "title": "المنح الدراسية",
+      "subtitle": "{n} منحة متاحة · {m} طلب إجمالاً",
+      "appsCount": "{n} طلب",
+      "expires": "ينتهي: {date}",
+      "appsSection": "طلبات المنح",
+      "empty": "لا توجد طلبات",
+      "filters": {
+        "all": "الكل",
+        "pending": "معلّقة",
+        "approved": "مقبولة",
+        "rejected": "مرفوضة"
+      },
+      "cols": {
+        "student": "الطالب",
+        "email": "البريد الإلكتروني",
+        "scholarship": "المنحة",
+        "applyDate": "تاريخ التقديم",
+        "status": "الحالة"
+      }
+    },
+    "studentsPage": {
+      "title": "قائمة الطلاب",
+      "subtitle": "{n} طالب {location}",
+      "inCollege": "في هذه الكلية",
+      "enrolled": "مسجّل",
+      "all": "الكل",
+      "empty": "لا يوجد طلاب في هذه الكلية",
+      "cols": {
+        "num": "#",
+        "student": "الطالب",
+        "college": "الكلية",
+        "points": "النقاط",
+        "scholarships": "المنح",
+        "training": "التدريب",
+        "activities": "الأنشطة",
+        "joinDate": "تاريخ الانضمام"
+      },
+      "points": "{n} نقطة"
+    }
   },
   "Admin": {
     "title": "لوحة التحكم",
@@ -133,11 +332,680 @@
     "email": "البريد الإلكتروني",
     "role": "الدور",
     "joined": "تاريخ الانضمام",
-    "noUsers": "لا يوجد مستخدمون بعد"
+    "noUsers": "لا يوجد مستخدمون بعد",
+    "sidebar": {
+      "overview": "نظرة عامة",
+      "users": "المستخدمون",
+      "manageUsers": "إدارة المستخدمين",
+      "managePoints": "إدارة النقاط",
+      "academic": "الطلبات الأكاديمية",
+      "scholarships": "طلبات المنح",
+      "training": "تسجيلات التدريب",
+      "studentRequests": "طلبات الطلاب",
+      "services": "طلبات الخدمات",
+      "volunteers": "طلبات التطوع",
+      "activities": "طلبات الأنشطة",
+      "clubs": "طلبات الأندية",
+      "tools": "أدوات",
+      "import": "استيراد Excel",
+      "dashboard": "لوحة التحكم",
+      "sysAdmin": "مدير النظام"
+    },
+    "overview": {
+      "title": "نظرة عامة",
+      "welcome": "مرحباً {name} — إحصائيات النظام في الوقت الفعلي",
+      "needsReview": "{n} طلب يحتاج مراجعة",
+      "checkPending": "تحقق من قسم الطلبات المعلّقة",
+      "pendingAlertTitle": "الطلبات المعلّقة — تحتاج إجراء",
+      "usersCard": {
+        "title": "المستخدمون",
+        "total": "إجمالي المستخدمين",
+        "students": "الطلاب",
+        "faculty": "هيئة التدريس",
+        "admins": "المدراء",
+        "manageLink": "إدارة المستخدمين ←"
+      },
+      "academicCard": {
+        "title": "الأكاديمي",
+        "scholarshipsPending": "طلبات المنح (معلّق)",
+        "scholarshipsTotal": "طلبات المنح (إجمالي)",
+        "trainingPending": "تسجيلات التدريب (معلّق)",
+        "trainingTotal": "تسجيلات التدريب (إجمالي)"
+      },
+      "studentSvcs": {
+        "title": "خدمات الطلاب",
+        "servicesPending": "طلبات الخدمات (معلّق)",
+        "servicesTotal": "طلبات الخدمات (إجمالي)",
+        "volunteerPending": "طلبات التطوع (معلّق)",
+        "volunteerTotal": "طلبات التطوع (إجمالي)"
+      },
+      "activitiesClubs": {
+        "title": "الأنشطة والأندية",
+        "activitiesPending": "طلبات الأنشطة (معلّق)",
+        "activitiesTotal": "طلبات الأنشطة (إجمالي)",
+        "clubsPending": "طلبات الأندية (معلّق)",
+        "clubsTotal": "طلبات الأندية (إجمالي)"
+      },
+      "recentUsersTitle": "آخر المستخدمين المسجّلين",
+      "viewAll": "عرض الكل",
+      "cols": {
+        "name": "الاسم",
+        "email": "البريد الإلكتروني",
+        "role": "الدور",
+        "joinDate": "تاريخ التسجيل"
+      },
+      "pendingItems": {
+        "scholarships": "طلبات المنح",
+        "training": "تسجيلات التدريب",
+        "services": "طلبات الخدمات",
+        "volunteers": "طلبات التطوع",
+        "activities": "طلبات الأنشطة",
+        "clubs": "طلبات الأندية"
+      }
+    },
+    "requests": {
+      "filters": {
+        "all": "الكل",
+        "pending": "معلّق",
+        "approved": "مقبول",
+        "rejected": "مرفوض",
+        "approvedF": "مقبولة",
+        "rejectedF": "مرفوضة"
+      },
+      "total": "{n} طلب إجمالاً",
+      "filtered": "{n} طلب",
+      "noRequests": "لا توجد طلبات",
+      "cols": {
+        "applicant": "المتقدّم",
+        "email": "البريد الإلكتروني",
+        "activity": "النشاط",
+        "activityDate": "تاريخ النشاط",
+        "applyDate": "تاريخ التقديم",
+        "statusAction": "الحالة والإجراء",
+        "opportunity": "فرصة التطوع",
+        "opportunityDate": "تاريخ الفرصة",
+        "service": "الخدمة المطلوبة",
+        "club": "النادي",
+        "requestDate": "تاريخ الطلب",
+        "student": "الطالب",
+        "scholarship": "المنحة",
+        "status": "الحالة"
+      }
+    },
+    "activitiesPage": { "title": "طلبات الأنشطة الطلابية" },
+    "volunteersPage": { "title": "طلبات التطوع" },
+    "servicesPage": { "title": "طلبات الخدمات الطلابية" },
+    "clubsPage": {
+      "title": "طلبات الأندية الرياضية",
+      "memberships": "عضويات الأندية",
+      "council": "طلبات المجلس"
+    }
   },
   "ModulePage": {
     "underDevTitle": "هذه الخدمة قيد التطوير",
     "underDevDesc": "نعمل على تطوير هذه الخدمة لتقديم أفضل تجربة ممكنة. يرجى العودة لاحقاً.",
     "backBtn": "العودة للصفحة الرئيسية"
+  },
+  "Status": {
+    "pending": "قيد المراجعة",
+    "approved": "مقبول",
+    "rejected": "مرفوض",
+    "completed": "مكتمل",
+    "cancelled": "ملغى",
+    "active": "نشط",
+    "inactive": "غير نشط",
+    "open": "مفتوح",
+    "closed": "مغلق",
+    "upcoming": "قادم",
+    "ongoing": "جارٍ",
+    "ended": "انتهى",
+    "enrolled": "مسجّل",
+    "openTbd": "مفتوح / يحدد لاحقاً"
+  },
+  "Sanad": {
+    "title": "سند – خدمات الطلاب",
+    "subtitle": "اختر القسم الذي تحتاجه",
+    "breadcrumb": "سند",
+    "welcome": "مرحباً {name}",
+    "myRequests": "طلباتي",
+    "myRequestsDesc": "تابع حالة طلباتك المقدّمة",
+    "enterSection": "الدخول للقسم",
+    "nav": {
+      "home": "الرئيسية",
+      "academic": "الأنشطة الأكاديمية",
+      "activities": "المهارات والأنشطة",
+      "volunteer": "الفرص التطوعية",
+      "studentServices": "الخدمات الطلابية",
+      "myRequests": "طلباتي",
+      "organizer": "لوحة المنظم",
+      "adminPanel": "لوحة الإدارة",
+      "loggedInAs": "مسجّل الدخول"
+    },
+    "sections": {
+      "academic": {
+        "title": "الأنشطة الأكاديمية",
+        "desc": "طلب الوثائق الرسمية، الجدول الدراسي، التسجيل في المقررات، وإخلاء الطرف",
+        "services": {
+          "officialDoc": "طلب وثيقة رسمية",
+          "schedule": "الجدول الدراسي",
+          "registration": "التسجيل في المقررات",
+          "clearance": "إخلاء الطرف"
+        }
+      },
+      "activities": {
+        "title": "المهارات والأنشطة",
+        "desc": "الأنشطة والفعاليات، برامج تطوير المهارات، والأندية الطلابية",
+        "services": {
+          "activities": "الأنشطة والفعاليات",
+          "skills": "برامج تطوير المهارات",
+          "clubs": "الأندية الطلابية"
+        }
+      },
+      "volunteer": {
+        "title": "الفرص التطوعية",
+        "desc": "استعرض فرص التطوع المتاحة وتابع سجل تطوعك",
+        "services": {
+          "opportunities": "الفرص المتاحة",
+          "log": "سجل التطوع"
+        }
+      },
+      "studentServices": {
+        "title": "الخدمات الطلابية",
+        "desc": "الخدمات الصحية، الإسكان والسكن، وخدمات النقل",
+        "services": {
+          "health": "الخدمات الصحية",
+          "housing": "الإسكان والسكن",
+          "transport": "خدمات النقل"
+        }
+      }
+    },
+    "academic": {
+      "breadcrumb": "الأنشطة الأكاديمية",
+      "officialDoc": "طلب وثيقة رسمية",
+      "schedule": "الجدول الدراسي",
+      "registration": "التسجيل في المقررات",
+      "clearance": "إخلاء الطرف"
+    },
+    "myRequestsPage": {
+      "breadcrumb": "طلباتي",
+      "allRequests": "جميع الطلبات",
+      "requestsCount": "{count} طلب",
+      "empty": "لا توجد طلبات بعد",
+      "emptyDesc": "سجّل في المنح أو الأنشطة أو الفرص التطوعية",
+      "cols": {
+        "id": "رقم الطلب",
+        "type": "نوع الطلب",
+        "category": "التصنيف",
+        "date": "التاريخ",
+        "status": "الحالة"
+      },
+      "categories": {
+        "scholarship": "منحة دراسية",
+        "training": "تدريب تعاوني",
+        "volunteer": "تطوع",
+        "activity": "نشاط طلابي",
+        "service": "خدمة طلابية"
+      }
+    },
+    "volunteerPage": {
+      "breadcrumb": "الفرص التطوعية",
+      "opportunities": "الفرص المتاحة",
+      "log": "سجل تطوعي"
+    },
+    "activitiesPage": {
+      "breadcrumb": "المهارات والأنشطة",
+      "activitiesCard": "الأنشطة والفعاليات",
+      "trainingCard": "برامج التدريب التعاوني",
+      "clubs": {
+        "title": "الأندية الطلابية",
+        "desc": "اكتشف الأندية الطلابية والفعاليات التنظيمية",
+        "btn": "الأندية"
+      }
+    },
+    "organizer": {
+      "breadcrumb": "لوحة المنظم",
+      "module": "لوحة المنظم",
+      "welcome": "مرحباً، {name}",
+      "subtitle": "تمكّن من إدارة الفعاليات والأنشطة الطلابية",
+      "stats": {
+        "activities": "الأنشطة المسجّلة",
+        "totalEnrollments": "إجمالي التسجيلات",
+        "volunteerRequests": "طلبات التطوع",
+        "pendingRequests": "طلبات قيد المراجعة"
+      },
+      "activitiesTable": {
+        "title": "الأنشطة الطلابية",
+        "countSuffix": "نشاط",
+        "cols": {
+          "activity": "النشاط",
+          "date": "التاريخ",
+          "enrolled": "المسجّلون"
+        },
+        "empty": "لا توجد أنشطة مسجّلة"
+      },
+      "recentApps": {
+        "title": "آخر التسجيلات",
+        "empty": "لا توجد تسجيلات بعد"
+      }
+    },
+    "studentServicesPage": {
+      "breadcrumb": "الخدمات الطلابية",
+      "health": {
+        "title": "الخدمات الصحية",
+        "clinic": { "label": "العيادة الجامعية", "desc": "الأحد – الخميس، 8:00 – 16:00 | مبنى الخدمات الطلابية" },
+        "insurance": { "label": "التأمين الطلابي", "desc": "تغطية شاملة لجميع الطلاب المسجّلين خلال الفصل الدراسي" },
+        "counseling": { "label": "التوجيه النفسي والإرشاد", "desc": "جلسات فردية وجماعية مع متخصصين معتمدين" },
+        "emergency": "للطوارئ: اتصل بـ 911 أو زر العيادة فوراً"
+      },
+      "housing": {
+        "title": "الإسكان والسكن",
+        "dormitory": { "label": "السكن الجامعي", "desc": "غرف فردية ومشتركة — التقديم قبل بداية كل فصل بـ 4 أسابيع" },
+        "rules": { "label": "قواعد السكن", "desc": "راجع دليل السكن الجامعي للاطلاع على الأنظمة واللوائح" },
+        "maintenance": { "label": "الصيانة والبلاغات", "desc": "قدّم بلاغات الصيانة عبر بوابة السكن أو اتصل بالإدارة" },
+        "emergency": "إدارة السكن: داخلي 2400 | يعمل 24 ساعة"
+      },
+      "transport": {
+        "title": "خدمات النقل",
+        "buses": { "label": "الحافلات الجامعية", "desc": "مسارات يومية تغطي المناطق السكنية الرئيسية حول الجامعة" },
+        "registration": { "label": "التسجيل في الخدمة", "desc": "سجّل في خدمة الحافلات عبر النظام — المقاعد محدودة" },
+        "schedules": { "label": "جداول التشغيل", "desc": "الجدول متاح على لوحات الجامعة وبوابة الطالب" },
+        "emergency": "للاستفسار عن مواعيد الحافلات: داخلي 2600"
+      }
+    },
+    "subadmin": {
+      "breadcrumb": "سند",
+      "pageTitle": "لوحة الإدارة",
+      "module": "لوحة إدارة سند",
+      "welcome": "مرحباً، {name}",
+      "overview": "نظرة عامة على الطلبات والمنظمين وأداء المنصة",
+      "kpis": {
+        "total": "إجمالي الطلبات",
+        "pending": "قيد المراجعة",
+        "activities": "طلبات الأنشطة",
+        "volunteer": "طلبات التطوع"
+      },
+      "distribution": {
+        "title": "توزيع الطلبات",
+        "activities": "أنشطة طلابية",
+        "volunteer": "فرص تطوعية",
+        "services": "خدمات طلابية",
+        "requestSuffix": "طلب",
+        "pendingSuffix": "قيد المراجعة"
+      },
+      "organizers": {
+        "title": "المنظمون",
+        "countSuffix": "منظم",
+        "empty": "لا يوجد منظمون مسجّلون",
+        "active": "نشط"
+      },
+      "recentVolunteer": {
+        "title": "آخر طلبات التطوع",
+        "empty": "لا توجد طلبات تطوع بعد",
+        "student": "الطالب",
+        "opportunity": "الفرصة",
+        "date": "التاريخ",
+        "status": "الحالة"
+      }
+    }
+  },
+  "Training": {
+    "module": "التدريب والتطوير — جامعة سليمان الراجحي",
+    "welcome": "مرحباً، {name}",
+    "enrollments": "{count} تسجيل",
+    "completedCount": "المكتملة: {count} برنامج",
+    "activeCount": "الجارية: {count} برنامج",
+    "totalCount": "الكل: {count} برنامج",
+    "completionPct": "{pct}% نسبة الإكمال",
+    "nav": {
+      "dashboard": "لوحة التحكم",
+      "catalog": "كتالوج البرامج",
+      "myCourses": "دوراتي",
+      "certificates": "الشهادات",
+      "requests": "الطلبات",
+      "moduleLabel": "التدريب والتطوير",
+      "loggedInAs": "مسجّل الدخول"
+    },
+    "stats": {
+      "active": "الجارية والمسجّلة",
+      "completed": "المكتملة",
+      "available": "برامج متاحة",
+      "total": "إجمالي التسجيلات"
+    },
+    "alerts": { "title": "التنبيهات", "daysLeft": "بعد {days} يوم" },
+    "quickLinks": {
+      "title": "روابط سريعة",
+      "catalog": "كتالوج البرامج",
+      "myCourses": "دوراتي",
+      "certificates": "الشهادات",
+      "requests": "طلب تدريبي"
+    },
+    "upcomingSessions": {
+      "title": "الجلسات القادمة",
+      "viewAll": "عرض الكل",
+      "empty": "لا توجد جلسات قادمة",
+      "browseCatalog": "تصفّح البرامج المتاحة ←"
+    },
+    "activeCourses": { "title": "الدورات الجارية والمسجّلة", "manage": "إدارة دوراتي" },
+    "catalog": {
+      "title": "كتالوج البرامج",
+      "available": "{count} برنامج متاح للتسجيل",
+      "myCourses": "دوراتي ←",
+      "empty": "لا توجد برامج متاحة للتسجيل حالياً",
+      "past": "برامج منتهية",
+      "instructor": "المدرب",
+      "startDate": "البدء",
+      "capacityFull": "مكتمل",
+      "enrolled": "مسجّل",
+      "status": { "UPCOMING": "قادم", "ONGOING": "جارٍ", "COMPLETED": "منتهٍ", "CANCELLED": "ملغى" }
+    },
+    "myCourses": {
+      "title": "دوراتي",
+      "summary": "{active} نشطة · {completed} مكتملة · {total} إجمالي",
+      "newEnroll": "+ تسجيل برنامج جديد",
+      "empty": "لم تسجّل في أي برنامج بعد",
+      "emptyDesc": "تصفّح البرامج المتاحة وابدأ رحلتك التدريبية",
+      "browseCatalog": "📚 تصفّح الكتالوج",
+      "activeSectionTitle": "الجارية والمسجّلة",
+      "completedSectionTitle": "المكتملة",
+      "rejectedSectionTitle": "مرفوضة",
+      "startDate": "البدء",
+      "endDate": "الانتهاء",
+      "certificateBtn": "الشهادة",
+      "completedBadge": "🏁 مكتمل",
+      "rejectedBadge": "❌ مرفوض"
+    },
+    "certificates": {
+      "title": "الشهادات",
+      "count": "{count} شهادة تدريبية",
+      "empty": "لا توجد شهادات بعد",
+      "emptyDesc": "أكمل برامجك التدريبية لتحصل على شهاداتك",
+      "issuedBadge": "✅ صادرة",
+      "issueDate": "تاريخ الإصدار",
+      "category": "الفئة",
+      "serialLabel": "رقم الشهادة",
+      "issuer": "صادرة عن جامعة سليمان الراجحي — مركز التدريب والتطوير"
+    },
+    "requests": {
+      "title": "الطلبات التدريبية",
+      "subtitle": "إرسال طلبات خاصة بتسجيلاتك وشهاداتك",
+      "newRequest": "طلب جديد",
+      "selectType": "اختر نوع الطلب:",
+      "programName": "اسم البرنامج / الدورة",
+      "programPlaceholder": "مثال: مهارات التفكير النقدي وحل المشكلات",
+      "notes": "ملاحظات إضافية (اختياري)",
+      "notesPlaceholder": "أضف أي تفاصيل أو مبررات...",
+      "attachLabel": "إرفاق مستند (اختياري)",
+      "attachHint": "PDF أو صورة — بحد أقصى 5 ميغابايت",
+      "sendBtn": "إرسال الطلب",
+      "history": "سجل الطلبات",
+      "empty": "لا توجد طلبات بعد"
+    }
+  },
+  "Services": {
+    "module": "خدمات الطلاب — جامعة سليمان الراجحي",
+    "welcome": "مرحباً، {name}",
+    "noApplicationsYet": "لم تُقدّم أي طلب بعد — تصفّح الخدمات المتاحة",
+    "applicationsSummary": "لديك {count} طلب · {pending} قيد المراجعة",
+    "browseCta": "تصفّح الخدمات ←",
+    "stats": { "available": "خدمات متاحة", "pending": "قيد المراجعة", "approved": "مقبولة", "total": "إجمالي طلباتي" },
+    "quickLinks": {
+      "title": "روابط سريعة",
+      "catalog": "كتالوج الخدمات",
+      "catalogDesc": "تصفّح جميع الخدمات المتاحة",
+      "myRequests": "طلباتي",
+      "myRequestsDesc": "تابع حالة طلباتك المقدَّمة"
+    },
+    "featured": "خدمات مميزة",
+    "recentApplications": {
+      "title": "آخر طلباتي",
+      "viewAll": "عرض الكل",
+      "empty": "لا توجد طلبات بعد",
+      "applyCta": "تقدّم لخدمة الآن"
+    },
+    "info": {
+      "title": "كيف تعمل خدمات الطلاب؟",
+      "body": "تصفّح الكتالوج واختر الخدمة المناسبة · قدّم طلبك بنقرة واحدة · تابع حالة طلبك في صفحة طلباتي · ستصلك إشعارات عند الموافقة أو رفض الطلب."
+    },
+    "catalog": {
+      "title": "كتالوج الخدمات",
+      "subtitle": "{count} خدمة متاحة · تقدَّم بطلبك بنقرة واحدة",
+      "empty": "لا توجد خدمات متاحة حالياً",
+      "emptyDesc": "تفقّد الصفحة لاحقاً"
+    },
+    "myRequests": { "title": "طلباتي", "empty": "لا توجد طلبات بعد", "browseCta": "تصفّح الخدمات" }
+  },
+  "Volunteers": {
+    "module": "التطوع والمشاركة المجتمعية — جامعة سليمان الراجحي",
+    "welcome": "مرحباً، {name}",
+    "badge": "متطوع نشط",
+    "noApplicationsYet": "لم تُقدّم أي طلب تطوع بعد — اكتشف الفرص المتاحة",
+    "applicationsSummary": "{count} طلب تطوع · {pending} قيد المراجعة · {approved} مقبول",
+    "discoverCta": "اكتشف الفرص ←",
+    "stats": { "available": "فرص متاحة", "pending": "قيد المراجعة", "approved": "مقبولة", "total": "إجمالي طلباتي" },
+    "upcoming": {
+      "title": "أقرب الفرص",
+      "viewAll": "عرض الكل",
+      "empty": "لا توجد فرص قادمة حالياً",
+      "viewAllCta": "عرض جميع فرص التطوع ←"
+    },
+    "myApplications": { "title": "آخر طلباتي", "viewAll": "عرض الكل", "empty": "لا توجد طلبات بعد", "applyCta": "تطوّع الآن" },
+    "info": {
+      "title": "لماذا التطوع؟",
+      "body": "يُسهم التطوع في إثراء تجربتك الجامعية وتطوير مهاراتك القيادية والإنسانية · يُحتسب في سجلك الأكاديمي · يُعزّز ملفك الشخصي أمام أصحاب العمل · وتحصل على شهادة تطوع رسمية من الجامعة."
+    },
+    "opportunities": {
+      "title": "فرص التطوع",
+      "subtitle": "اكتشف فرص التطوع المتاحة وانضم إلى مجتمع المتطوعين",
+      "empty": "لا توجد فرص تطوع متاحة حالياً",
+      "apply": "التقديم"
+    },
+    "myApplicationsPage": { "title": "طلبات التطوع", "empty": "لم تتقدم لأي فرصة تطوع بعد", "browseCta": "تصفّح الفرص" }
+  },
+  "Activities": {
+    "module": "الأنشطة الطلابية — جامعة سليمان الراجحي",
+    "welcome": "مرحباً، {name}",
+    "badge": "مشارك نشط",
+    "noApplicationsYet": "لم تسجّل في أي نشاط بعد — اكتشف ما هو متاح",
+    "applicationsSummary": "{count} طلب مشاركة · {pending} قيد المراجعة · {approved} مقبول",
+    "browseCta": "تصفّح الأنشطة ←",
+    "stats": { "available": "أنشطة متاحة", "pending": "قيد المراجعة", "approved": "مقبولة", "total": "إجمالي طلباتي" },
+    "upcoming": {
+      "title": "أقرب الأنشطة",
+      "viewAll": "عرض الكل",
+      "empty": "لا توجد أنشطة قادمة حالياً",
+      "viewAllCta": "عرض جميع الأنشطة ←"
+    },
+    "myApplications": { "title": "آخر طلباتي", "viewAll": "عرض الكل", "empty": "لا توجد طلبات بعد", "registerCta": "سجّل الآن" },
+    "info": {
+      "title": "الأنشطة الطلابية — فرصة للتميز",
+      "body": "تُسهم الأنشطة الطلابية في تطوير مهاراتك الشخصية والقيادية · تُحتسب نقاط المشاركة في ملفك الأكاديمي · تعرّف على زملائك وابنِ شبكة علاقات داخل الجامعة · واحصل على شهادات مشاركة رسمية."
+    },
+    "catalog": {
+      "title": "الأنشطة المتاحة",
+      "subtitle": "{upcoming} نشاط قادم · {past} نشاط منتهٍ",
+      "sectionUpcoming": "الأنشطة القادمة",
+      "sectionPast": "الأنشطة السابقة",
+      "emptyUpcoming": "لا توجد أنشطة قادمة حالياً",
+      "status": { "open": "مفتوح", "ended": "انتهى", "openTbd": "مفتوح / يحدد لاحقاً" }
+    },
+    "myApplicationsPage": {
+      "title": "طلباتي",
+      "emptySubtitle": "لم تسجّل في أي نشاط بعد",
+      "summary": "{count} طلب · {pending} قيد المراجعة · {approved} مقبول · {rejected} مرفوض",
+      "empty": "لا توجد طلبات بعد",
+      "emptyDesc": "سجّل في نشاط من صفحة الأنشطة المتاحة",
+      "browseCta": "تصفّح الأنشطة ←",
+      "registeredAt": "تاريخ التسجيل",
+      "ended": "انتهى",
+      "sections": { "pending": "قيد المراجعة", "approved": "مقبولة", "rejected": "مرفوضة" }
+    }
+  },
+  "Clubs": {
+    "title": "الأندية الطلابية",
+    "subtitle": "اكتشف الأندية الطلابية والانضم إلى المجتمع الجامعي",
+    "myClubs": "أنديتي",
+    "activities": "الفعاليات",
+    "join": "انضمام",
+    "joined": "منضم",
+    "apply": "التقديم للمجلس",
+    "empty": "لا توجد أندية متاحة حالياً",
+    "emptyMyClubs": "لم تنضم لأي نادٍ بعد",
+    "browseClubs": "تصفّح الأندية"
+  },
+  "Alumni": {
+    "title": "الخريجون",
+    "subtitle": "مرحباً بك في مجتمع خريجي جامعة سليمان الراجحي",
+    "profile": "ملفي الشخصي",
+    "card": "بطاقة الخريج",
+    "jobs": "فرص العمل",
+    "network": "شبكة الخريجين",
+    "events": "الفعاليات",
+    "contribute": "المساهمة",
+    "documents": "وثائقي",
+    "development": "التطوير المهني",
+    "employer": { "title": "بوابة أصحاب العمل", "postJob": "نشر وظيفة", "applicants": "المتقدمون", "verify": "التحقق" },
+    "admin": { "title": "إدارة الخريجين", "statistics": "الإحصائيات", "eventsManage": "إدارة الفعاليات", "alumniList": "قائمة الخريجين" }
+  },
+  "News": {
+    "title": "الأخبار والإعلانات",
+    "subtitle": "تابع آخر الأخبار والإعلانات الجامعية",
+    "all": "جميع الأخبار",
+    "readMore": "اقرأ المزيد",
+    "empty": "لا توجد أخبار حالياً",
+    "publishedAt": "تاريخ النشر"
+  },
+  "Graduates": {
+    "sidebar": {
+      "overview": "نظرة عامة",
+      "graduation": "التخرج",
+      "requirements": "متطلبات التخرج",
+      "ceremony": "حفل التخرج",
+      "documents": "وثائق التخرج",
+      "alumniPortal": "بوابة الخريجين",
+      "alumni": "الخريجون",
+      "jobs": "فرص العمل",
+      "events": "الفعاليات",
+      "card": "بطاقة الخريج",
+      "portal": "بوابة الخريجين"
+    },
+    "status": {
+      "completed": "مكتمل",
+      "in_progress": "جارٍ",
+      "pending": "معلّق",
+      "waived": "مُعفى"
+    },
+    "overview": {
+      "module": "بوابة الخريجين — جامعة سليمان الراجحي",
+      "welcome": "أهلاً، {name}",
+      "points": "{n} نقطة",
+      "memberSince": "عضو منذ {date}",
+      "requirementsProgress": "اكتمال متطلبات التخرج",
+      "completionRatio": "{done} / {total} ({pct}%)",
+      "completeCta": "أكمل المتطلبات المتبقية للتأهل للتخرج",
+      "viewDetails": "عرض التفاصيل ←",
+      "stats": {
+        "requirements": "متطلبات مكتملة",
+        "readiness": "نسبة الاستعداد",
+        "scholarships": "طلبات المنح",
+        "training": "برامج التدريب"
+      },
+      "requirementsTitle": "متطلبات التخرج",
+      "viewAll": "عرض الكل",
+      "viewAllReqs": "عرض جميع المتطلبات ({n}) ←",
+      "timelineTitle": "الجدول الزمني للتخرج",
+      "nextDeadline": "الموعد القادم:",
+      "ceremony": {
+        "title": "حفل التخرج",
+        "registrationDeadline": "آخر موعد للتسجيل: {date}",
+        "registered": "✅ مسجّل",
+        "registerNow": "سجّل الآن"
+      },
+      "links": {
+        "requirements": "متطلبات التخرج",
+        "ceremony": "حفل التخرج",
+        "documents": "وثائق التخرج",
+        "alumni": "بوابة الخريجين",
+        "jobs": "فرص العمل",
+        "card": "بطاقة الخريج"
+      }
+    },
+    "requirements": {
+      "breadcrumbParent": "الخريجون",
+      "breadcrumb": "متطلبات التخرج",
+      "title": "متطلبات التخرج",
+      "subtitle": "{done} مكتملة من أصل {total} متطلب",
+      "readinessPct": "{pct}%",
+      "readinessLabel": "جاهزية التخرج",
+      "progressTitle": "التقدم الإجمالي",
+      "categories": {
+        "all": "الكل",
+        "academic": "أكاديمي",
+        "financial": "مالي",
+        "admin": "إداري",
+        "training": "تدريب"
+      },
+      "progress": "التقدم",
+      "clearanceTitle": "تفاصيل إخلاء الطرف",
+      "clearanceSections": "{done} / {total} أقسام",
+      "signed": "موقّع",
+      "waiting": "في الانتظار"
+    },
+    "ceremony": {
+      "breadcrumbParent": "الخريجون",
+      "breadcrumb": "حفل التخرج",
+      "title": "حفل التخرج 🎓",
+      "subtitle": "حفل التخرج السنوي",
+      "university": "جامعة سليمان الراجحي",
+      "dateLabel": "التاريخ",
+      "timeLabel": "الوقت",
+      "venueLabel": "المكان",
+      "guestsLabel": "عدد الضيوف المسموح",
+      "guestsValue": "{n} ضيوف",
+      "registrationTitle": "التسجيل في الحفل",
+      "successTitle": "تم التسجيل بنجاح!",
+      "successMsg": "تم تسجيلك في حفل التخرج مع {n} ضيوف.",
+      "confirmationMsg": "ستصلك رسالة تأكيد على بريدك الجامعي قريباً.",
+      "deadlinePassed": "انتهى موعد التسجيل",
+      "countdown": "⏳ المتبقي للتسجيل",
+      "daysLeft": "{n} يوم",
+      "guestCountLabel": "عدد الضيوف",
+      "guestSingular": "ضيف",
+      "guestPlural": "ضيوف",
+      "maxGuests": "الحد الأقصى: {n} ضيوف",
+      "confirmBtn": "تأكيد التسجيل",
+      "rehearsalTitle": "البروفا العامة",
+      "rehearsalMandatory": "الحضور إلزامي لجميع المتخرجين",
+      "dresscodeTitle": "الزي الرسمي",
+      "dresscodeNote": "📌 يُمكن استلام الزي الأكاديمي من إدارة شؤون الطلاب اعتباراً من 1 سبتمبر 2026",
+      "timelineTitle": "المراحل والمواعيد"
+    },
+    "documents": {
+      "breadcrumbParent": "الخريجون",
+      "breadcrumb": "وثائق التخرج",
+      "title": "وثائق التخرج",
+      "subtitle": "اطلب وثائقك الرسمية — جميع الوثائق مجانية",
+      "clearanceNote": "بعض الوثائق تتطلب إتمام إخلاء الطرف أولاً قبل إصدارها.",
+      "lockedBadge": "🔒 غير متاح بعد",
+      "copiesLabel": "عدد النسخ:",
+      "deliveryDays": "{n} أيام عمل",
+      "deliveredAtCeremony": "يُسلَّم في الحفل",
+      "requestBtn": "طلب الوثيقة",
+      "submittingBtn": "جارٍ الإرسال...",
+      "submittedBtn": "✅ تم تقديم الطلب",
+      "notesTitle": "ملاحظات مهمة",
+      "notes": {
+        "delivery": "تُرسل الوثائق إلى بريدك الجامعي عند الاستعداد أو تُستلم من إدارة شؤون الطلاب.",
+        "certificate": "شهادة التخرج تُسلَّم حصراً في حفل التخرج أو بالبريد المسجّل.",
+        "clearance": "وثيقة إخلاء الطرف تتطلب توقيع جميع الأقسام قبل الإصدار.",
+        "contact": "للاستفسار تواصل مع عمادة شؤون الطلاب: students@sru.edu.sa | داخلي 2100"
+      },
+      "types": {
+        "transcript": "كشف درجات",
+        "certificate": "شهادة",
+        "clearance": "إخلاء طرف",
+        "honor": "تميز أكاديمي",
+        "recommendation": "توصية"
+      }
+    }
   }
 }

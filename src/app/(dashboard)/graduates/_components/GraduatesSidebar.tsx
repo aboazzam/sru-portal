@@ -3,38 +3,41 @@ import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
-
-const navGroups = [
-  {
-    label: null,
-    items: [
-      { href: "/graduates", label: "نظرة عامة", icon: "🏛️", exact: true },
-    ],
-  },
-  {
-    label: "التخرج",
-    items: [
-      { href: "/graduates/requirements", label: "متطلبات التخرج", icon: "✅", exact: false },
-      { href: "/graduates/ceremony",     label: "حفل التخرج",     icon: "🎓", exact: false },
-      { href: "/graduates/documents",    label: "وثائق التخرج",   icon: "📄", exact: false },
-    ],
-  },
-  {
-    label: "بوابة الخريجين",
-    items: [
-      { href: "/alumni",            label: "الخريجون",         icon: "🤝", exact: false },
-      { href: "/alumni/jobs",       label: "فرص العمل",        icon: "💼", exact: false },
-      { href: "/alumni/events",     label: "الفعاليات",        icon: "📅", exact: false },
-      { href: "/alumni/card",       label: "بطاقة الخريج",    icon: "🪪", exact: false },
-    ],
-  },
-];
+import { useTranslations } from "next-intl";
 
 interface Props { userName: string }
 
 export default function GraduatesSidebar({ userName }: Props) {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
+  const t = useTranslations("Graduates");
+  const tc = useTranslations("Common");
+
+  const navGroups = [
+    {
+      label: null,
+      items: [
+        { href: "/graduates", label: t("sidebar.overview"), icon: "🏛️", exact: true },
+      ],
+    },
+    {
+      label: t("sidebar.graduation"),
+      items: [
+        { href: "/graduates/requirements", label: t("sidebar.requirements"), icon: "✅", exact: false },
+        { href: "/graduates/ceremony",     label: t("sidebar.ceremony"),     icon: "🎓", exact: false },
+        { href: "/graduates/documents",    label: t("sidebar.documents"),    icon: "📄", exact: false },
+      ],
+    },
+    {
+      label: t("sidebar.alumniPortal"),
+      items: [
+        { href: "/alumni",        label: t("sidebar.alumni"),  icon: "🤝", exact: false },
+        { href: "/alumni/jobs",   label: t("sidebar.jobs"),    icon: "💼", exact: false },
+        { href: "/alumni/events", label: t("sidebar.events"),  icon: "📅", exact: false },
+        { href: "/alumni/card",   label: t("sidebar.card"),    icon: "🪪", exact: false },
+      ],
+    },
+  ];
 
   const NavContent = () => (
     <nav className="flex flex-col h-full">
@@ -50,7 +53,7 @@ export default function GraduatesSidebar({ userName }: Props) {
       </div>
 
       <div className="px-4 py-3 border-b border-rose-950 shrink-0">
-        <p className="text-rose-400 text-[10px] uppercase tracking-wider mb-0.5">بوابة الخريجين</p>
+        <p className="text-rose-400 text-[10px] uppercase tracking-wider mb-0.5">{t("sidebar.portal")}</p>
         <p className="text-rose-100 text-xs font-medium truncate">{userName}</p>
       </div>
 
@@ -88,7 +91,7 @@ export default function GraduatesSidebar({ userName }: Props) {
       </div>
 
       <div className="px-5 py-4 border-t border-rose-950 shrink-0">
-        <p className="text-rose-600 text-[10px] mb-0.5">مسجّل الدخول</p>
+        <p className="text-rose-600 text-[10px] mb-0.5">{tc("loggedIn")}</p>
         <p className="text-white text-sm font-medium truncate">{userName}</p>
       </div>
     </nav>
@@ -99,7 +102,7 @@ export default function GraduatesSidebar({ userName }: Props) {
       <button
         onClick={() => setOpen(!open)}
         className="md:hidden fixed bottom-6 start-6 z-50 w-12 h-12 rounded-full bg-rose-900 text-white shadow-xl flex items-center justify-center text-xl"
-        aria-label="فتح القائمة"
+        aria-label={tc("openMenu")}
       >
         {open ? "✕" : "☰"}
       </button>

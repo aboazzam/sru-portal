@@ -2,18 +2,8 @@
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
+import { useTranslations } from "next-intl";
 import { useState } from "react";
-
-const navItems = [
-  { href: "/sanad",                  label: "الرئيسية",           icon: "🏠", roles: ["ALL"] },
-  { href: "/sanad/academic",         label: "الأنشطة الأكاديمية", icon: "📚", roles: ["ALL"] },
-  { href: "/sanad/activities",       label: "المهارات والأنشطة",  icon: "💡", roles: ["ALL"] },
-  { href: "/sanad/volunteer",        label: "الفرص التطوعية",     icon: "🤲", roles: ["ALL"] },
-  { href: "/sanad/student-services", label: "الخدمات الطلابية",   icon: "🎓", roles: ["ALL"] },
-  { href: "/sanad/my-requests",      label: "طلباتي",             icon: "📋", roles: ["ALL"] },
-  { href: "/sanad/organizer",        label: "لوحة المنظم",        icon: "⚙️", roles: ["ORGANIZER", "SUBADMIN", "ADMIN"] },
-  { href: "/sanad/subadmin",         label: "لوحة الإدارة",       icon: "🛡️", roles: ["SUBADMIN", "ADMIN"] },
-];
 
 interface Props {
   role: string;
@@ -23,6 +13,18 @@ interface Props {
 export default function SanadSidebar({ role, userName }: Props) {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
+  const t = useTranslations("Sanad");
+
+  const navItems = [
+    { href: "/sanad",                  label: t("nav.home"),           icon: "🏠", roles: ["ALL"] },
+    { href: "/sanad/academic",         label: t("nav.academic"),       icon: "📚", roles: ["ALL"] },
+    { href: "/sanad/activities",       label: t("nav.activities"),     icon: "💡", roles: ["ALL"] },
+    { href: "/sanad/volunteer",        label: t("nav.volunteer"),      icon: "🤲", roles: ["ALL"] },
+    { href: "/sanad/student-services", label: t("nav.studentServices"),icon: "🎓", roles: ["ALL"] },
+    { href: "/sanad/my-requests",      label: t("nav.myRequests"),     icon: "📋", roles: ["ALL"] },
+    { href: "/sanad/organizer",        label: t("nav.organizer"),      icon: "⚙️", roles: ["ORGANIZER", "SUBADMIN", "ADMIN"] },
+    { href: "/sanad/subadmin",         label: t("nav.adminPanel"),     icon: "🛡️", roles: ["SUBADMIN", "ADMIN"] },
+  ];
 
   const visible = navItems.filter(
     (item) => item.roles.includes("ALL") || item.roles.includes(role)
@@ -34,7 +36,7 @@ export default function SanadSidebar({ role, userName }: Props) {
       <div className="px-5 py-5 border-b border-[#2C1650] flex items-center">
         <Image
           src="/assets/logos/logo-white.svg"
-          alt="جامعة سليمان الراجحي"
+          alt={t("title")}
           width={160}
           height={40}
           style={{ height: "40px", width: "auto" }}
@@ -70,7 +72,7 @@ export default function SanadSidebar({ role, userName }: Props) {
 
       {/* User info */}
       <div className="px-5 py-4 border-t border-[#2C1650]">
-        <p className="text-[#9D7EC8] text-xs mb-0.5">مسجّل الدخول</p>
+        <p className="text-[#9D7EC8] text-xs mb-0.5">{t("nav.loggedInAs")}</p>
         <p className="text-white text-sm font-medium truncate">{userName}</p>
       </div>
     </nav>

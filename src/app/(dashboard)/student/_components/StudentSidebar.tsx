@@ -3,41 +3,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
-
-const navGroups = [
-  {
-    label: null,
-    items: [
-      { href: "/student", label: "نظرة عامة", icon: "🏠", exact: true },
-    ],
-  },
-  {
-    label: "سجلاتي",
-    items: [
-      { href: "/student/my-applications", label: "جميع طلباتي",       icon: "📋", exact: false },
-      { href: "/student/scholarships",    label: "المنح الدراسية",     icon: "🎓", exact: false },
-      { href: "/student/trainings",       label: "التدريب التعاوني",   icon: "🏢", exact: false },
-    ],
-  },
-  {
-    label: "الخدمات",
-    items: [
-      { href: "/financial",   label: "الخدمات المالية",  icon: "💳", exact: false },
-      { href: "/activities",  label: "الأنشطة الطلابية", icon: "🎯", exact: false },
-      { href: "/clubs",       label: "الأندية الرياضية", icon: "⚽", exact: false },
-      { href: "/volunteers",  label: "التطوع",            icon: "🌱", exact: false },
-      { href: "/services",    label: "الخدمات الطلابية", icon: "🛎️", exact: false },
-    ],
-  },
-  {
-    label: "المزيد",
-    items: [
-      { href: "/news",   label: "الأخبار الجامعية", icon: "📰", exact: false },
-      { href: "/alumni", label: "الخريجون",          icon: "🤝", exact: false },
-      { href: "/hala",   label: "هلا بك",            icon: "👋", exact: false },
-    ],
-  },
-];
+import { useTranslations } from "next-intl";
 
 interface Props {
   userName: string;
@@ -47,6 +13,43 @@ interface Props {
 export default function StudentSidebar({ userName, points }: Props) {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
+  const t = useTranslations("Student");
+  const tc = useTranslations("Common");
+
+  const navGroups = [
+    {
+      label: null,
+      items: [
+        { href: "/student", label: t("sidebar.overview"), icon: "🏠", exact: true },
+      ],
+    },
+    {
+      label: t("sidebar.records"),
+      items: [
+        { href: "/student/my-applications", label: t("sidebar.myApps"),      icon: "📋", exact: false },
+        { href: "/student/scholarships",    label: t("sidebar.scholarships"), icon: "🎓", exact: false },
+        { href: "/student/trainings",       label: t("sidebar.training"),     icon: "🏢", exact: false },
+      ],
+    },
+    {
+      label: t("sidebar.services"),
+      items: [
+        { href: "/financial",  label: t("sidebar.financial"),        icon: "💳", exact: false },
+        { href: "/activities", label: t("sidebar.activities"),       icon: "🎯", exact: false },
+        { href: "/clubs",      label: t("sidebar.clubs"),            icon: "⚽", exact: false },
+        { href: "/volunteers", label: t("sidebar.volunteer"),        icon: "🌱", exact: false },
+        { href: "/services",   label: t("sidebar.studentServices"),  icon: "🛎️", exact: false },
+      ],
+    },
+    {
+      label: t("sidebar.more"),
+      items: [
+        { href: "/news",   label: t("sidebar.news"),   icon: "📰", exact: false },
+        { href: "/alumni", label: t("sidebar.alumni"), icon: "🤝", exact: false },
+        { href: "/hala",   label: t("sidebar.hala"),   icon: "👋", exact: false },
+      ],
+    },
+  ];
 
   const NavContent = () => (
     <nav className="flex flex-col h-full">
@@ -64,12 +67,12 @@ export default function StudentSidebar({ userName, points }: Props) {
       <div className="px-4 py-3 border-b border-slate-700 shrink-0">
         <div className="flex items-center justify-between gap-2">
           <div className="min-w-0">
-            <p className="text-slate-400 text-[10px] uppercase tracking-wider mb-0.5">بوابة الطالب</p>
+            <p className="text-slate-400 text-[10px] uppercase tracking-wider mb-0.5">{t("sidebar.portal")}</p>
             <p className="text-slate-200 text-xs font-medium truncate">{userName}</p>
           </div>
           <div className="text-center shrink-0">
             <p className="text-amber-400 font-bold text-sm tabular-nums">{points}</p>
-            <p className="text-[9px] text-slate-500">نقطة</p>
+            <p className="text-[9px] text-slate-500">{t("sidebar.points")}</p>
           </div>
         </div>
       </div>
@@ -108,7 +111,7 @@ export default function StudentSidebar({ userName, points }: Props) {
       </div>
 
       <div className="px-5 py-4 border-t border-slate-700 shrink-0">
-        <p className="text-slate-500 text-[10px] mb-0.5">مسجّل الدخول</p>
+        <p className="text-slate-500 text-[10px] mb-0.5">{tc("loggedIn")}</p>
         <p className="text-white text-sm font-medium truncate">{userName}</p>
       </div>
     </nav>
@@ -119,7 +122,7 @@ export default function StudentSidebar({ userName, points }: Props) {
       <button
         onClick={() => setOpen(!open)}
         className="md:hidden fixed bottom-6 start-6 z-50 w-12 h-12 rounded-full bg-slate-800 text-white shadow-xl flex items-center justify-center text-xl"
-        aria-label="فتح القائمة"
+        aria-label={tc("openMenu")}
       >
         {open ? "✕" : "☰"}
       </button>

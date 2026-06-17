@@ -1,15 +1,12 @@
+export const dynamic = 'force-dynamic';
+
 import Link from "next/link";
 import { redirect } from "next/navigation";
+import { getTranslations } from "next-intl/server";
 import { getCurrentUser } from "@/lib/dal";
 import { prisma } from "@/lib/db";
 import CatalogEnrollButton from "./_components/CatalogEnrollButton";
 
-const statusLabel: Record<string, string> = {
-  UPCOMING:  "قادم",
-  ONGOING:   "جارٍ",
-  COMPLETED: "منتهٍ",
-  CANCELLED: "ملغى",
-};
 const statusStyle: Record<string, { bg: string; color: string }> = {
   UPCOMING:  { bg: "#DBEAFE", color: "#2563EB" },
   ONGOING:   { bg: "#DCFCE7", color: "#16A34A" },
@@ -20,6 +17,15 @@ const statusStyle: Record<string, { bg: string; color: string }> = {
 export default async function TrainingCatalogPage() {
   const user = await getCurrentUser();
   if (!user) redirect("/login");
+
+  const t = await getTranslations("Training");
+
+  const statusLabel: Record<string, string> = {
+    UPCOMING:  t("catalog.status.UPCOMING"),
+    ONGOING:   t("catalog.status.ONGOING"),
+    COMPLETED: t("catalog.status.COMPLETED"),
+    CANCELLED: t("catalog.status.CANCELLED"),
+  };
 
   const [trainings, myEnrollments] = await Promise.all([
     prisma.training.findMany({
@@ -45,17 +51,17 @@ export default async function TrainingCatalogPage() {
 
   const enrolledMap = new Map(myEnrollments.map((e) => [e.trainingId, e.status]));
 
-  const available = trainings.filter((t) => t.status === "UPCOMING" || t.status === "ONGOING");
-  const past      = trainings.filter((t) => t.status === "COMPLETED" || t.status === "CANCELLED");
+  const available = trainings.filter((tr) => tr.status === "UPCOMING" || tr.status === "ONGOING");
+  const past      = trainings.filter((tr) => tr.status === "COMPLETED" || tr.status === "CANCELLED");
 
   return (
     <div className="space-y-6">
       {/* Header */}
       <div className="flex items-center justify-between gap-4 flex-wrap">
         <div>
-          <h1 className="text-2xl font-bold text-[#1A2A30]">كتالوج البرامج</h1>
+          <h1 className="text-2xl font-bold text-[#1A2A30]">{t("catalog.title")}</h1>
           <p className="text-[#8FA4AB] text-sm mt-0.5">
-            {available.length} برنامج متاح للتسجيل
+            {t("catalog.available", { count: available.length })}
           </p>
         </div>
         <Link
@@ -63,37 +69,37 @@ export default async function TrainingCatalogPage() {
           className="text-sm font-semibold hover:underline"
           style={{ color: "#6CAEBD" }}
         >
-          دوراتي ←
+          {t("catalog.myCourses")}
         </Link>
       </div>
 
       {/* Available */}
       {available.length === 0 ? (
         <div className="bg-white rounded-2xl border border-[#E8EDEF] py-16 text-center">
-          <p className="text-[#8FA4AB]">لا توجد برامج متاحة للتسجيل حالياً</p>
+          <p className="text-[#8FA4AB]">{t("catalog.empty")}</p>
         </div>
       ) : (
         <div className="space-y-3">
-          {available.map((t) => {
-            const isFull      = t.capacity !== null && t._count.enrollments >= t.capacity;
-            const unavailable = t.status === "CANCELLED" || t.status === "COMPLETED";
-            const myStatus    = enrolledMap.get(t.id);
-            const st          = statusStyle[t.status] ?? { bg: "#F3F4F6", color: "#6B7280" };
+          {available.map((tr) => {
+            const isFull      = tr.capacity !== null && tr._count.enrollments >= tr.capacity;
+            const unavailable = tr.status === "CANCELLED" || tr.status === "COMPLETED";
+            const myStatus    = enrolledMap.get(tr.id);
+            const st          = statusStyle[tr.status] ?? { bg: "#F3F4F6", color: "#6B7280" };
 
             return (
               <div
-                key={t.id}
+                key={tr.id}
                 className="bg-white rounded-2xl border border-[#E8EDEF] p-5 flex flex-col sm:flex-row sm:items-start gap-4 hover:shadow-sm transition-shadow"
               >
                 {/* Date badge */}
                 <div className="shrink-0 w-14 h-14 rounded-xl bg-[#E8F6F8] flex flex-col items-center justify-center text-center">
-                  {t.startDate ? (
+                  {tr.startDate ? (
                     <>
                       <span className="text-lg font-bold text-[#4A8FA0] leading-none">
-                        {new Date(t.startDate).toLocaleDateString("ar-SA", { day: "numeric" })}
+                        {new Date(tr.startDate).toLocaleDateString("ar-SA", { day: "numeric" })}
                       </span>
                       <span className="text-[10px] text-[#8FA4AB] leading-none mt-0.5">
-                        {new Date(t.startDate).toLocaleDateString("ar-SA", { month: "short" })}
+                        {new Date(tr.startDate).toLocaleDateString("ar-SA", { month: "short" })}
                       </span>
                     </>
                   ) : (
@@ -104,26 +110,26 @@ export default async function TrainingCatalogPage() {
                 {/* Content */}
                 <div className="flex-1 min-w-0 space-y-1.5">
                   <div className="flex items-center gap-2 flex-wrap">
-                    <h3 className="font-bold text-[#1F2937] text-sm">{t.title}</h3>
+                    <h3 className="font-bold text-[#1F2937] text-sm">{tr.title}</h3>
                     <span className="text-[10px] font-bold px-2 py-0.5 rounded-full" style={{ background: st.bg, color: st.color }}>
-                      {statusLabel[t.status]}
+                      {statusLabel[tr.status]}
                     </span>
                   </div>
-                  {t.description && (
-                    <p className="text-xs text-[#6B7280] line-clamp-2">{t.description}</p>
+                  {tr.description && (
+                    <p className="text-xs text-[#6B7280] line-clamp-2">{tr.description}</p>
                   )}
                   <div className="flex items-center gap-3 text-xs text-[#9CA3AF] flex-wrap">
-                    {t.instructor && <span>المدرب: {t.instructor}</span>}
-                    {t.category   && <span>· {t.category}</span>}
-                    {t.startDate  && (
+                    {tr.instructor && <span>{t("catalog.instructor")}: {tr.instructor}</span>}
+                    {tr.category   && <span>· {tr.category}</span>}
+                    {tr.startDate  && (
                       <span>
-                        · البدء: {new Date(t.startDate).toLocaleDateString("ar-SA")}
+                        · {t("catalog.startDate")}: {new Date(tr.startDate).toLocaleDateString("ar-SA")}
                       </span>
                     )}
-                    {t.capacity !== null && (
+                    {tr.capacity !== null && (
                       <span>
-                        · {t._count.enrollments}/{t.capacity} مسجّل
-                        {isFull && " (مكتمل)"}
+                        · {tr._count.enrollments}/{tr.capacity} {t("catalog.enrolled")}
+                        {isFull && ` (${t("catalog.capacityFull")})`}
                       </span>
                     )}
                   </div>
@@ -132,7 +138,7 @@ export default async function TrainingCatalogPage() {
                 {/* Action */}
                 <div className="shrink-0 self-start">
                   <CatalogEnrollButton
-                    trainingId={t.id}
+                    trainingId={tr.id}
                     myStatus={myStatus ?? null}
                     isFull={isFull}
                     unavailable={unavailable}
@@ -147,31 +153,31 @@ export default async function TrainingCatalogPage() {
       {/* Past */}
       {past.length > 0 && (
         <div className="space-y-3">
-          <h2 className="font-bold text-[#8FA4AB] text-sm">برامج منتهية</h2>
+          <h2 className="font-bold text-[#8FA4AB] text-sm">{t("catalog.past")}</h2>
           <div className="space-y-2">
-            {past.map((t) => {
-              const myStatus = enrolledMap.get(t.id);
-              const st       = statusStyle[t.status] ?? { bg: "#F3F4F6", color: "#6B7280" };
+            {past.map((tr) => {
+              const myStatus = enrolledMap.get(tr.id);
+              const st       = statusStyle[tr.status] ?? { bg: "#F3F4F6", color: "#6B7280" };
               return (
                 <div
-                  key={t.id}
+                  key={tr.id}
                   className="bg-[#F9FAFB] rounded-xl border border-[#E8EDEF] p-4 flex items-center justify-between gap-4 opacity-75"
                 >
                   <div className="min-w-0">
-                    <p className="font-semibold text-[#374151] text-sm">{t.title}</p>
+                    <p className="font-semibold text-[#374151] text-sm">{tr.title}</p>
                     <p className="text-xs text-[#9CA3AF] mt-0.5">
-                      {t.category && `${t.category} · `}
-                      {t.instructor ?? ""}
+                      {tr.category && `${tr.category} · `}
+                      {tr.instructor ?? ""}
                     </p>
                   </div>
                   <div className="flex items-center gap-2 shrink-0">
                     {myStatus && (
                       <span className="text-xs font-semibold px-2 py-0.5 rounded-full bg-[#DCFCE7] text-[#16A34A]">
-                        مسجّل
+                        {t("catalog.enrolled")}
                       </span>
                     )}
                     <span className="text-xs font-semibold px-2.5 py-0.5 rounded-full" style={{ background: st.bg, color: st.color }}>
-                      {statusLabel[t.status]}
+                      {statusLabel[tr.status]}
                     </span>
                   </div>
                 </div>

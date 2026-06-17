@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
+import { getTranslations } from "next-intl/server";
 import { getCurrentUser } from "@/lib/dal";
 import { prisma } from "@/lib/db";
 import VolunteerOpportunities from "./_components/VolunteerOpportunities";
@@ -29,6 +30,8 @@ export default async function VolunteerPage() {
   const user = await getCurrentUser();
   if (!user) redirect("/login");
 
+  const t = await getTranslations("Sanad");
+
   const [opportunities, myApplications] = await Promise.all([
     prisma.volunteerOpportunity.findMany({
       orderBy: { date: "asc" },
@@ -46,16 +49,16 @@ export default async function VolunteerPage() {
   return (
     <div className="space-y-6">
       <div className="flex items-center gap-2 text-sm text-gray-500">
-        <Link href="/sanad" className="hover:text-[#3D1F6E] transition-colors">سند</Link>
+        <Link href="/sanad" className="hover:text-[#3D1F6E] transition-colors">{t("breadcrumb")}</Link>
         <span>/</span>
-        <span className="text-[#3D1F6E] font-medium">الفرص التطوعية</span>
+        <span className="text-[#3D1F6E] font-medium">{t("volunteerPage.breadcrumb")}</span>
       </div>
 
-      <ServiceCard title="الفرص المتاحة" icon="🤲" accentColor="#6B46C1">
+      <ServiceCard title={t("volunteerPage.opportunities")} icon="🤲" accentColor="#6B46C1">
         <VolunteerOpportunities opportunities={opportunities} appliedIds={appliedIds} />
       </ServiceCard>
 
-      <ServiceCard title="سجل تطوعي" icon="📊" accentColor="#00B4C8">
+      <ServiceCard title={t("volunteerPage.log")} icon="📊" accentColor="#00B4C8">
         <VolunteerLog applications={myApplications} />
       </ServiceCard>
     </div>

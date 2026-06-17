@@ -1,4 +1,7 @@
+export const dynamic = 'force-dynamic';
+
 import { redirect } from "next/navigation";
+import { getTranslations } from "next-intl/server";
 import { getCurrentUser } from "@/lib/dal";
 import { prisma } from "@/lib/db";
 import ActivityApplyButton from "./_components/ActivityApplyButton";
@@ -8,6 +11,8 @@ const actIcons = ["🎭", "⚽", "🎨", "🏆", "🎤", "🌍", "🎓", "🎪",
 export default async function ActivitiesCatalogPage() {
   const user = await getCurrentUser();
   if (!user) redirect("/login");
+
+  const t = await getTranslations("Activities");
 
   const now = new Date();
 
@@ -48,11 +53,11 @@ export default async function ActivitiesCatalogPage() {
               {act.date && (
                 <p className="text-xs mt-1" style={{ color: isPast ? "#9CA3AF" : "#2563EB" }}>
                   📅 {act.date.toLocaleDateString("ar-SA", { day: "numeric", month: "long", year: "numeric" })}
-                  {isPast && " · انتهى"}
+                  {isPast && ` · ${t("catalog.status.ended")}`}
                 </p>
               )}
               {!act.date && (
-                <p className="text-xs mt-1 text-[#16A34A]">📆 مفتوح / يحدد لاحقاً</p>
+                <p className="text-xs mt-1 text-[#16A34A]">📆 {t("catalog.status.openTbd")}</p>
               )}
             </div>
           </div>
@@ -66,7 +71,7 @@ export default async function ActivitiesCatalogPage() {
               className="text-xs font-medium px-2.5 py-1 rounded-lg"
               style={{ background: isPast ? "#F3F4F6" : "#EFF6FF", color: isPast ? "#6B7280" : "#2563EB" }}
             >
-              {isPast ? "انتهى" : "مفتوح"}
+              {isPast ? t("catalog.status.ended") : t("catalog.status.open")}
             </span>
             <ActivityApplyButton
               activityId={act.id}
@@ -84,9 +89,9 @@ export default async function ActivitiesCatalogPage() {
     <div className="space-y-8">
       {/* Header */}
       <div>
-        <h1 className="text-2xl font-bold text-[#1A2A30]">الأنشطة المتاحة</h1>
+        <h1 className="text-2xl font-bold text-[#1A2A30]">{t("catalog.title")}</h1>
         <p className="text-sm text-[#8FA4AB] mt-1">
-          {upcoming.length} نشاط قادم · {past.length} نشاط منتهٍ
+          {t("catalog.subtitle", { upcoming: upcoming.length, past: past.length })}
         </p>
       </div>
 
@@ -94,7 +99,7 @@ export default async function ActivitiesCatalogPage() {
       {upcoming.length > 0 ? (
         <section>
           <h2 className="font-bold text-[#1A2A30] text-base mb-4 flex items-center gap-2">
-            <span>📅</span> الأنشطة القادمة
+            <span>📅</span> {t("catalog.sectionUpcoming")}
           </h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-5">
             {upcoming.map((act, i) => (
@@ -105,7 +110,7 @@ export default async function ActivitiesCatalogPage() {
       ) : (
         <div className="bg-white rounded-2xl border border-[#E8EDEF] px-6 py-12 text-center">
           <p className="text-4xl mb-2">📭</p>
-          <p className="text-sm text-[#8FA4AB]">لا توجد أنشطة قادمة حالياً</p>
+          <p className="text-sm text-[#8FA4AB]">{t("catalog.emptyUpcoming")}</p>
         </div>
       )}
 
@@ -113,7 +118,7 @@ export default async function ActivitiesCatalogPage() {
       {past.length > 0 && (
         <section>
           <h2 className="font-bold text-[#6B7280] text-base mb-4 flex items-center gap-2">
-            <span>🕐</span> الأنشطة السابقة
+            <span>🕐</span> {t("catalog.sectionPast")}
           </h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-5 opacity-80">
             {past.map((act, i) => (

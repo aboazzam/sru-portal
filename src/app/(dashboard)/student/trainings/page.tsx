@@ -3,22 +3,9 @@ import { redirect } from "next/navigation";
 import { getCurrentUser } from "@/lib/dal";
 import { prisma } from "@/lib/db";
 import EnrollButton from "./_components/EnrollButton";
+import { getTranslations } from "next-intl/server";
 
-const trainingStatusConfig: Record<string, { label: string; bg: string; color: string }> = {
-  UPCOMING:  { label: "قادم",  bg: "#DBEAFE", color: "#2563EB" },
-  ONGOING:   { label: "جارٍ",  bg: "#DCFCE7", color: "#16A34A" },
-  COMPLETED: { label: "منتهٍ", bg: "#F3F4F6", color: "#6B7280" },
-  CANCELLED: { label: "ملغى",  bg: "#FEE2E2", color: "#DC2626" },
-};
-
-const enrStatusConfig: Record<string, { label: string; bg: string; color: string }> = {
-  PENDING:   { label: "قيد المراجعة", bg: "#FEF3C7", color: "#D97706" },
-  APPROVED:  { label: "مقبول",        bg: "#DCFCE7", color: "#16A34A" },
-  REJECTED:  { label: "مرفوض",        bg: "#FEE2E2", color: "#DC2626" },
-  COMPLETED: { label: "مكتمل",        bg: "#DBEAFE", color: "#2563EB" },
-};
-
-const filters = ["الكل", "قادمة", "جارية", "تسجيلاتي", "منتهية"] as const;
+const filters = ["all", "upcoming", "ongoing", "mine", "expired"] as const;
 
 export default async function StudentTrainingsPage({
   searchParams,
@@ -29,7 +16,32 @@ export default async function StudentTrainingsPage({
   if (!user) redirect("/login");
   if (user.role !== "STUDENT") redirect("/dashboard");
 
+  const t = await getTranslations("Student");
+  const ts = await getTranslations("Status");
+
   const { filter } = await searchParams;
+
+  const trainingStatusConfig: Record<string, { label: string; bg: string; color: string }> = {
+    UPCOMING:  { label: ts("upcoming"),  bg: "#DBEAFE", color: "#2563EB" },
+    ONGOING:   { label: ts("ongoing"),   bg: "#DCFCE7", color: "#16A34A" },
+    COMPLETED: { label: ts("ended"),     bg: "#F3F4F6", color: "#6B7280" },
+    CANCELLED: { label: ts("cancelled"), bg: "#FEE2E2", color: "#DC2626" },
+  };
+
+  const enrStatusConfig: Record<string, { label: string; bg: string; color: string }> = {
+    PENDING:   { label: ts("pending"),   bg: "#FEF3C7", color: "#D97706" },
+    APPROVED:  { label: ts("approved"),  bg: "#DCFCE7", color: "#16A34A" },
+    REJECTED:  { label: ts("rejected"),  bg: "#FEE2E2", color: "#DC2626" },
+    COMPLETED: { label: ts("completed"), bg: "#DBEAFE", color: "#2563EB" },
+  };
+
+  const filterLabels: Record<string, string> = {
+    all:      t("trainingsPage.filters.all"),
+    upcoming: t("trainingsPage.filters.upcoming"),
+    ongoing:  t("trainingsPage.filters.ongoing"),
+    mine:     t("trainingsPage.filters.mine"),
+    expired:  t("trainingsPage.filters.expired"),
+  };
 
   const [trainings, myEnrollments] = await Promise.all([
     prisma.training.findMany({
@@ -52,10 +64,10 @@ export default async function StudentTrainingsPage({
   const enrolledIds = new Set(myEnrollments.map((e) => e.trainingId));
 
   const filtered = (() => {
-    if (filter === "قادمة")    return trainings.filter((t) => t.status === "UPCOMING");
-    if (filter === "جارية")    return trainings.filter((t) => t.status === "ONGOING");
-    if (filter === "منتهية")   return trainings.filter((t) => t.status === "COMPLETED" || t.status === "CANCELLED");
-    if (filter === "تسجيلاتي") return trainings.filter((t) => enrolledIds.has(t.id));
+    if (filter === "upcoming") return trainings.filter((t) => t.status === "UPCOMING");
+    if (filter === "ongoing")  return trainings.filter((t) => t.status === "ONGOING");
+    if (filter === "expired")  return trainings.filter((t) => t.status === "COMPLETED" || t.status === "CANCELLED");
+    if (filter === "mine")     return trainings.filter((t) => enrolledIds.has(t.id));
     return trainings;
   })();
 
@@ -65,20 +77,20 @@ export default async function StudentTrainingsPage({
     <div className="space-y-5">
 
       <div className="flex items-center gap-2 text-sm text-gray-500">
-        <Link href="/student" className="hover:text-cyan-600 transition-colors">لوحة الطالب</Link>
+        <Link href="/student" className="hover:text-cyan-600 transition-colors">{t("trainingsPage.breadcrumb")}</Link>
         <span>/</span>
-        <span className="text-gray-800 font-medium">التدريب التعاوني</span>
+        <span className="text-gray-800 font-medium">{t("trainingsPage.title")}</span>
       </div>
 
       <div className="flex items-start justify-between gap-4 flex-wrap">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">التدريب التعاوني</h1>
+          <h1 className="text-2xl font-bold text-gray-900">{t("trainingsPage.title")}</h1>
           <p className="text-gray-500 text-sm mt-0.5">
-            {openCount} برنامج متاح — سجّلت في {myEnrollments.length}
+            {t("trainingsPage.subtitle", { available: openCount, enrolled: myEnrollments.length })}
           </p>
         </div>
         <Link href="/training" className="text-xs font-medium text-cyan-600 hover:underline bg-cyan-50 px-3 py-1.5 rounded-lg border border-cyan-200">
-          استعراض كل البرامج ←
+          {t("trainingsPage.browseAll")}
         </Link>
       </div>
 
@@ -86,7 +98,7 @@ export default async function StudentTrainingsPage({
       {myEnrollments.length > 0 && (
         <div className="bg-white rounded-xl border border-gray-200 overflow-hidden">
           <div className="px-5 py-4 border-b border-gray-100">
-            <h2 className="font-semibold text-gray-800 text-sm">تسجيلاتي</h2>
+            <h2 className="font-semibold text-gray-800 text-sm">{t("trainingsPage.myEnrollments")}</h2>
           </div>
           <ul className="divide-y divide-gray-50">
             {myEnrollments.map((enr) => {
@@ -123,8 +135,8 @@ export default async function StudentTrainingsPage({
       {/* Filter tabs */}
       <div className="flex gap-2 flex-wrap">
         {filters.map((f) => {
-          const isActive = (!filter && f === "الكل") || filter === f;
-          const href = f === "الكل" ? "/student/trainings" : `/student/trainings?filter=${f}`;
+          const isActive = (!filter && f === "all") || filter === f;
+          const href = f === "all" ? "/student/trainings" : `/student/trainings?filter=${f}`;
           return (
             <Link
               key={f}
@@ -133,7 +145,7 @@ export default async function StudentTrainingsPage({
                 isActive ? "bg-cyan-600 text-white shadow-sm" : "bg-white text-gray-600 hover:bg-gray-50 border border-gray-200"
               }`}
             >
-              {f}
+              {filterLabels[f]}
             </Link>
           );
         })}
@@ -143,20 +155,20 @@ export default async function StudentTrainingsPage({
       {filtered.length === 0 ? (
         <div className="bg-white rounded-xl border border-gray-200 py-12 text-center">
           <p className="text-2xl mb-2">🔍</p>
-          <p className="text-gray-400 text-sm">لا توجد برامج في هذا التصنيف</p>
+          <p className="text-gray-400 text-sm">{t("trainingsPage.empty")}</p>
         </div>
       ) : (
         <div className="space-y-3">
-          {filtered.map((t) => {
-            const isFull       = t.capacity !== null && t._count.enrollments >= t.capacity;
-            const unavailable  = t.status === "CANCELLED" || t.status === "COMPLETED";
-            const enrolled     = enrolledIds.has(t.id);
-            const cfg          = trainingStatusConfig[t.status] ?? trainingStatusConfig.UPCOMING;
-            const pct          = t.capacity ? Math.round((t._count.enrollments / t.capacity) * 100) : 0;
+          {filtered.map((tr) => {
+            const isFull       = tr.capacity !== null && tr._count.enrollments >= tr.capacity;
+            const unavailable  = tr.status === "CANCELLED" || tr.status === "COMPLETED";
+            const enrolled     = enrolledIds.has(tr.id);
+            const cfg          = trainingStatusConfig[tr.status] ?? trainingStatusConfig.UPCOMING;
+            const pct          = tr.capacity ? Math.round((tr._count.enrollments / tr.capacity) * 100) : 0;
 
             return (
               <div
-                key={t.id}
+                key={tr.id}
                 className={`bg-white rounded-xl border p-5 hover:shadow-sm transition-shadow ${
                   unavailable && !enrolled ? "border-gray-100 opacity-70" : "border-gray-200"
                 }`}
@@ -164,7 +176,7 @@ export default async function StudentTrainingsPage({
                 <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
                   <div className="min-w-0 flex-1">
                     <div className="flex items-center gap-2 flex-wrap">
-                      <h3 className="font-semibold text-gray-800">{t.title}</h3>
+                      <h3 className="font-semibold text-gray-800">{tr.title}</h3>
                       <span
                         className="text-xs font-semibold px-2.5 py-0.5 rounded-full"
                         style={{ background: cfg.bg, color: cfg.color }}
@@ -173,23 +185,23 @@ export default async function StudentTrainingsPage({
                       </span>
                       {enrolled && (
                         <span className="text-xs font-semibold px-2.5 py-0.5 rounded-full bg-cyan-100 text-cyan-700">
-                          ✓ مسجّل
+                          {t("trainingsPage.enrolledBadge")}
                         </span>
                       )}
                     </div>
-                    {t.description && (
-                      <p className="text-sm text-gray-500 mt-1.5 line-clamp-2 leading-relaxed">{t.description}</p>
+                    {tr.description && (
+                      <p className="text-sm text-gray-500 mt-1.5 line-clamp-2 leading-relaxed">{tr.description}</p>
                     )}
                     <div className="flex items-center gap-3 mt-2 text-xs text-gray-400 flex-wrap">
-                      {t.instructor && <span>👤 {t.instructor}</span>}
-                      {t.category && <span>🏷️ {t.category}</span>}
-                      {t.startDate && <span>📅 {t.startDate.toLocaleDateString("ar-SA")}</span>}
+                      {tr.instructor && <span>👤 {tr.instructor}</span>}
+                      {tr.category && <span>🏷️ {tr.category}</span>}
+                      {tr.startDate && <span>📅 {tr.startDate.toLocaleDateString("ar-SA")}</span>}
                     </div>
-                    {t.capacity !== null && (
+                    {tr.capacity !== null && (
                       <div className="mt-3">
                         <div className="flex justify-between text-xs text-gray-400 mb-1">
-                          <span>{t._count.enrollments} / {t.capacity} مسجّل</span>
-                          <span className={isFull ? "text-red-500 font-medium" : ""}>{isFull ? "ممتلئ" : `${pct}%`}</span>
+                          <span>{t("trainingsPage.enrolled", { n: tr._count.enrollments, cap: tr.capacity })}</span>
+                          <span className={isFull ? "text-red-500 font-medium" : ""}>{isFull ? t("trainingsPage.full") : `${pct}%`}</span>
                         </div>
                         <div className="h-1.5 bg-gray-100 rounded-full overflow-hidden">
                           <div
@@ -202,7 +214,7 @@ export default async function StudentTrainingsPage({
                   </div>
                   <div className="shrink-0">
                     <EnrollButton
-                      trainingId={t.id}
+                      trainingId={tr.id}
                       enrolled={enrolled}
                       isFull={isFull}
                       unavailable={unavailable}

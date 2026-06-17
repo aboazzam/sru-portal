@@ -6,7 +6,32 @@
     "signOut": "Sign Out",
     "backToHome": "Back to Home",
     "langSwitch": "عربي",
-    "copyright": "© {year} Sulaiman Al-Rajhi University. All rights reserved."
+    "copyright": "© {year} Sulaiman Al-Rajhi University. All rights reserved.",
+    "viewAll": "View All",
+    "loading": "Loading...",
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "edit": "Edit",
+    "submit": "Submit",
+    "confirm": "Confirm",
+    "close": "Close",
+    "search": "Search",
+    "filter": "Filter",
+    "noData": "No data available",
+    "error": "An error occurred",
+    "success": "Operation completed successfully",
+    "home": "Home",
+    "about": "About the University",
+    "contact": "Contact Us",
+    "settings": "Settings",
+    "profile": "Profile",
+    "dashboard": "Dashboard",
+    "notifications": "Notifications",
+    "help": "Help",
+    "logout": "Logout",
+    "loggedIn": "Logged in",
+    "openMenu": "Open menu"
   },
   "Landing": {
     "heroTitle": "Sulaiman Al-Rajhi University Portal",
@@ -23,51 +48,15 @@
     "footerAbout": "About the University"
   },
   "Modules": {
-    "hala": {
-      "name": "Hala",
-      "description": "Communication, complaints and inquiries",
-      "party": "Deanship of Student Affairs"
-    },
-    "sanad": {
-      "name": "Sanad – Student Services",
-      "description": "All student services in one place",
-      "party": "Deanship of Student Affairs"
-    },
-    "facultyServices": {
-      "name": "Faculty Services",
-      "description": "Academic services for faculty members",
-      "party": "Deanship of Faculty and Staff Affairs"
-    },
-    "clubs": {
-      "name": "Student Clubs",
-      "description": "Activities, clubs and student events",
-      "party": "Deanship of Student Affairs"
-    },
-    "financial": {
-      "name": "Financial Services",
-      "description": "Tuition fees, payments and financial statements",
-      "party": "Financial Administration"
-    },
-    "scholarships": {
-      "name": "Grants & Financial Solutions",
-      "description": "Scholarships and financial support for students",
-      "party": "Deanship of Student Affairs"
-    },
-    "training": {
-      "name": "Cooperative Training",
-      "description": "Training opportunities and employment services",
-      "party": "Deanship of Career Development"
-    },
-    "graduates": {
-      "name": "Graduates",
-      "description": "Post-graduation services and alumni network",
-      "party": "Deanship of Community Service"
-    },
-    "admin": {
-      "name": "Control Panel",
-      "description": "System administration and permissions",
-      "party": "System Administration"
-    }
+    "hala": { "name": "Hala", "description": "Communication, complaints and inquiries", "party": "Deanship of Student Affairs" },
+    "sanad": { "name": "Sanad – Student Services", "description": "All student services in one place", "party": "Deanship of Student Affairs" },
+    "facultyServices": { "name": "Faculty Services", "description": "Academic services for faculty members", "party": "Deanship of Faculty and Staff Affairs" },
+    "clubs": { "name": "Student Clubs", "description": "Activities, clubs and student events", "party": "Deanship of Student Affairs" },
+    "financial": { "name": "Financial Services", "description": "Tuition fees, payments and financial statements", "party": "Financial Administration" },
+    "scholarships": { "name": "Grants & Financial Solutions", "description": "Scholarships and financial support for students", "party": "Deanship of Student Affairs" },
+    "training": { "name": "Cooperative Training", "description": "Training opportunities and employment services", "party": "Deanship of Career Development" },
+    "graduates": { "name": "Graduates", "description": "Post-graduation services and alumni network", "party": "Deanship of Community Service" },
+    "admin": { "name": "Control Panel", "description": "System administration and permissions", "party": "System Administration" }
   },
   "Login": {
     "title": "Sign in to the Portal",
@@ -104,7 +93,121 @@
     "schedule": "Course Schedule",
     "exams": "Exam Timetable",
     "library": "Library Resources",
-    "financial": "Financial Summary"
+    "financial": "Financial Summary",
+    "sidebar": {
+      "overview": "Overview",
+      "records": "My Records",
+      "myApps": "All My Applications",
+      "scholarships": "Scholarships",
+      "training": "Cooperative Training",
+      "services": "Services",
+      "financial": "Financial Services",
+      "activities": "Student Activities",
+      "clubs": "Sports Clubs",
+      "volunteer": "Volunteering",
+      "studentServices": "Student Services",
+      "more": "More",
+      "news": "University News",
+      "alumni": "Graduates",
+      "hala": "Hala",
+      "portal": "Student Portal",
+      "points": "point(s)"
+    },
+    "overview": {
+      "module": "Student Portal — Sulaiman Al-Rajhi University",
+      "welcomeHero": "Welcome, {name}",
+      "memberSince": "Member since {date}",
+      "earnedPoints": "earned point(s)",
+      "pendingMsg": "You have {n} request(s) under review",
+      "viewAllApps": "View all applications →",
+      "availableServices": "Available Services",
+      "enterLink": "Enter →",
+      "recentActivity": "Recent Activity",
+      "viewAll": "View All",
+      "noRequests": "No requests yet",
+      "upcomingEvents": "Upcoming Events",
+      "noEvents": "No upcoming events",
+      "activityType": "Activity",
+      "volunteerType": "Volunteer",
+      "dateTbd": "TBD",
+      "activitiesLink": "Activities →",
+      "volunteerLink": "Volunteering →",
+      "bannerTitle": "Make the most of all available services",
+      "bannerDesc": "Register for activities, clubs, and volunteer programs to earn points added to your university profile.",
+      "studentGuide": "Student Guide →",
+      "typeLabels": {
+        "scholarships": "Scholarships",
+        "training": "Training",
+        "services": "Services",
+        "volunteer": "Volunteer",
+        "activities": "Activities",
+        "clubs": "Clubs"
+      }
+    },
+    "myApps": {
+      "title": "All My Applications",
+      "breadcrumb": "Student Dashboard",
+      "total": "{n} total request(s)",
+      "totalLabel": "Total Requests",
+      "pendingLabel": "Under Review",
+      "approvedLabel": "Approved",
+      "typeFilterLabel": "Request Type",
+      "statusFilterLabel": "Status",
+      "empty": "No requests match this filter",
+      "results": "{n} result(s)",
+      "filters": {
+        "all": "All",
+        "scholarships": "Scholarships",
+        "training": "Training",
+        "services": "Services",
+        "volunteer": "Volunteer",
+        "activities": "Activities",
+        "clubs": "Clubs"
+      },
+      "statusFilters": {
+        "all": "All",
+        "pending": "Under Review",
+        "approved": "Approved",
+        "rejected": "Rejected",
+        "completed": "Completed"
+      }
+    },
+    "scholarshipsPage": {
+      "breadcrumb": "Student Dashboard",
+      "title": "Scholarships",
+      "subtitle": "{available} available — applied for {applied}",
+      "browseAll": "Browse all scholarships →",
+      "myApps": "My Applications",
+      "appliedOn": "Applied {date}",
+      "empty": "No scholarships in this category",
+      "applicants": "{n} applicant(s)",
+      "daysLeft": "{n} day(s) left",
+      "expiredBadge": "Expired",
+      "filters": {
+        "all": "All",
+        "available": "Available",
+        "mine": "My Applications",
+        "expired": "Expired"
+      }
+    },
+    "trainingsPage": {
+      "breadcrumb": "Student Dashboard",
+      "title": "Cooperative Training",
+      "subtitle": "{available} program(s) available — enrolled in {enrolled}",
+      "browseAll": "Browse all programs →",
+      "myEnrollments": "My Enrollments",
+      "empty": "No programs in this category",
+      "enrolledBadge": "✓ Enrolled",
+      "enrolled": "{n} / {cap} enrolled",
+      "full": "Full",
+      "filters": {
+        "all": "All",
+        "upcoming": "Upcoming",
+        "ongoing": "Ongoing",
+        "mine": "My Enrollments",
+        "expired": "Expired"
+      }
+    }
   },
   "Faculty": {
     "welcome": "Welcome, {name}",
@@ -120,7 +223,103 @@
     "grades": "Submit Grades",
     "attendance": "Attendance Records",
     "students": "Student List",
-    "office": "Office Hours"
+    "office": "Office Hours",
+    "sidebar": {
+      "overview": "Overview",
+      "academic": "Academic",
+      "trainings": "Training Programs",
+      "scholarships": "Scholarships",
+      "studentsList": "Student List",
+      "portal": "Faculty Portal"
+    },
+    "overview": {
+      "module": "Faculty Portal",
+      "welcomeHero": "Welcome, {name}",
+      "trainerIn": "You are a trainer in {n} training program(s)",
+      "notAssigned": "You have not been assigned as a trainer yet",
+      "stats": {
+        "totalStudents": "Total Students",
+        "thisMonth": "+{n} this month",
+        "programs": "Training Programs",
+        "active": "{n} active",
+        "mine": "My Programs",
+        "iAmTrainer": "I am the Trainer",
+        "scholarships": "Scholarship Opportunities",
+        "pending": "{n} pending"
+      },
+      "myTrainings": "My Training Programs",
+      "viewAll": "View All",
+      "noTrainings": "You have not been assigned as a trainer in any program",
+      "browseAll": "Browse all programs",
+      "enrolled": "{n} enrolled",
+      "recentStudents": "Latest Enrolled Students",
+      "quickAccess": "Quick Access",
+      "links": {
+        "trainings": "Training Programs",
+        "scholarships": "Scholarships",
+        "students": "Student List"
+      }
+    },
+    "trainingsPage": {
+      "title": "Training Programs",
+      "total": "{n} total program(s)",
+      "trainerIn": "You are a trainer in {n}",
+      "iAmTrainer": "⭐ I am the Trainer",
+      "trainerBadge": "⭐ You are a trainer in {n} program(s)",
+      "empty": "No programs match this filter",
+      "viewAll": "View All",
+      "startDate": "Start:",
+      "endDate": "End:",
+      "enrolled": "{n} / {cap} enrolled",
+      "enrolledCount": "enrolled",
+      "filters": {
+        "all": "All",
+        "mine": "My Programs",
+        "upcoming": "Upcoming",
+        "ongoing": "Ongoing",
+        "expired": "Expired"
+      }
+    },
+    "scholarshipsPage": {
+      "title": "Scholarships",
+      "subtitle": "{n} scholarship(s) available · {m} total application(s)",
+      "appsCount": "{n} application(s)",
+      "expires": "Expires: {date}",
+      "appsSection": "Scholarship Applications",
+      "empty": "No applications found",
+      "filters": {
+        "all": "All",
+        "pending": "Pending",
+        "approved": "Approved",
+        "rejected": "Rejected"
+      },
+      "cols": {
+        "student": "Student",
+        "email": "Email",
+        "scholarship": "Scholarship",
+        "applyDate": "Apply Date",
+        "status": "Status"
+      }
+    },
+    "studentsPage": {
+      "title": "Student List",
+      "subtitle": "{n} student(s) {location}",
+      "inCollege": "in this college",
+      "enrolled": "enrolled",
+      "all": "All",
+      "empty": "No students in this college",
+      "cols": {
+        "num": "#",
+        "student": "Student",
+        "college": "College",
+        "points": "Points",
+        "scholarships": "Scholarships",
+        "training": "Training",
+        "activities": "Activities",
+        "joinDate": "Join Date"
+      },
+      "points": "{n} point(s)"
+    }
   },
   "Admin": {
     "title": "Admin Dashboard",
@@ -133,11 +332,624 @@
     "email": "Email",
     "role": "Role",
     "joined": "Joined",
-    "noUsers": "No users yet"
+    "noUsers": "No users yet",
+    "sidebar": {
+      "overview": "Overview",
+      "users": "Users",
+      "manageUsers": "Manage Users",
+      "managePoints": "Manage Points",
+      "academic": "Academic Requests",
+      "scholarships": "Scholarship Requests",
+      "training": "Training Registrations",
+      "studentRequests": "Student Requests",
+      "services": "Service Requests",
+      "volunteers": "Volunteer Requests",
+      "activities": "Activity Requests",
+      "clubs": "Club Requests",
+      "tools": "Tools",
+      "import": "Import Excel",
+      "dashboard": "Control Panel",
+      "sysAdmin": "System Administrator"
+    },
+    "overview": {
+      "title": "Overview",
+      "welcome": "Hello {name} — Real-time system statistics",
+      "needsReview": "{n} request(s) need review",
+      "checkPending": "Check the pending requests section",
+      "pendingAlertTitle": "Pending Requests — Action Required",
+      "usersCard": {
+        "title": "Users",
+        "total": "Total Users",
+        "students": "Students",
+        "faculty": "Faculty",
+        "admins": "Admins",
+        "manageLink": "Manage Users →"
+      },
+      "academicCard": {
+        "title": "Academic",
+        "scholarshipsPending": "Scholarship Requests (Pending)",
+        "scholarshipsTotal": "Scholarship Requests (Total)",
+        "trainingPending": "Training Registrations (Pending)",
+        "trainingTotal": "Training Registrations (Total)"
+      },
+      "studentSvcs": {
+        "title": "Student Services",
+        "servicesPending": "Service Requests (Pending)",
+        "servicesTotal": "Service Requests (Total)",
+        "volunteerPending": "Volunteer Requests (Pending)",
+        "volunteerTotal": "Volunteer Requests (Total)"
+      },
+      "activitiesClubs": {
+        "title": "Activities & Clubs",
+        "activitiesPending": "Activity Requests (Pending)",
+        "activitiesTotal": "Activity Requests (Total)",
+        "clubsPending": "Club Requests (Pending)",
+        "clubsTotal": "Club Requests (Total)"
+      },
+      "recentUsersTitle": "Latest Registered Users",
+      "viewAll": "View All",
+      "cols": {
+        "name": "Name",
+        "email": "Email",
+        "role": "Role",
+        "joinDate": "Registration Date"
+      },
+      "pendingItems": {
+        "scholarships": "Scholarship Requests",
+        "training": "Training Registrations",
+        "services": "Service Requests",
+        "volunteers": "Volunteer Requests",
+        "activities": "Activity Requests",
+        "clubs": "Club Requests"
+      }
+    },
+    "requests": {
+      "filters": {
+        "all": "All",
+        "pending": "Pending",
+        "approved": "Approved",
+        "rejected": "Rejected",
+        "approvedF": "Approved",
+        "rejectedF": "Rejected"
+      },
+      "total": "{n} total request(s)",
+      "filtered": "{n} request(s)",
+      "noRequests": "No requests found",
+      "cols": {
+        "applicant": "Applicant",
+        "email": "Email",
+        "activity": "Activity",
+        "activityDate": "Activity Date",
+        "applyDate": "Apply Date",
+        "statusAction": "Status & Action",
+        "opportunity": "Volunteer Opportunity",
+        "opportunityDate": "Opportunity Date",
+        "service": "Requested Service",
+        "club": "Club",
+        "requestDate": "Request Date",
+        "student": "Student",
+        "scholarship": "Scholarship",
+        "status": "Status"
+      }
+    },
+    "activitiesPage": { "title": "Student Activity Requests" },
+    "volunteersPage": { "title": "Volunteer Requests" },
+    "servicesPage": { "title": "Student Service Requests" },
+    "clubsPage": {
+      "title": "Sports Club Requests",
+      "memberships": "Club Memberships",
+      "council": "Council Applications"
+    }
   },
   "ModulePage": {
     "underDevTitle": "This service is under development",
     "underDevDesc": "We are working on developing this service to provide the best possible experience. Please check back later.",
     "backBtn": "Back to Home"
+  },
+  "Status": {
+    "pending": "Under Review",
+    "approved": "Approved",
+    "rejected": "Rejected",
+    "completed": "Completed",
+    "cancelled": "Cancelled",
+    "active": "Active",
+    "inactive": "Inactive",
+    "open": "Open",
+    "closed": "Closed",
+    "upcoming": "Upcoming",
+    "ongoing": "Ongoing",
+    "ended": "Ended",
+    "enrolled": "Enrolled",
+    "openTbd": "Open / TBD"
+  },
+  "Sanad": {
+    "title": "Sanad – Student Services",
+    "subtitle": "Choose the section you need",
+    "breadcrumb": "Sanad",
+    "welcome": "Welcome, {name}",
+    "myRequests": "My Requests",
+    "myRequestsDesc": "Track your submitted requests",
+    "enterSection": "Enter Section",
+    "nav": {
+      "home": "Home",
+      "academic": "Academic Activities",
+      "activities": "Skills & Activities",
+      "volunteer": "Volunteer Opportunities",
+      "studentServices": "Student Services",
+      "myRequests": "My Requests",
+      "organizer": "Organizer Panel",
+      "adminPanel": "Admin Panel",
+      "loggedInAs": "Logged in"
+    },
+    "sections": {
+      "academic": {
+        "title": "Academic Activities",
+        "desc": "Official document requests, course schedule, course registration, and clearance",
+        "services": {
+          "officialDoc": "Official Document Request",
+          "schedule": "Course Schedule",
+          "registration": "Course Registration",
+          "clearance": "Clearance"
+        }
+      },
+      "activities": {
+        "title": "Skills & Activities",
+        "desc": "Activities and events, skills development programs, and student clubs",
+        "services": {
+          "activities": "Activities & Events",
+          "skills": "Skills Development Programs",
+          "clubs": "Student Clubs"
+        }
+      },
+      "volunteer": {
+        "title": "Volunteer Opportunities",
+        "desc": "Browse available volunteer opportunities and track your volunteer log",
+        "services": {
+          "opportunities": "Available Opportunities",
+          "log": "Volunteer Log"
+        }
+      },
+      "studentServices": {
+        "title": "Student Services",
+        "desc": "Health services, housing and accommodation, and transportation services",
+        "services": {
+          "health": "Health Services",
+          "housing": "Housing & Accommodation",
+          "transport": "Transportation Services"
+        }
+      }
+    },
+    "academic": {
+      "breadcrumb": "Academic Activities",
+      "officialDoc": "Official Document Request",
+      "schedule": "Course Schedule",
+      "registration": "Course Registration",
+      "clearance": "Clearance"
+    },
+    "myRequestsPage": {
+      "breadcrumb": "My Requests",
+      "allRequests": "All Requests",
+      "requestsCount": "{count} request(s)",
+      "empty": "No requests yet",
+      "emptyDesc": "Register for scholarships, activities, or volunteer opportunities",
+      "cols": {
+        "id": "Request ID",
+        "type": "Request Type",
+        "category": "Category",
+        "date": "Date",
+        "status": "Status"
+      },
+      "categories": {
+        "scholarship": "Scholarship",
+        "training": "Cooperative Training",
+        "volunteer": "Volunteering",
+        "activity": "Student Activity",
+        "service": "Student Service"
+      }
+    },
+    "volunteerPage": {
+      "breadcrumb": "Volunteer Opportunities",
+      "opportunities": "Available Opportunities",
+      "log": "My Volunteer Log"
+    },
+    "activitiesPage": {
+      "breadcrumb": "Skills & Activities",
+      "activitiesCard": "Activities & Events",
+      "trainingCard": "Cooperative Training Programs",
+      "clubs": {
+        "title": "Student Clubs",
+        "desc": "Discover student clubs and organizational events",
+        "btn": "Clubs"
+      }
+    },
+    "organizer": {
+      "breadcrumb": "Organizer Panel",
+      "module": "Organizer Panel",
+      "welcome": "Welcome, {name}",
+      "subtitle": "Manage student events and activities",
+      "stats": {
+        "activities": "Registered Activities",
+        "totalEnrollments": "Total Enrollments",
+        "volunteerRequests": "Volunteer Requests",
+        "pendingRequests": "Pending Requests"
+      },
+      "activitiesTable": {
+        "title": "Student Activities",
+        "countSuffix": "activity / activities",
+        "cols": {
+          "activity": "Activity",
+          "date": "Date",
+          "enrolled": "Enrolled"
+        },
+        "empty": "No registered activities"
+      },
+      "recentApps": {
+        "title": "Latest Registrations",
+        "empty": "No registrations yet"
+      }
+    },
+    "studentServicesPage": {
+      "breadcrumb": "Student Services",
+      "health": {
+        "title": "Health Services",
+        "clinic": { "label": "University Clinic", "desc": "Sun – Thu, 8:00 – 16:00 | Student Services Building" },
+        "insurance": { "label": "Student Insurance", "desc": "Comprehensive coverage for all enrolled students during the semester" },
+        "counseling": { "label": "Psychological Counseling", "desc": "Individual and group sessions with certified specialists" },
+        "emergency": "Emergency: call 911 or visit the clinic immediately"
+      },
+      "housing": {
+        "title": "Housing & Accommodation",
+        "dormitory": { "label": "University Housing", "desc": "Single and shared rooms — apply 4 weeks before each semester" },
+        "rules": { "label": "Housing Rules", "desc": "Review the university housing guide for regulations and policies" },
+        "maintenance": { "label": "Maintenance & Reports", "desc": "Submit maintenance requests via the housing portal or contact administration" },
+        "emergency": "Housing Management: ext. 2400 | 24/7"
+      },
+      "transport": {
+        "title": "Transportation Services",
+        "buses": { "label": "University Buses", "desc": "Daily routes covering major residential areas around the university" },
+        "registration": { "label": "Service Registration", "desc": "Register for the bus service through the system — seats are limited" },
+        "schedules": { "label": "Operating Schedules", "desc": "Schedules are available on university boards and the student portal" },
+        "emergency": "Bus schedule inquiries: ext. 2600"
+      }
+    },
+    "subadmin": {
+      "breadcrumb": "Sanad",
+      "pageTitle": "Admin Panel",
+      "module": "Sanad Admin Panel",
+      "welcome": "Welcome, {name}",
+      "overview": "Overview of requests, organizers, and platform performance",
+      "kpis": {
+        "total": "Total Requests",
+        "pending": "Under Review",
+        "activities": "Activity Requests",
+        "volunteer": "Volunteer Requests"
+      },
+      "distribution": {
+        "title": "Request Distribution",
+        "activities": "Student Activities",
+        "volunteer": "Volunteer Opportunities",
+        "services": "Student Services",
+        "requestSuffix": "requests",
+        "pendingSuffix": "under review"
+      },
+      "organizers": {
+        "title": "Organizers",
+        "countSuffix": "organizer(s)",
+        "empty": "No organizers registered",
+        "active": "Active"
+      },
+      "recentVolunteer": {
+        "title": "Latest Volunteer Requests",
+        "empty": "No volunteer requests yet",
+        "student": "Student",
+        "opportunity": "Opportunity",
+        "date": "Date",
+        "status": "Status"
+      }
+    }
+  },
+  "Training": {
+    "module": "Training & Development — Sulaiman Al-Rajhi University",
+    "welcome": "Welcome, {name}",
+    "enrollments": "{count} enrollment(s)",
+    "completedCount": "Completed: {count} program(s)",
+    "activeCount": "Active: {count} program(s)",
+    "totalCount": "Total: {count} program(s)",
+    "completionPct": "{pct}% completion rate",
+    "nav": {
+      "dashboard": "Dashboard",
+      "catalog": "Program Catalog",
+      "myCourses": "My Courses",
+      "certificates": "Certificates",
+      "requests": "Requests",
+      "moduleLabel": "Training & Development",
+      "loggedInAs": "Logged in"
+    },
+    "stats": { "active": "Active & Enrolled", "completed": "Completed", "available": "Available Programs", "total": "Total Enrollments" },
+    "alerts": { "title": "Alerts", "daysLeft": "In {days} day(s)" },
+    "quickLinks": { "title": "Quick Links", "catalog": "Program Catalog", "myCourses": "My Courses", "certificates": "Certificates", "requests": "Training Request" },
+    "upcomingSessions": { "title": "Upcoming Sessions", "viewAll": "View All", "empty": "No upcoming sessions", "browseCatalog": "Browse available programs →" },
+    "activeCourses": { "title": "Active & Enrolled Courses", "manage": "Manage My Courses" },
+    "catalog": {
+      "title": "Program Catalog",
+      "available": "{count} program(s) available for enrollment",
+      "myCourses": "My Courses →",
+      "empty": "No programs available for enrollment at the moment",
+      "past": "Past Programs",
+      "instructor": "Instructor",
+      "startDate": "Starts",
+      "capacityFull": "Full",
+      "enrolled": "Enrolled",
+      "status": { "UPCOMING": "Upcoming", "ONGOING": "Ongoing", "COMPLETED": "Completed", "CANCELLED": "Cancelled" }
+    },
+    "myCourses": {
+      "title": "My Courses",
+      "summary": "{active} active · {completed} completed · {total} total",
+      "newEnroll": "+ Enroll in New Program",
+      "empty": "You have not enrolled in any program yet",
+      "emptyDesc": "Browse available programs and start your training journey",
+      "browseCatalog": "📚 Browse Catalog",
+      "activeSectionTitle": "Active & Enrolled",
+      "completedSectionTitle": "Completed",
+      "rejectedSectionTitle": "Rejected",
+      "startDate": "Starts",
+      "endDate": "Ends",
+      "certificateBtn": "Certificate",
+      "completedBadge": "🏁 Completed",
+      "rejectedBadge": "❌ Rejected"
+    },
+    "certificates": {
+      "title": "Certificates",
+      "count": "{count} training certificate(s)",
+      "empty": "No certificates yet",
+      "emptyDesc": "Complete your training programs to earn certificates",
+      "issuedBadge": "✅ Issued",
+      "issueDate": "Issue Date",
+      "category": "Category",
+      "serialLabel": "Certificate Number",
+      "issuer": "Issued by Sulaiman Al-Rajhi University — Training & Development Center"
+    },
+    "requests": {
+      "title": "Training Requests",
+      "subtitle": "Submit requests related to your enrollments and certificates",
+      "newRequest": "New Request",
+      "selectType": "Select request type:",
+      "programName": "Program / Course Name",
+      "programPlaceholder": "e.g., Critical Thinking and Problem-Solving Skills",
+      "notes": "Additional Notes (optional)",
+      "notesPlaceholder": "Add any details or justifications...",
+      "attachLabel": "Attach Document (optional)",
+      "attachHint": "PDF or image — max 5 MB",
+      "sendBtn": "Submit Request",
+      "history": "Request History",
+      "empty": "No requests yet"
+    }
+  },
+  "Services": {
+    "module": "Student Services — Sulaiman Al-Rajhi University",
+    "welcome": "Welcome, {name}",
+    "noApplicationsYet": "No requests submitted yet — browse the available services",
+    "applicationsSummary": "You have {count} request(s) · {pending} under review",
+    "browseCta": "Browse Services →",
+    "stats": { "available": "Available Services", "pending": "Under Review", "approved": "Approved", "total": "Total My Requests" },
+    "quickLinks": { "title": "Quick Links", "catalog": "Service Catalog", "catalogDesc": "Browse all available services", "myRequests": "My Requests", "myRequestsDesc": "Track your submitted requests" },
+    "featured": "Featured Services",
+    "recentApplications": { "title": "My Latest Requests", "viewAll": "View All", "empty": "No requests yet", "applyCta": "Apply for a Service Now" },
+    "info": { "title": "How do Student Services work?", "body": "Browse the catalog and choose the right service · Submit your request in one click · Track your request status on the My Requests page · You will receive notifications when your request is approved or rejected." },
+    "catalog": { "title": "Service Catalog", "subtitle": "{count} service(s) available · Apply in one click", "empty": "No services available at the moment", "emptyDesc": "Check back later" },
+    "myRequests": { "title": "My Requests", "empty": "No requests yet", "browseCta": "Browse Services" }
+  },
+  "Volunteers": {
+    "module": "Volunteering & Community Engagement — Sulaiman Al-Rajhi University",
+    "welcome": "Welcome, {name}",
+    "badge": "Active Volunteer",
+    "noApplicationsYet": "No volunteer requests submitted yet — discover available opportunities",
+    "applicationsSummary": "{count} volunteer request(s) · {pending} under review · {approved} approved",
+    "discoverCta": "Discover Opportunities →",
+    "stats": { "available": "Available Opportunities", "pending": "Under Review", "approved": "Approved", "total": "Total My Requests" },
+    "upcoming": { "title": "Nearest Opportunities", "viewAll": "View All", "empty": "No upcoming opportunities at the moment", "viewAllCta": "View all volunteer opportunities →" },
+    "myApplications": { "title": "My Latest Requests", "viewAll": "View All", "empty": "No requests yet", "applyCta": "Volunteer Now" },
+    "info": { "title": "Why Volunteer?", "body": "Volunteering enriches your university experience and develops your leadership and interpersonal skills · It is counted in your academic record · It enhances your profile for employers · You receive an official volunteer certificate from the university." },
+    "opportunities": { "title": "Volunteer Opportunities", "subtitle": "Discover available volunteer opportunities and join the volunteer community", "empty": "No volunteer opportunities available at the moment", "apply": "Apply" },
+    "myApplicationsPage": { "title": "My Volunteer Applications", "empty": "You have not applied for any volunteer opportunity yet", "browseCta": "Browse Opportunities" }
+  },
+  "Activities": {
+    "module": "Student Activities — Sulaiman Al-Rajhi University",
+    "welcome": "Welcome, {name}",
+    "badge": "Active Participant",
+    "noApplicationsYet": "Not registered for any activity yet — discover what's available",
+    "applicationsSummary": "{count} participation request(s) · {pending} under review · {approved} approved",
+    "browseCta": "Browse Activities →",
+    "stats": { "available": "Available Activities", "pending": "Under Review", "approved": "Approved", "total": "Total My Requests" },
+    "upcoming": { "title": "Nearest Activities", "viewAll": "View All", "empty": "No upcoming activities at the moment", "viewAllCta": "View all activities →" },
+    "myApplications": { "title": "My Latest Requests", "viewAll": "View All", "empty": "No requests yet", "registerCta": "Register Now" },
+    "info": { "title": "Student Activities — A Path to Excellence", "body": "Student activities help develop your personal and leadership skills · Participation points are counted in your academic profile · Meet your peers and build a network within the university · Receive official participation certificates." },
+    "catalog": {
+      "title": "Available Activities",
+      "subtitle": "{upcoming} upcoming · {past} past",
+      "sectionUpcoming": "Upcoming Activities",
+      "sectionPast": "Past Activities",
+      "emptyUpcoming": "No upcoming activities at the moment",
+      "status": { "open": "Open", "ended": "Ended", "openTbd": "Open / TBD" }
+    },
+    "myApplicationsPage": {
+      "title": "My Applications",
+      "emptySubtitle": "Not registered for any activity yet",
+      "summary": "{count} request(s) · {pending} under review · {approved} approved · {rejected} rejected",
+      "empty": "No applications yet",
+      "emptyDesc": "Register for an activity from the available activities page",
+      "browseCta": "Browse Activities →",
+      "registeredAt": "Registered on",
+      "ended": "Ended",
+      "sections": { "pending": "Under Review", "approved": "Approved", "rejected": "Rejected" }
+    }
+  },
+  "Clubs": {
+    "title": "Student Clubs",
+    "subtitle": "Discover student clubs and join the university community",
+    "myClubs": "My Clubs",
+    "activities": "Activities",
+    "join": "Join",
+    "joined": "Joined",
+    "apply": "Apply for Council",
+    "empty": "No clubs available at the moment",
+    "emptyMyClubs": "You have not joined any club yet",
+    "browseClubs": "Browse Clubs"
+  },
+  "Alumni": {
+    "title": "Graduates",
+    "subtitle": "Welcome to the Sulaiman Al-Rajhi University alumni community",
+    "profile": "My Profile",
+    "card": "Graduate Card",
+    "jobs": "Job Opportunities",
+    "network": "Alumni Network",
+    "events": "Events",
+    "contribute": "Contribute",
+    "documents": "My Documents",
+    "development": "Professional Development",
+    "employer": { "title": "Employer Portal", "postJob": "Post a Job", "applicants": "Applicants", "verify": "Verify" },
+    "admin": { "title": "Alumni Administration", "statistics": "Statistics", "eventsManage": "Manage Events", "alumniList": "Alumni List" }
+  },
+  "News": {
+    "title": "News & Announcements",
+    "subtitle": "Stay updated with the latest university news and announcements",
+    "all": "All News",
+    "readMore": "Read More",
+    "empty": "No news at the moment",
+    "publishedAt": "Published on"
+  },
+  "Graduates": {
+    "sidebar": {
+      "overview": "Overview",
+      "graduation": "Graduation",
+      "requirements": "Graduation Requirements",
+      "ceremony": "Graduation Ceremony",
+      "documents": "Graduation Documents",
+      "alumniPortal": "Alumni Portal",
+      "alumni": "Graduates",
+      "jobs": "Job Opportunities",
+      "events": "Events",
+      "card": "Graduate Card",
+      "portal": "Graduates Portal"
+    },
+    "status": {
+      "completed": "Completed",
+      "in_progress": "In Progress",
+      "pending": "Pending",
+      "waived": "Waived"
+    },
+    "overview": {
+      "module": "Graduates Portal — Sulaiman Al-Rajhi University",
+      "welcome": "Welcome, {name}",
+      "points": "{n} point(s)",
+      "memberSince": "Member since {date}",
+      "requirementsProgress": "Graduation Requirements Completion",
+      "completionRatio": "{done} / {total} ({pct}%)",
+      "completeCta": "Complete the remaining requirements to qualify for graduation",
+      "viewDetails": "View Details →",
+      "stats": {
+        "requirements": "Completed Requirements",
+        "readiness": "Readiness Rate",
+        "scholarships": "Scholarship Applications",
+        "training": "Training Programs"
+      },
+      "requirementsTitle": "Graduation Requirements",
+      "viewAll": "View All",
+      "viewAllReqs": "View all requirements ({n}) →",
+      "timelineTitle": "Graduation Timeline",
+      "nextDeadline": "Next Deadline:",
+      "ceremony": {
+        "title": "Graduation Ceremony",
+        "registrationDeadline": "Registration deadline: {date}",
+        "registered": "✅ Registered",
+        "registerNow": "Register Now"
+      },
+      "links": {
+        "requirements": "Graduation Requirements",
+        "ceremony": "Graduation Ceremony",
+        "documents": "Graduation Documents",
+        "alumni": "Alumni Portal",
+        "jobs": "Job Opportunities",
+        "card": "Graduate Card"
+      }
+    },
+    "requirements": {
+      "breadcrumbParent": "Graduates",
+      "breadcrumb": "Graduation Requirements",
+      "title": "Graduation Requirements",
+      "subtitle": "{done} completed out of {total} requirement(s)",
+      "readinessPct": "{pct}%",
+      "readinessLabel": "Graduation Readiness",
+      "progressTitle": "Overall Progress",
+      "categories": {
+        "all": "All",
+        "academic": "Academic",
+        "financial": "Financial",
+        "admin": "Administrative",
+        "training": "Training"
+      },
+      "progress": "Progress",
+      "clearanceTitle": "Clearance Details",
+      "clearanceSections": "{done} / {total} section(s)",
+      "signed": "Signed",
+      "waiting": "Waiting"
+    },
+    "ceremony": {
+      "breadcrumbParent": "Graduates",
+      "breadcrumb": "Graduation Ceremony",
+      "title": "Graduation Ceremony 🎓",
+      "subtitle": "Annual Graduation Ceremony",
+      "university": "Sulaiman Al-Rajhi University",
+      "dateLabel": "Date",
+      "timeLabel": "Time",
+      "venueLabel": "Venue",
+      "guestsLabel": "Allowed Guests",
+      "guestsValue": "{n} guest(s)",
+      "registrationTitle": "Ceremony Registration",
+      "successTitle": "Registration Successful!",
+      "successMsg": "You have been registered for the graduation ceremony with {n} guest(s).",
+      "confirmationMsg": "A confirmation message will be sent to your university email soon.",
+      "deadlinePassed": "Registration deadline has passed",
+      "countdown": "⏳ Time left to register",
+      "daysLeft": "{n} day(s)",
+      "guestCountLabel": "Number of Guests",
+      "guestSingular": "guest",
+      "guestPlural": "guests",
+      "maxGuests": "Maximum: {n} guest(s)",
+      "confirmBtn": "Confirm Registration",
+      "rehearsalTitle": "General Rehearsal",
+      "rehearsalMandatory": "Attendance is mandatory for all graduates",
+      "dresscodeTitle": "Dress Code",
+      "dresscodeNote": "📌 Academic attire can be collected from the Student Affairs Administration starting September 1, 2026",
+      "timelineTitle": "Stages & Deadlines"
+    },
+    "documents": {
+      "breadcrumbParent": "Graduates",
+      "breadcrumb": "Graduation Documents",
+      "title": "Graduation Documents",
+      "subtitle": "Request your official documents — all documents are free",
+      "clearanceNote": "Some documents require completing clearance before they can be issued.",
+      "lockedBadge": "🔒 Not available yet",
+      "copiesLabel": "Number of copies:",
+      "deliveryDays": "{n} business day(s)",
+      "deliveredAtCeremony": "Delivered at ceremony",
+      "requestBtn": "Request Document",
+      "submittingBtn": "Submitting...",
+      "submittedBtn": "✅ Request Submitted",
+      "notesTitle": "Important Notes",
+      "notes": {
+        "delivery": "Documents are sent to your university email when ready or collected from the Student Affairs Administration.",
+        "certificate": "The graduation certificate is delivered exclusively at the graduation ceremony or by registered mail.",
+        "clearance": "The clearance document requires signatures from all departments before issuance.",
+        "contact": "For inquiries contact the Deanship of Student Affairs: students@sru.edu.sa | ext. 2100"
+      },
+      "types": {
+        "transcript": "Transcript",
+        "certificate": "Certificate",
+        "clearance": "Clearance",
+        "honor": "Academic Honor",
+        "recommendation": "Recommendation"
+      }
+    }
   }
 }

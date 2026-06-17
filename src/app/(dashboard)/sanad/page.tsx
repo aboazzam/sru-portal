@@ -1,43 +1,61 @@
 import Link from "next/link";
+import { getTranslations } from "next-intl/server";
 import { getCurrentUser } from "@/lib/dal";
-
-const sections = [
-  {
-    href: "/sanad/academic",
-    icon: "📚",
-    title: "الأنشطة الأكاديمية",
-    desc: "طلب الوثائق الرسمية، الجدول الدراسي، التسجيل في المقررات، وإخلاء الطرف",
-    services: ["طلب وثيقة رسمية", "الجدول الدراسي", "التسجيل في المقررات", "إخلاء الطرف"],
-    accent: "#3D1F6E",
-  },
-  {
-    href: "/sanad/activities",
-    icon: "💡",
-    title: "المهارات والأنشطة",
-    desc: "الأنشطة والفعاليات، برامج تطوير المهارات، والأندية الطلابية",
-    services: ["الأنشطة والفعاليات", "برامج تطوير المهارات", "الأندية الطلابية"],
-    accent: "#00B4C8",
-  },
-  {
-    href: "/sanad/volunteer",
-    icon: "🤲",
-    title: "الفرص التطوعية",
-    desc: "استعرض فرص التطوع المتاحة وتابع سجل تطوعك",
-    services: ["الفرص المتاحة", "سجل التطوع"],
-    accent: "#6B46C1",
-  },
-  {
-    href: "/sanad/student-services",
-    icon: "🎓",
-    title: "الخدمات الطلابية",
-    desc: "الخدمات الصحية، الإسكان والسكن، وخدمات النقل",
-    services: ["الخدمات الصحية", "الإسكان والسكن", "خدمات النقل"],
-    accent: "#0097AA",
-  },
-];
 
 export default async function SanadHomePage() {
   const user = await getCurrentUser();
+  const t = await getTranslations("Sanad");
+
+  const sections = [
+    {
+      href: "/sanad/academic",
+      icon: "📚",
+      title: t("sections.academic.title"),
+      desc: t("sections.academic.desc"),
+      services: [
+        t("sections.academic.services.officialDoc"),
+        t("sections.academic.services.schedule"),
+        t("sections.academic.services.registration"),
+        t("sections.academic.services.clearance"),
+      ],
+      accent: "#3D1F6E",
+    },
+    {
+      href: "/sanad/activities",
+      icon: "💡",
+      title: t("sections.activities.title"),
+      desc: t("sections.activities.desc"),
+      services: [
+        t("sections.activities.services.activities"),
+        t("sections.activities.services.skills"),
+        t("sections.activities.services.clubs"),
+      ],
+      accent: "#00B4C8",
+    },
+    {
+      href: "/sanad/volunteer",
+      icon: "🤲",
+      title: t("sections.volunteer.title"),
+      desc: t("sections.volunteer.desc"),
+      services: [
+        t("sections.volunteer.services.opportunities"),
+        t("sections.volunteer.services.log"),
+      ],
+      accent: "#6B46C1",
+    },
+    {
+      href: "/sanad/student-services",
+      icon: "🎓",
+      title: t("sections.studentServices.title"),
+      desc: t("sections.studentServices.desc"),
+      services: [
+        t("sections.studentServices.services.health"),
+        t("sections.studentServices.services.housing"),
+        t("sections.studentServices.services.transport"),
+      ],
+      accent: "#0097AA",
+    },
+  ];
 
   return (
     <div className="space-y-6">
@@ -51,9 +69,9 @@ export default async function SanadHomePage() {
             📋
           </div>
           <div>
-            <h1 className="text-2xl font-bold text-[#3D1F6E]">سند – خدمات الطلاب</h1>
+            <h1 className="text-2xl font-bold text-[#3D1F6E]">{t("title")}</h1>
             <p className="text-gray-500 text-sm mt-0.5">
-              مرحباً {user?.name}، اختر القسم الذي تحتاجه
+              {t("welcome", { name: user?.name ?? "" })}، {t("subtitle")}
             </p>
           </div>
         </div>
@@ -68,9 +86,9 @@ export default async function SanadHomePage() {
           <span className="text-xl">📋</span>
           <div>
             <p className="font-semibold text-[#3D1F6E] group-hover:text-[#00B4C8] transition-colors">
-              طلباتي
+              {t("myRequests")}
             </p>
-            <p className="text-gray-400 text-xs">تابع حالة طلباتك المقدّمة</p>
+            <p className="text-gray-400 text-xs">{t("myRequestsDesc")}</p>
           </div>
         </div>
         <span className="text-[#00B4C8] text-lg">←</span>
@@ -118,7 +136,7 @@ export default async function SanadHomePage() {
                 className="mt-1 block text-center py-2.5 rounded-xl text-sm font-semibold text-white transition-opacity hover:opacity-90"
                 style={{ background: sec.accent }}
               >
-                الدخول للقسم
+                {t("enterSection")}
               </Link>
             </div>
           </div>

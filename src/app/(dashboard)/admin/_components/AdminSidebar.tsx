@@ -3,50 +3,36 @@ import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
-
-const navGroups = [
-  {
-    label: null,
-    items: [
-      { href: "/admin", label: "نظرة عامة", icon: "📊", exact: true },
-    ],
-  },
-  {
-    label: "المستخدمون",
-    items: [
-      { href: "/admin/users",  label: "إدارة المستخدمين", icon: "👥", exact: false },
-      { href: "/admin/points", label: "إدارة النقاط",     icon: "⭐", exact: false },
-    ],
-  },
-  {
-    label: "الطلبات الأكاديمية",
-    items: [
-      { href: "/admin/scholarships", label: "طلبات المنح",     icon: "🎓", exact: false },
-      { href: "/admin/trainings",    label: "تسجيلات التدريب", icon: "🏢", exact: false },
-    ],
-  },
-  {
-    label: "طلبات الطلاب",
-    items: [
-      { href: "/admin/services",    label: "طلبات الخدمات", icon: "🛎️", exact: false },
-      { href: "/admin/volunteers",  label: "طلبات التطوع",  icon: "🌱", exact: false },
-      { href: "/admin/activities",  label: "طلبات الأنشطة", icon: "🎯", exact: false },
-      { href: "/admin/clubs",       label: "طلبات الأندية", icon: "⚽", exact: false },
-    ],
-  },
-  {
-    label: "أدوات",
-    items: [
-      { href: "/admin/import", label: "استيراد Excel", icon: "📥", exact: false },
-    ],
-  },
-];
+import { useTranslations } from "next-intl";
 
 interface Props { userName: string }
 
 export default function AdminSidebar({ userName }: Props) {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
+  const t = useTranslations("Admin");
+  const tc = useTranslations("Common");
+
+  const navGroups = [
+    { label: null, items: [{ href: "/admin", label: t("sidebar.overview"), icon: "📊", exact: true }] },
+    { label: t("sidebar.users"), items: [
+      { href: "/admin/users",  label: t("sidebar.manageUsers"), icon: "👥", exact: false },
+      { href: "/admin/points", label: t("sidebar.managePoints"), icon: "⭐", exact: false },
+    ]},
+    { label: t("sidebar.academic"), items: [
+      { href: "/admin/scholarships", label: t("sidebar.scholarships"), icon: "🎓", exact: false },
+      { href: "/admin/trainings",    label: t("sidebar.training"),     icon: "🏢", exact: false },
+    ]},
+    { label: t("sidebar.studentRequests"), items: [
+      { href: "/admin/services",   label: t("sidebar.services"),   icon: "🛎️", exact: false },
+      { href: "/admin/volunteers", label: t("sidebar.volunteers"), icon: "🌱", exact: false },
+      { href: "/admin/activities", label: t("sidebar.activities"), icon: "🎯", exact: false },
+      { href: "/admin/clubs",      label: t("sidebar.clubs"),      icon: "⚽", exact: false },
+    ]},
+    { label: t("sidebar.tools"), items: [
+      { href: "/admin/import", label: t("sidebar.import"), icon: "📥", exact: false },
+    ]},
+  ];
 
   const NavContent = () => (
     <nav className="flex flex-col h-full">
@@ -62,9 +48,9 @@ export default function AdminSidebar({ userName }: Props) {
       </div>
 
       <div className="px-4 py-3 border-b border-green-950 shrink-0">
-        <p className="text-green-400 text-[10px] uppercase tracking-wider mb-0.5">لوحة التحكم</p>
+        <p className="text-green-400 text-[10px] uppercase tracking-wider mb-0.5">{t("sidebar.dashboard")}</p>
         <p className="text-green-100 text-xs font-semibold">{userName}</p>
-        <p className="text-green-500 text-[10px]">مدير النظام</p>
+        <p className="text-green-500 text-[10px]">{t("sidebar.sysAdmin")}</p>
       </div>
 
       <div className="flex-1 overflow-y-auto px-3 py-3 space-y-4">
@@ -101,7 +87,7 @@ export default function AdminSidebar({ userName }: Props) {
       </div>
 
       <div className="px-5 py-4 border-t border-green-950 shrink-0">
-        <p className="text-green-500 text-[10px] mb-0.5">مسجّل الدخول</p>
+        <p className="text-green-500 text-[10px] mb-0.5">{tc("loggedIn")}</p>
         <p className="text-white text-sm font-medium truncate">{userName}</p>
       </div>
     </nav>
@@ -112,7 +98,7 @@ export default function AdminSidebar({ userName }: Props) {
       <button
         onClick={() => setOpen(!open)}
         className="md:hidden fixed bottom-6 start-6 z-50 w-12 h-12 rounded-full bg-green-900 text-white shadow-xl flex items-center justify-center text-xl"
-        aria-label="فتح القائمة"
+        aria-label={tc("openMenu")}
       >
         {open ? "✕" : "☰"}
       </button>

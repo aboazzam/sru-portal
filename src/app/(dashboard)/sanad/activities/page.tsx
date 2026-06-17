@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
+import { getTranslations } from "next-intl/server";
 import { getCurrentUser } from "@/lib/dal";
 import { prisma } from "@/lib/db";
 import ActivitiesCalendar from "./_components/ActivitiesCalendar";
@@ -23,6 +24,8 @@ function ServiceCard({ title, icon, children }: { title: string; icon: string; c
 export default async function ActivitiesPage() {
   const user = await getCurrentUser();
   if (!user) redirect("/login");
+
+  const t = await getTranslations("Sanad");
 
   const [activities, myApplications, trainings, myEnrollments] = await Promise.all([
     prisma.studentActivity.findMany({
@@ -48,22 +51,22 @@ export default async function ActivitiesPage() {
     }),
   ]);
 
-  const appliedActivityIds = new Set(myApplications.map((a) => a.activityId));
+  const appliedActivityIds  = new Set(myApplications.map((a) => a.activityId));
   const enrolledTrainingIds = new Set(myEnrollments.map((e) => e.trainingId));
 
   return (
     <div className="space-y-6">
       <div className="flex items-center gap-2 text-sm text-gray-500">
-        <Link href="/sanad" className="hover:text-[#3D1F6E] transition-colors">سند</Link>
+        <Link href="/sanad" className="hover:text-[#3D1F6E] transition-colors">{t("breadcrumb")}</Link>
         <span>/</span>
-        <span className="text-[#3D1F6E] font-medium">المهارات والأنشطة</span>
+        <span className="text-[#3D1F6E] font-medium">{t("activitiesPage.breadcrumb")}</span>
       </div>
 
-      <ServiceCard title="الأنشطة والفعاليات" icon="📅">
+      <ServiceCard title={t("activitiesPage.activitiesCard")} icon="📅">
         <ActivitiesCalendar activities={activities} appliedIds={appliedActivityIds} />
       </ServiceCard>
 
-      <ServiceCard title="برامج التدريب التعاوني" icon="💡">
+      <ServiceCard title={t("activitiesPage.trainingCard")} icon="💡">
         <SkillsPrograms trainings={trainings} enrolledIds={enrolledTrainingIds} />
       </ServiceCard>
 
@@ -73,15 +76,15 @@ export default async function ActivitiesPage() {
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-xl bg-yellow-50 flex items-center justify-center text-xl shrink-0">⭐</div>
             <div>
-              <h2 className="font-bold text-[#3D1F6E] text-base">الأندية الطلابية</h2>
-              <p className="text-gray-400 text-xs mt-0.5">اكتشف الأندية الطلابية والفعاليات التنظيمية</p>
+              <h2 className="font-bold text-[#3D1F6E] text-base">{t("activitiesPage.clubs.title")}</h2>
+              <p className="text-gray-400 text-xs mt-0.5">{t("activitiesPage.clubs.desc")}</p>
             </div>
           </div>
           <Link
             href="/clubs"
             className="flex items-center gap-1.5 px-4 py-2 bg-yellow-400 text-yellow-900 rounded-lg text-sm font-semibold hover:bg-yellow-500 transition-colors shrink-0"
           >
-            <span>الأندية</span>
+            <span>{t("activitiesPage.clubs.btn")}</span>
             <span>↗</span>
           </Link>
         </div>

@@ -1,16 +1,10 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
+import { getTranslations } from "next-intl/server";
 import { getCurrentUser } from "@/lib/dal";
 import { prisma } from "@/lib/db";
 
 type UnifiedStatus = "PENDING" | "APPROVED" | "REJECTED" | "COMPLETED";
-
-const statusConfig: Record<UnifiedStatus, { label: string; color: string; bg: string }> = {
-  PENDING:   { label: "قيد المراجعة", color: "#d97706", bg: "#fef3c7" },
-  APPROVED:  { label: "مقبول",        color: "#16a34a", bg: "#dcfce7" },
-  REJECTED:  { label: "مرفوض",        color: "#dc2626", bg: "#fee2e2" },
-  COMPLETED: { label: "مكتمل",        color: "#2563eb", bg: "#dbeafe" },
-};
 
 type RequestRow = {
   id: string;
@@ -23,6 +17,16 @@ type RequestRow = {
 export default async function MyRequestsPage() {
   const user = await getCurrentUser();
   if (!user) redirect("/login");
+
+  const t  = await getTranslations("Sanad");
+  const ts = await getTranslations("Status");
+
+  const statusConfig: Record<UnifiedStatus, { label: string; color: string; bg: string }> = {
+    PENDING:   { label: ts("pending"),   color: "#d97706", bg: "#fef3c7" },
+    APPROVED:  { label: ts("approved"),  color: "#16a34a", bg: "#dcfce7" },
+    REJECTED:  { label: ts("rejected"),  color: "#dc2626", bg: "#fee2e2" },
+    COMPLETED: { label: ts("completed"), color: "#2563eb", bg: "#dbeafe" },
+  };
 
   const [scholarships, trainings, volunteers, activities, services] = await Promise.all([
     prisma.scholarshipApplication.findMany({
@@ -56,35 +60,35 @@ export default async function MyRequestsPage() {
     ...scholarships.map((r) => ({
       id: `SCH-${r.id.slice(-5).toUpperCase()}`,
       type: r.scholarship.title,
-      category: "منحة دراسية",
+      category: t("myRequestsPage.categories.scholarship"),
       status: r.status as UnifiedStatus,
       date: r.createdAt,
     })),
     ...trainings.map((r) => ({
       id: `TRN-${r.id.slice(-5).toUpperCase()}`,
       type: r.training.title,
-      category: "تدريب تعاوني",
+      category: t("myRequestsPage.categories.training"),
       status: r.status as UnifiedStatus,
       date: r.createdAt,
     })),
     ...volunteers.map((r) => ({
       id: `VOL-${r.id.slice(-5).toUpperCase()}`,
       type: r.opportunity.title,
-      category: "تطوع",
+      category: t("myRequestsPage.categories.volunteer"),
       status: r.status as UnifiedStatus,
       date: r.createdAt,
     })),
     ...activities.map((r) => ({
       id: `ACT-${r.id.slice(-5).toUpperCase()}`,
       type: r.activity.title,
-      category: "نشاط طلابي",
+      category: t("myRequestsPage.categories.activity"),
       status: r.status as UnifiedStatus,
       date: r.createdAt,
     })),
     ...services.map((r) => ({
       id: `SVC-${r.id.slice(-5).toUpperCase()}`,
       type: r.service.title,
-      category: "خدمة طلابية",
+      category: t("myRequestsPage.categories.service"),
       status: r.status as UnifiedStatus,
       date: r.createdAt,
     })),
@@ -100,9 +104,9 @@ export default async function MyRequestsPage() {
   return (
     <div className="space-y-6">
       <div className="flex items-center gap-2 text-sm text-gray-500">
-        <Link href="/sanad" className="hover:text-[#3D1F6E] transition-colors">سند</Link>
+        <Link href="/sanad" className="hover:text-[#3D1F6E] transition-colors">{t("breadcrumb")}</Link>
         <span>/</span>
-        <span className="text-[#3D1F6E] font-medium">طلباتي</span>
+        <span className="text-[#3D1F6E] font-medium">{t("myRequestsPage.breadcrumb")}</span>
       </div>
 
       {/* Status summary */}
@@ -121,25 +125,25 @@ export default async function MyRequestsPage() {
       {/* Requests table */}
       <div className="bg-white rounded-2xl shadow-sm border border-purple-100 overflow-hidden">
         <div className="px-6 py-4 border-b border-purple-50 flex items-center justify-between">
-          <h2 className="font-bold text-[#3D1F6E]">جميع الطلبات</h2>
-          <span className="text-xs text-gray-400">{rows.length} طلب</span>
+          <h2 className="font-bold text-[#3D1F6E]">{t("myRequestsPage.allRequests")}</h2>
+          <span className="text-xs text-gray-400">{t("myRequestsPage.requestsCount", { count: rows.length })}</span>
         </div>
 
         {rows.length === 0 ? (
           <div className="py-16 text-center">
-            <p className="text-gray-400">لا توجد طلبات بعد</p>
-            <p className="text-gray-300 text-xs mt-1">سجّل في المنح أو الأنشطة أو الفرص التطوعية</p>
+            <p className="text-gray-400">{t("myRequestsPage.empty")}</p>
+            <p className="text-gray-300 text-xs mt-1">{t("myRequestsPage.emptyDesc")}</p>
           </div>
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
               <thead className="bg-[#F5F3FF]">
                 <tr>
-                  <th className="px-4 py-3 text-start text-xs font-bold text-[#3D1F6E]">رقم الطلب</th>
-                  <th className="px-4 py-3 text-start text-xs font-bold text-[#3D1F6E]">نوع الطلب</th>
-                  <th className="px-4 py-3 text-start text-xs font-bold text-[#3D1F6E] hidden sm:table-cell">التصنيف</th>
-                  <th className="px-4 py-3 text-start text-xs font-bold text-[#3D1F6E] hidden sm:table-cell">التاريخ</th>
-                  <th className="px-4 py-3 text-start text-xs font-bold text-[#3D1F6E]">الحالة</th>
+                  <th className="px-4 py-3 text-start text-xs font-bold text-[#3D1F6E]">{t("myRequestsPage.cols.id")}</th>
+                  <th className="px-4 py-3 text-start text-xs font-bold text-[#3D1F6E]">{t("myRequestsPage.cols.type")}</th>
+                  <th className="px-4 py-3 text-start text-xs font-bold text-[#3D1F6E] hidden sm:table-cell">{t("myRequestsPage.cols.category")}</th>
+                  <th className="px-4 py-3 text-start text-xs font-bold text-[#3D1F6E] hidden sm:table-cell">{t("myRequestsPage.cols.date")}</th>
+                  <th className="px-4 py-3 text-start text-xs font-bold text-[#3D1F6E]">{t("myRequestsPage.cols.status")}</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-50">

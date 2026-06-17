@@ -1,48 +1,53 @@
+export const dynamic = 'force-dynamic';
+
 import Link from "next/link";
+import { getTranslations } from "next-intl/server";
 
-const services = [
-  {
-    icon: "🏥",
-    title: "الخدمات الصحية",
-    accentColor: "#00B4C8",
-    items: [
-      { label: "العيادة الجامعية",         desc: "الأحد – الخميس، 8:00 – 16:00 | مبنى الخدمات الطلابية" },
-      { label: "التأمين الطلابي",           desc: "تغطية شاملة لجميع الطلاب المسجّلين خلال الفصل الدراسي" },
-      { label: "التوجيه النفسي والإرشاد",   desc: "جلسات فردية وجماعية مع متخصصين معتمدين" },
-    ],
-    emergencyNote: "للطوارئ: اتصل بـ 911 أو زر العيادة فوراً",
-  },
-  {
-    icon: "🏠",
-    title: "الإسكان والسكن",
-    accentColor: "#3D1F6E",
-    items: [
-      { label: "السكن الجامعي",        desc: "غرف فردية ومشتركة — التقديم قبل بداية كل فصل بـ 4 أسابيع" },
-      { label: "قواعد السكن",          desc: "راجع دليل السكن الجامعي للاطلاع على الأنظمة واللوائح" },
-      { label: "الصيانة والبلاغات",    desc: "قدّم بلاغات الصيانة عبر بوابة السكن أو اتصل بالإدارة" },
-    ],
-    emergencyNote: "إدارة السكن: داخلي 2400 | يعمل 24 ساعة",
-  },
-  {
-    icon: "🚌",
-    title: "خدمات النقل",
-    accentColor: "#6B46C1",
-    items: [
-      { label: "الحافلات الجامعية",    desc: "مسارات يومية تغطي المناطق السكنية الرئيسية حول الجامعة" },
-      { label: "التسجيل في الخدمة",    desc: "سجّل في خدمة الحافلات عبر النظام — المقاعد محدودة" },
-      { label: "جداول التشغيل",        desc: "الجدول متاح على لوحات الجامعة وبوابة الطالب" },
-    ],
-    emergencyNote: "للاستفسار عن مواعيد الحافلات: داخلي 2600",
-  },
-];
+export default async function StudentServicesPage() {
+  const t = await getTranslations("Sanad");
 
-export default function StudentServicesPage() {
+  const services = [
+    {
+      icon: "🏥",
+      title: t("studentServicesPage.health.title"),
+      accentColor: "#00B4C8",
+      items: [
+        { label: t("studentServicesPage.health.clinic.label"),    desc: t("studentServicesPage.health.clinic.desc") },
+        { label: t("studentServicesPage.health.insurance.label"), desc: t("studentServicesPage.health.insurance.desc") },
+        { label: t("studentServicesPage.health.counseling.label"),desc: t("studentServicesPage.health.counseling.desc") },
+      ],
+      emergencyNote: t("studentServicesPage.health.emergency"),
+    },
+    {
+      icon: "🏠",
+      title: t("studentServicesPage.housing.title"),
+      accentColor: "#3D1F6E",
+      items: [
+        { label: t("studentServicesPage.housing.dormitory.label"),  desc: t("studentServicesPage.housing.dormitory.desc") },
+        { label: t("studentServicesPage.housing.rules.label"),      desc: t("studentServicesPage.housing.rules.desc") },
+        { label: t("studentServicesPage.housing.maintenance.label"),desc: t("studentServicesPage.housing.maintenance.desc") },
+      ],
+      emergencyNote: t("studentServicesPage.housing.emergency"),
+    },
+    {
+      icon: "🚌",
+      title: t("studentServicesPage.transport.title"),
+      accentColor: "#6B46C1",
+      items: [
+        { label: t("studentServicesPage.transport.buses.label"),       desc: t("studentServicesPage.transport.buses.desc") },
+        { label: t("studentServicesPage.transport.registration.label"),desc: t("studentServicesPage.transport.registration.desc") },
+        { label: t("studentServicesPage.transport.schedules.label"),   desc: t("studentServicesPage.transport.schedules.desc") },
+      ],
+      emergencyNote: t("studentServicesPage.transport.emergency"),
+    },
+  ];
+
   return (
     <div className="space-y-6">
       <div className="flex items-center gap-2 text-sm text-gray-500">
-        <Link href="/sanad" className="hover:text-[#3D1F6E] transition-colors">سند</Link>
+        <Link href="/sanad" className="hover:text-[#3D1F6E] transition-colors">{t("breadcrumb")}</Link>
         <span>/</span>
-        <span className="text-[#3D1F6E] font-medium">الخدمات الطلابية</span>
+        <span className="text-[#3D1F6E] font-medium">{t("studentServicesPage.breadcrumb")}</span>
       </div>
 
       {services.map((svc) => (
