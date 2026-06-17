@@ -9,7 +9,7 @@ echo "==> Pulling latest code..."
 git pull origin main
 
 echo "==> Installing dependencies..."
-npm ci --omit=dev
+npm install
 
 echo "==> Generating Prisma client..."
 npx prisma generate
