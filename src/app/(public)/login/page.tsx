@@ -17,7 +17,7 @@ export default async function LoginPage() {
       <div className="w-full max-w-md animate-fade-in-up">
         <div className="text-center mb-8 flex flex-col items-center">
           <Image
-            src="/assets/logos/logo-white.svg"
+            src="/assets/logos/sru-logo.png"
             alt={tc("universityName")}
             width={200}
             height={48}

@@ -167,30 +167,27 @@ export default async function LandingPage() {
     <main className="min-h-screen bg-white flex flex-col font-sans" dir="rtl">
 
       {/* ── Sticky Header ──────────────────────────────── */}
-      <header className="sticky top-0 z-50 bg-[#1B5E20]/95 backdrop-blur-sm shadow-lg">
-        <div className="max-w-7xl mx-auto px-6 py-3.5 flex items-center justify-between">
-          <Image
-            src="/assets/logos/logo-white.svg"
-            alt={t("universityName")}
-            width={180}
-            height={40}
-            style={{ height: "38px", width: "auto" }}
-            priority
-          />
-          <div className="flex items-center gap-3">
-            <LanguageToggle className="text-white" />
-            <Link
-              href="/login"
-              className="px-5 py-2 bg-white text-[#1B5E20] rounded-lg font-semibold hover:bg-green-50 transition-colors text-sm shadow"
-            >
-              {t("signIn")}
-            </Link>
-          </div>
-        </div>
-      </header>
+      <header className="sticky top-0 z-50 bg-[#2C1650]/95 backdrop-blur-sm shadow-lg">
+  <div className="max-w-7xl mx-auto px-6 py-3.5 flex items-center justify-between">
+    <img src="/assets/logos/logo-white.png"
+      alt={t("universityName")}
+      width={180}
+      height={40}
+      />
+    <div className="flex items-center gap-3">
+      <LanguageToggle className="text-white" />
+      <Link
+        href="/login"
+        className="px-5 py-2 bg-white text-[#1B5E20] rounded-lg font-semibold hover:bg-green-50 transition-colors text-sm shadow"
+      >
+        {t("signIn")}
+      </Link>
+    </div>
+  </div>
+</header>
 
       {/* ── Hero ───────────────────────────────────────── */}
-      <section className="relative overflow-hidden bg-gradient-to-br from-[#1B5E20] via-[#155724] to-[#0d3d17] text-white">
+      <section className="relative overflow-hidden bg-gradient-to-br from-[#6B46C1] via-[#3D1F6E] to-[#2C1650] text-white">
         <div className="absolute -top-32 -start-32 w-96 h-96 rounded-full bg-white/5 pointer-events-none" />
         <div className="absolute top-20 -end-20 w-72 h-72 rounded-full bg-white/5 pointer-events-none" />
         <div className="absolute -bottom-1 start-0 end-0 h-16 bg-white"
@@ -198,11 +195,11 @@ export default async function LandingPage() {
         />
 
         <div className="relative max-w-4xl mx-auto px-6 pt-24 pb-32 text-center">
-          <div className="inline-block mb-5 px-4 py-1.5 rounded-full border border-green-400/40 bg-green-700/40 text-green-200 text-xs font-medium tracking-wide animate-fade-in">
+          <div className="inline-block mb-5 px-4 py-1.5 rounded-full border border-#2C1650-400/40 bg-#2C1650-700/40 text-#2C1650-200 text-xs font-medium tracking-wide animate-fade-in">
             البوابة الجامعية الرسمية
           </div>
 
-          <h1 className="text-4xl md:text-5xl font-extrabold mb-5 leading-tight animate-fade-in-up">
+          <h1 className="text-4xl md:text-3xl font-extrabold mb-5 leading-tight animate-fade-in-up">
             {tl("heroTitle")}
           </h1>
 
