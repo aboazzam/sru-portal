@@ -128,10 +128,10 @@ const modules = [
 ];
 
 const stats = [
-  { value: "+٥٠٠٠", label: "طالب وطالبة" },
-  { value: "+٤٠٠",  label: "عضو هيئة تدريس" },
-  { value: "١٠",    label: "خدمات رقمية" },
-  { value: "+١٥",   label: "عاماً من التميز" },
+  { value: "+2359", label: "طالب وطالبة" },
+  { value: "+85",  label: "عضو هيئة تدريس" },
+  { value: "+100",    label: "خدمات رقمية" },
+  { value: "+12",   label: "عاماً من التميز" },
 ];
 
 const features = [
@@ -371,7 +371,7 @@ export default async function LandingPage() {
       </section>
 
       {/* ── CTA Banner ─────────────────────────────────── */}
-      <section className="py-20 px-6 bg-gradient-to-l from-[#1B5E20] to-[#2D7A35] text-white">
+      <section className="py-20 px-6 bg-gradient-to-l from-[#3D1F6E] to-[#6B46C1] text-white">
         <div className="max-w-3xl mx-auto text-center">
           <h2 className="text-3xl md:text-4xl font-extrabold mb-4">ابدأ رحلتك الجامعية اليوم</h2>
           <p className="text-green-200 text-lg mb-8 max-w-xl mx-auto leading-relaxed">
@@ -379,7 +379,7 @@ export default async function LandingPage() {
           </p>
           <Link
             href="/login"
-            className="inline-block px-12 py-4 bg-white text-[#1B5E20] rounded-xl font-bold text-base shadow-xl hover:bg-green-50 hover:scale-105 transition-all duration-200"
+            className="inline-block px-12 py-4 bg-white text-[#3D1F6E] rounded-xl font-bold text-base shadow-xl hover:bg-green-50 hover:scale-105 transition-all duration-200"
           >
             {t("signIn")} →
           </Link>
@@ -387,21 +387,21 @@ export default async function LandingPage() {
       </section>
 
       {/* ── Footer ─────────────────────────────────────── */}
-      <footer className="bg-[#0f3d18] text-green-300 py-12 px-6">
+      <footer className="bg-[#3D1F6E] text-gray-300 py-12 px-6">
         <div className="max-w-7xl mx-auto">
           <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-8 mb-8 pb-8 border-b border-green-800">
 
             {/* Brand */}
             <div>
-              <Image
-                src="/assets/logos/logo-white.svg"
+              <img
+                src="/assets/logos/logo-white.png"
                 alt={t("universityName")}
                 width={160}
                 height={38}
                 style={{ height: "38px", width: "auto" }}
                 className="mb-3 opacity-90"
               />
-              <p className="text-sm text-green-400 max-w-xs leading-relaxed">
+              <p className="text-sm text-gray-400 max-w-xs leading-relaxed">
                 بوابة جامعة سليمان الراجحي — منصة رقمية متكاملة لجميع الخدمات الجامعية.
               </p>
             </div>
@@ -448,7 +448,7 @@ export default async function LandingPage() {
 
           </div>
 
-          <p className="text-center text-xs text-green-600">
+          <p className="text-center text-xs text-gray-600">
             {t("copyright", { year })}
           </p>
         </div>
