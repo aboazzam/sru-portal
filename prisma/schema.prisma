@@ -74,6 +74,7 @@ enum EnrollmentStatus {
 model User {
   id        String   @id @default(cuid())
   name      String
+  nameEn    String?
   email     String   @unique
   password  String
   role      Role     @default(STUDENT)

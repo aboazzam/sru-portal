@@ -32,6 +32,7 @@ export const GET = withAuth(async (req: NextRequest) => {
       select: {
         id: true,
         name: true,
+        nameEn: true,
         email: true,
         role: true,
         gender: true,
@@ -51,6 +52,7 @@ export const GET = withAuth(async (req: NextRequest) => {
 
 const CreateUserSchema = z.object({
   name:     z.string().min(1),
+  nameEn:   z.string().optional(),
   email:    z.string().email(),
   password: z.string().min(8),
   role:     z.enum(['STUDENT', 'FACULTY', 'ADMIN', 'ORGANIZER', 'SUBADMIN']),
@@ -64,7 +66,7 @@ export const POST = withAuth(async (req: NextRequest) => {
     return Response.json({ error: parsed.error.flatten().fieldErrors }, { status: 422 })
   }
 
-  const { name, email, password, role, gender } = parsed.data
+  const { name, nameEn, email, password, role, gender } = parsed.data
 
   const existing = await prisma.user.findUnique({ where: { email } })
   if (existing) {
@@ -73,8 +75,11 @@ export const POST = withAuth(async (req: NextRequest) => {
 
   const hashed = await bcrypt.hash(password, 10)
   const user = await prisma.user.create({
-    data: { name, email, password: hashed, role, gender },
-    select: { id: true, name: true, email: true, role: true, gender: true, points: true, createdAt: true },
+    data: { name, nameEn, email, password: hashed, role, gender },
+    select: {
+      id: true, name: true, nameEn: true, email: true,
+      role: true, gender: true, points: true, createdAt: true,
+    },
   })
 
   return Response.json({ user }, { status: 201 })
