@@ -25,6 +25,8 @@ export default async function ServiceCatalogPage() {
     }),
   ]);
 
+  const { name: userName, email: userEmail } = user;
+
   const appliedMap = new Map(myApplications.map((a) => [a.serviceId, a.status]));
 
   return (
@@ -74,6 +76,9 @@ export default async function ServiceCatalogPage() {
                   <div className="mt-3">
                     <ApplyButton
                       serviceId={svc.id}
+                      serviceTitle={svc.title}
+                      userName={userName}
+                      userEmail={userEmail}
                       alreadyApplied={applied}
                       existingStatus={appStatus}
                     />

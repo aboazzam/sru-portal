@@ -4,7 +4,7 @@ import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
 
-const PRIMARY = "#059669";
+const PRIMARY = "#3D1F6E";
 
 const navItems = [
   { href: "/services",             label: "لوحة التحكم",     icon: "🏠" },
@@ -25,22 +25,27 @@ export default function ServicesSidebar({ userName, userRole }: Props) {
     <nav className="flex flex-col h-full">
       {/* Brand */}
       <div className="px-5 py-5 border-b border-[#C8D4D8] flex items-center">
-        <Image
-          src="/assets/logos/logo-dark.svg"
+        <a
+      href="https://sru-portal.aboazzam.art"
+      target="_blank"
+      rel="noopener noreferrer"
+    >
+        <img
+          src="/assets/logos/sru-logo.png"
           alt="جامعة سليمان الراجحي"
           width={160}
           height={40}
           style={{ height: "40px", width: "auto" }}
-          priority
         />
+        </a>
       </div>
 
       {/* Module label */}
-      <div className="px-5 py-3 border-b border-[#E8EDEF]">
+      <div className="px-5 py-3 border-b border-[#2C1650]">
         <div className="flex items-center gap-2">
           <div
             className="w-7 h-7 rounded-lg flex items-center justify-center text-sm"
-            style={{ background: "linear-gradient(135deg, #059669, #047857)" }}
+            style={{ background: "linear-gradient(135deg, #6B46C1, #3D1F6E)" }}
           >
             🛎️
           </div>
@@ -63,7 +68,7 @@ export default function ServicesSidebar({ userName, userRole }: Props) {
                 className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all duration-150 ${
                   isActive
                     ? "text-white shadow-sm"
-                    : "text-[#506570] hover:bg-[#ECFDF5] hover:text-[#065F46]"
+                    : "text-[#2C1650] hover:bg-[#3D1F6E] hover:text-[#3D1F6E]"
                 }`}
                 style={isActive ? { background: PRIMARY } : undefined}
               >

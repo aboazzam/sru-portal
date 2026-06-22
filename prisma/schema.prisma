@@ -281,6 +281,8 @@ model ServiceApplications {
   service   StudentService    @relation(fields: [serviceId], references: [id])
   serviceId String
   status    ApplicationStatus @default(PENDING)
+  notes     String?
+  formData  String?
   createdAt DateTime          @default(now())
   updatedAt DateTime          @updatedAt
 
