@@ -111,7 +111,7 @@ export async function GET(request: NextRequest) {
   wsNotes["!cols"] = [{ wch: 60 }];
   XLSX.utils.book_append_sheet(wb, wsNotes, "ملاحظات");
 
-  const buffer = XLSX.write(wb, { type: "buffer", bookType: "xlsx" }) as Buffer;
+  const buffer = XLSX.write(wb, { type: "buffer", bookType: "xlsx" }) as Uint8Array;
 
   return new NextResponse(buffer, {
     headers: {

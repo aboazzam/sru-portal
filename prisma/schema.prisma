@@ -94,6 +94,7 @@ model User {
   volunteerApplications VolunteerApplication[]
   serviceApplications ServiceApplications[]
   trainingEnrollments TrainingEnrollment[]
+  trainingRequests    TrainingRequest[]
 }
 
 // ─────────────────────────────────────────
@@ -376,4 +377,23 @@ model TrainingEnrollment {
   updatedAt  DateTime         @updatedAt
 
   @@unique([userId, trainingId])
+}
+
+enum TrainingRequestStatus {
+  PENDING
+  APPROVED
+  REJECTED
+  COMPLETED
+}
+
+model TrainingRequest {
+  id          String                @id @default(cuid())
+  user        User                  @relation(fields: [userId], references: [id])
+  userId      String
+  type        String
+  programName String
+  notes       String?
+  status      TrainingRequestStatus @default(PENDING)
+  createdAt   DateTime              @default(now())
+  updatedAt   DateTime              @updatedAt
 }
