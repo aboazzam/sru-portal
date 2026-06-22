@@ -111,10 +111,9 @@ export async function GET(request: NextRequest) {
   wsNotes["!cols"] = [{ wch: 60 }];
   XLSX.utils.book_append_sheet(wb, wsNotes, "ملاحظات");
 
-  const raw = XLSX.write(wb, { type: "array", bookType: "xlsx" }) as Uint8Array;
-  const ab  = raw.buffer.slice(raw.byteOffset, raw.byteOffset + raw.byteLength) as ArrayBuffer;
+  const buffer = XLSX.write(wb, { type: "buffer", bookType: "xlsx" }) as Buffer;
 
-  return new NextResponse(ab, {
+  return new NextResponse(buffer, {
     headers: {
       "Content-Type":        "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
       "Content-Disposition": `attachment; filename="${sheet}-template.xlsx"`,

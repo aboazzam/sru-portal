@@ -1,3 +1,5 @@
+import { z } from 'zod'
+import bcrypt from 'bcryptjs'
 import type { NextRequest } from 'next/server'
 import { prisma } from '@/lib/db'
 import { withAuth } from '@/lib/with-auth'
@@ -45,4 +47,35 @@ export const GET = withAuth(async (req: NextRequest) => {
     users,
     pagination: { page, limit, total, pages: Math.ceil(total / limit) },
   })
+}, ['ADMIN'])
+
+const CreateUserSchema = z.object({
+  name:     z.string().min(1),
+  email:    z.string().email(),
+  password: z.string().min(8),
+  role:     z.enum(['STUDENT', 'FACULTY', 'ADMIN', 'ORGANIZER', 'SUBADMIN']),
+  gender:   z.enum(['MALE', 'FEMALE']).optional(),
+})
+
+export const POST = withAuth(async (req: NextRequest) => {
+  const body = await req.json().catch(() => null)
+  const parsed = CreateUserSchema.safeParse(body)
+  if (!parsed.success) {
+    return Response.json({ error: parsed.error.flatten().fieldErrors }, { status: 422 })
+  }
+
+  const { name, email, password, role, gender } = parsed.data
+
+  const existing = await prisma.user.findUnique({ where: { email } })
+  if (existing) {
+    return Response.json({ error: 'البريد الإلكتروني مستخدم بالفعل.' }, { status: 409 })
+  }
+
+  const hashed = await bcrypt.hash(password, 10)
+  const user = await prisma.user.create({
+    data: { name, email, password: hashed, role, gender },
+    select: { id: true, name: true, email: true, role: true, gender: true, points: true, createdAt: true },
+  })
+
+  return Response.json({ user }, { status: 201 })
 }, ['ADMIN'])
