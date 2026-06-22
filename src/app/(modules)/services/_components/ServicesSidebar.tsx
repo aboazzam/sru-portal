@@ -1,23 +1,27 @@
 "use client";
 import Link from "next/link";
-import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
 
 const PRIMARY = "#3D1F6E";
 
-const navItems = [
+const studentNavItems = [
   { href: "/services",             label: "لوحة التحكم",     icon: "🏠" },
   { href: "/services/catalog",     label: "كتالوج الخدمات",  icon: "📋" },
   { href: "/services/my-requests", label: "طلباتي",          icon: "📄" },
 ];
 
+const adminNavItems = [
+  { href: "/services/admin", label: "إدارة الطلبات", icon: "🛠️" },
+];
+
 interface Props {
   userName: string;
   userRole: string;
+  isAdmin?: boolean;
 }
 
-export default function ServicesSidebar({ userName, userRole }: Props) {
+export default function ServicesSidebar({ userName, userRole, isAdmin = false }: Props) {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
 
@@ -25,18 +29,14 @@ export default function ServicesSidebar({ userName, userRole }: Props) {
     <nav className="flex flex-col h-full">
       {/* Brand */}
       <div className="px-5 py-5 border-b border-[#C8D4D8] flex items-center">
-        <a
-      href="https://sru-portal.aboazzam.art"
-      target="_blank"
-      rel="noopener noreferrer"
-    >
-        <img
-          src="/assets/logos/sru-logo.png"
-          alt="جامعة سليمان الراجحي"
-          width={160}
-          height={40}
-          style={{ height: "40px", width: "auto" }}
-        />
+        <a href="https://sru-portal.aboazzam.art" target="_blank" rel="noopener noreferrer">
+          <img
+            src="/assets/logos/sru-logo.png"
+            alt="جامعة سليمان الراجحي"
+            width={160}
+            height={40}
+            style={{ height: "40px", width: "auto" }}
+          />
         </a>
       </div>
 
@@ -55,7 +55,7 @@ export default function ServicesSidebar({ userName, userRole }: Props) {
 
       {/* Nav links */}
       <ul className="flex-1 px-3 py-4 space-y-1 overflow-y-auto">
-        {navItems.map((item) => {
+        {studentNavItems.map((item) => {
           const isActive =
             item.href === "/services"
               ? pathname === "/services"
@@ -66,9 +66,7 @@ export default function ServicesSidebar({ userName, userRole }: Props) {
                 href={item.href}
                 onClick={() => setOpen(false)}
                 className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all duration-150 ${
-                  isActive
-                    ? "text-white shadow-sm"
-                    : "text-[#2C1650] hover:bg-[#3D1F6E] hover:text-[#3D1F6E]"
+                  isActive ? "text-white shadow-sm" : "text-[#2C1650] hover:bg-[#EDE9F5] hover:text-[#3D1F6E]"
                 }`}
                 style={isActive ? { background: PRIMARY } : undefined}
               >
@@ -78,6 +76,35 @@ export default function ServicesSidebar({ userName, userRole }: Props) {
             </li>
           );
         })}
+
+        {/* Admin section */}
+        {isAdmin && (
+          <>
+            <li className="pt-3 pb-1">
+              <p className="px-3 text-[10px] font-bold uppercase tracking-widest text-[#9CA3AF]">
+                إدارة
+              </p>
+            </li>
+            {adminNavItems.map((item) => {
+              const isActive = pathname.startsWith(item.href);
+              return (
+                <li key={item.href}>
+                  <Link
+                    href={item.href}
+                    onClick={() => setOpen(false)}
+                    className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all duration-150 ${
+                      isActive ? "text-white shadow-sm" : "text-[#1E3A5F] hover:bg-[#EFF6FF] hover:text-[#1E3A5F]"
+                    }`}
+                    style={isActive ? { background: "#1E3A5F" } : undefined}
+                  >
+                    <span className="text-base shrink-0">{item.icon}</span>
+                    <span>{item.label}</span>
+                  </Link>
+                </li>
+              );
+            })}
+          </>
+        )}
       </ul>
 
       {/* User info */}

@@ -10,6 +10,8 @@ const ROLE_LABELS: Record<string, string> = {
   SUBADMIN:  "مشرف النظام",
 };
 
+const ADMIN_ROLES = ["ADMIN", "SUBADMIN"];
+
 export default async function ServicesLayout({ children }: { children: React.ReactNode }) {
   const user = await getCurrentUser();
   if (!user) redirect("/login");
@@ -19,6 +21,7 @@ export default async function ServicesLayout({ children }: { children: React.Rea
       <ServicesSidebar
         userName={user.name}
         userRole={ROLE_LABELS[user.role] ?? ""}
+        isAdmin={ADMIN_ROLES.includes(user.role)}
       />
       <div className="flex-1 min-w-0 bg-[#F4F7F8] overflow-auto">
         <div className="p-6">{children}</div>
