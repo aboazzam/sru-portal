@@ -111,12 +111,13 @@ export async function GET(request: NextRequest) {
   wsNotes["!cols"] = [{ wch: 60 }];
   XLSX.utils.book_append_sheet(wb, wsNotes, "ملاحظات");
 
-  const buffer = XLSX.write(wb, { type: "buffer", bookType: "xlsx" }) as Uint8Array;
+  const buffer = XLSX.write(wb, { type: "base64", bookType: "xlsx" }) as string;
+const binaryBuffer = Buffer.from(buffer, "base64");
 
-  return new NextResponse(buffer, {
-    headers: {
-      "Content-Type":        "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-      "Content-Disposition": `attachment; filename="${sheet}-template.xlsx"`,
-    },
-  });
+return new Response(binaryBuffer, {
+  headers: {
+    "Content-Type":        "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+    "Content-Disposition": `attachment; filename="${sheet}-template.xlsx"`,
+  },
+});
 }
