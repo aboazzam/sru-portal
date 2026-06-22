@@ -169,11 +169,17 @@ export default async function LandingPage() {
       {/* ── Sticky Header ──────────────────────────────── */}
       <header className="sticky top-0 z-50 bg-[#2C1650]/95 backdrop-blur-sm shadow-lg">
   <div className="max-w-7xl mx-auto px-6 py-3.5 flex items-center justify-between">
+    <a
+      href="https://sru-portal.aboazzam.art"
+      target="_blank"
+      rel="noopener noreferrer"
+    >
     <img src="/assets/logos/logo-white.png"
       alt={t("universityName")}
       width={180}
       height={40}
       />
+    </a>
     <div className="flex items-center gap-3">
       <LanguageToggle className="text-white" />
       <Link

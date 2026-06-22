@@ -48,7 +48,7 @@ export default async function ServicesDashboard() {
       {/* Hero */}
       <div
         className="rounded-2xl p-6 text-white shadow-sm"
-        style={{ background: "linear-gradient(135deg, #059669 0%, #047857 100%)" }}
+        style={{ background: "linear-gradient(135deg, #2C1650 0%, #6B46C1 100%)" }}
       >
         <div className="flex items-start justify-between gap-4 flex-wrap">
           <div>

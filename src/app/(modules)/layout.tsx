@@ -14,7 +14,7 @@ export default async function ModulesLayout({ children }: { children: React.Reac
 
   return (
     <div className="min-h-screen bg-[#F4F7F8] flex flex-col">
-      <header className="bg-[#1B5E20] text-white px-6 py-3 flex items-center justify-between shadow-md shrink-0">
+      <header className="bg-[#6B46C1] text-white px-6 py-3 flex items-center justify-between shadow-md shrink-0">
         <Image
           src="/assets/logos/logo-white.svg"
           alt={tc("universityName")}
@@ -34,7 +34,7 @@ export default async function ModulesLayout({ children }: { children: React.Reac
           <form action={logout}>
             <button
               type="submit"
-              className="px-4 py-1.5 bg-green-700 hover:bg-green-600 rounded-lg text-sm font-medium transition-colors"
+              className="px-4 py-1.5 bg-purple-800 hover:bg-purple-700 rounded-lg text-sm font-medium transition-colors"
             >
               {tc("signOut")}
             </button>
