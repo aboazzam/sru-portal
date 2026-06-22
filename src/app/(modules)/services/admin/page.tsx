@@ -12,7 +12,15 @@ export default async function ServiceAdminPage() {
 
   const [applications, services] = await Promise.all([
     prisma.serviceApplications.findMany({
-      include: {
+      select: {
+        id:        true,
+        status:    true,
+        userId:    true,
+        serviceId: true,
+        notes:     true,
+        formData:  true,
+        createdAt: true,
+        updatedAt: true,
         user:    { select: { id: true, name: true, email: true } },
         service: { select: { id: true, title: true } },
       },
