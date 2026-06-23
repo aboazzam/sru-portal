@@ -89,38 +89,44 @@ function AddUserModal({ onClose, onSuccess }: AddUserModalProps) {
     e.preventDefault();
     setError(null);
     setSubmitting(true);
-    const token = getClientToken();
-    const body: Record<string, unknown> = {
-      name:     form.name,
-      email:    form.email,
-      password: form.password,
-      role:     form.role,
-    };
-    if (form.nameEn.trim()) body.nameEn = form.nameEn.trim();
-    if (form.gender) body.gender = form.gender;
+    try {
+      const token = getClientToken();
+      const body: Record<string, unknown> = {
+        name:     form.name,
+        email:    form.email,
+        password: form.password,
+        role:     form.role,
+      };
+      if (form.nameEn.trim()) body.nameEn = form.nameEn.trim();
+      if (form.gender) body.gender = form.gender;
 
-    const res = await fetch("/api/admin/users", {
-      method: "POST",
-      headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
-      body: JSON.stringify(body),
-    });
+      const res = await fetch("/api/admin/users", {
+        method: "POST",
+        headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
+        body: JSON.stringify(body),
+      });
 
-    const data = await res.json();
-    setSubmitting(false);
+      let data: Record<string, unknown> = {};
+      try { data = await res.json(); } catch { /* non-JSON body */ }
 
-    if (!res.ok) {
-      if (res.status === 409) {
-        setError(t("emailTaken"));
-      } else if (typeof data.error === "object") {
-        const msgs = Object.values(data.error as Record<string, string[]>).flat();
-        setError(msgs[0] ?? t("fieldError"));
-      } else {
-        setError(data.error ?? t("genericError"));
+      if (!res.ok) {
+        if (res.status === 409) {
+          setError("هذا البريد الإلكتروني مسجل مسبقاً");
+        } else if (typeof data.error === "object" && data.error !== null) {
+          const msgs = Object.values(data.error as Record<string, string[]>).flat();
+          setError(msgs[0] ?? t("fieldError"));
+        } else {
+          setError(typeof data.error === "string" ? data.error : t("genericError"));
+        }
+        return;
       }
-      return;
-    }
 
-    onSuccess(data.user);
+      onSuccess(data.user as User);
+    } catch {
+      setError(t("genericError"));
+    } finally {
+      setSubmitting(false);
+    }
   }
 
   return (
@@ -257,38 +263,44 @@ function EditUserModal({ user, onClose, onSuccess }: EditUserModalProps) {
     e.preventDefault();
     setError(null);
     setSubmitting(true);
-    const token = getClientToken();
-    const body: Record<string, unknown> = {
-      name:   form.name,
-      nameEn: form.nameEn.trim() || null,
-      email:  form.email,
-      role:   form.role,
-      gender: form.gender || null,
-    };
-    if (form.password) body.password = form.password;
+    try {
+      const token = getClientToken();
+      const body: Record<string, unknown> = {
+        name:   form.name,
+        nameEn: form.nameEn.trim() || null,
+        email:  form.email,
+        role:   form.role,
+        gender: form.gender || null,
+      };
+      if (form.password) body.password = form.password;
 
-    const res = await fetch(`/api/admin/users/${user.id}`, {
-      method: "PATCH",
-      headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
-      body: JSON.stringify(body),
-    });
+      const res = await fetch(`/api/admin/users/${user.id}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
+        body: JSON.stringify(body),
+      });
 
-    const data = await res.json();
-    setSubmitting(false);
+      let data: Record<string, unknown> = {};
+      try { data = await res.json(); } catch { /* non-JSON body */ }
 
-    if (!res.ok) {
-      if (res.status === 409) {
-        setError(t("emailTaken"));
-      } else if (typeof data.error === "object") {
-        const msgs = Object.values(data.error as Record<string, string[]>).flat();
-        setError(msgs[0] ?? t("fieldError"));
-      } else {
-        setError(data.error ?? t("genericError"));
+      if (!res.ok) {
+        if (res.status === 409) {
+          setError("هذا البريد الإلكتروني مسجل مسبقاً");
+        } else if (typeof data.error === "object" && data.error !== null) {
+          const msgs = Object.values(data.error as Record<string, string[]>).flat();
+          setError(msgs[0] ?? t("fieldError"));
+        } else {
+          setError(typeof data.error === "string" ? data.error : t("genericError"));
+        }
+        return;
       }
-      return;
-    }
 
-    onSuccess(data.user);
+      onSuccess(data.user as User);
+    } catch {
+      setError(t("genericError"));
+    } finally {
+      setSubmitting(false);
+    }
   }
 
   return (
