@@ -1,0 +1,14 @@
+
+> sru-portal@0.1.0 dev
+> next dev
+
+▲ Next.js 16.2.7 (Turbopack)
+- Local:         http://localhost:3000
+- Network:       http://192.168.100.58:3000
+- Environments: .env
+✓ Ready in 2.5s
+
+✓ Finished writing to filesystem cache in 28.0s
+ POST /api/admin/users 401 in 5.2s (next.js: 4.9s, application-code: 232ms)
+ POST /api/admin/users 201 in 596ms (next.js: 10ms, application-code: 586ms)
+○ Compiling /login ...
