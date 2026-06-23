@@ -1,6 +1,5 @@
 "use client";
 import { useState, useTransition } from "react";
-import { getClientToken } from "@/lib/client-auth";
 import { createTraining, updateTraining, deleteTraining } from "../_actions";
 
 interface Training {
